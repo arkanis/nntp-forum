@@ -39,28 +39,6 @@ $thread_tree = array( $topic_id => $message_tree[$topic_id] );
 // get_message_tree() would have failed).
 $nntp->command('group ' . $group, 211);
 
-/*
-$posts = array();
-
-$nntp->command('article', 220);
-$posts[] = new Message( $nntp->get_text_response() );
-list($status,) = $nntp->command('next', array(223, 421));
-
-while($status == 223){
-	$nntp->command('head', 221);
-	$post = new Message($nntp->get_text_response());
-	if ( $post->references ) {
-		$referenced_ids = explode(' ', $post->references);
-		if (in_array($topic_id, $referenced_ids)){
-			$nntp->command('body', 222);
-			$post->store_body( $nntp->get_text_response() );
-			$posts[] = $post;
-		}
-	}
-	list($status,) = $nntp->command('next', array(223, 421));
-}
-*/
-
 // Setup layout variables
 $title = $message_infos[$topic_id]['subject'];
 $breadcrumbs[$group] = '/' . $group;
@@ -75,7 +53,7 @@ $body_class = 'messages';
 // A recursive tree walker function. Unfortunately necessary because we start the recursion
 // within the function (otherwise we could use an iterator).
 function traverse_tree($tree_level){
-	global $nntp, $message_infos;
+	global $nntp, $message_infos, $group;
 	
 	echo("<ul>\n");
 	foreach($tree_level as $id => $replies){
@@ -98,7 +76,7 @@ function traverse_tree($tree_level){
 		if ( ! empty($message_parser->attachments) ){
 			echo('	<ul class="attachments">' . "\n");
 			foreach($message_parser->attachments as $attachment)
-				echo('		<li>' . h($attachment['name']) . ' (' . intval($attachment['size'] / 1024) . ' KiByte)</li>' . "\n");
+				echo('		<li><a href="/' . urlencode($group) . '/' . urlencode($overview['number']) . '/' . urlencode($attachment['name']) . '">' . h($attachment['name']) . '</a> (' . intval($attachment['size'] / 1024) . ' KiByte)</li>' . "\n");
 			echo("	</ul>\n");
 		}
 		
