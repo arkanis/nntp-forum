@@ -1,0 +1,5 @@
+from: Stephan <ss209@hdm-stuttgart.de>
+newsgroups: hdm.test.allgemein
+subject: posting over a plain TCP/IP channel
+
+I'm just trying to post a new article manually by typing this straigt into a plain TCP channel using socat

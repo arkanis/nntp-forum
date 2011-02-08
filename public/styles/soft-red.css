@@ -1,0 +1,191 @@
+/* define HTML5 block level elements */
+header, nav, footer, article, section { display: block; }
+
+
+/* layout */
+html { margin: 0; padding: 0; }
+body { width: 58em; margin: 1em auto; padding: 0 1em 1px 1em; }
+
+
+/* colors and typography */
+html { background: #f2f2f2; }
+body { font-family: sans-serif; font-size: medium; color: #333; background: white; box-shadow: 0 0 10px black; }
+
+body { -moz-box-shadow: 0 0 10px black; -webkit-box-shadow: 0 0 10px black; }
+
+body > header { margin: 0 -1em; padding: 0; color: white; background: #db0031; }
+body > header h1 { margin: 0; padding: 0.5em 0.5em; font-size: 1.5em; font-weight: normal; }
+body > header a { text-decoration: none; color: inherit; }
+
+body > header > nav { font-size: 0.77em; margin: 0; padding: 0.75em 1.2em; background: #28698f; border-top: 1px solid white; }
+body > header > nav a:hover { text-decoration: underline; }
+body > header > nav > ul#utilities { float: right; margin: 0; padding: 0; list-style: none; }
+body > header > nav > ul#utilities > li { display: inline; }
+body > header > nav > ul#utilities > li > a.newsfeed { padding: 1px 0 1px 20px; background: url(/styles/feed.png) left center no-repeat; }
+body > header > nav > ul#breadcrumbs { overflow: hidden; margin: 0; padding: 0; list-style: none; }
+body > header > nav > ul#breadcrumbs > li { float: left; margin: 0 1em 0 0; padding: 0; }
+body > header > nav > ul#breadcrumbs > li:before { content: '→'; margin-right: 1em; }
+body > header > nav > ul#breadcrumbs > li:first-child:before { content: none;}
+
+body > footer { font-size: 0.77em; margin: 1em 0; padding: 0; text-align: center; color: gray; }
+body > footer a { color: inherit; text-decoration: none; }
+body > footer a:hover { text-decoration: underline; }
+
+
+/* general content styles */
+body > h2 { font-size: 1.5em; margin: 1em 0 0 0; padding: 0; font-family: serif; border-bottom: 1px solid #ccc; }
+body a { color: hsl(202, 56%, 36%); text-decoration: none; }
+body a:hover { text-decoration: underline; }
+
+
+/* general form styles */
+form { margin: 1em 0; padding: 1px 0.5em; border: 1em solid rgba(0, 0, 0, 0.5); border-radius: 1em; background: hsla(0, 0%, 50%, 0.1); }
+
+form > .notice, form > .error { font-size: 0.77em; margin: 0.5em 0; padding: 0.5em 0.5em 0.5em 40px; background: no-repeat 10px 0.5em; border-width: 1px; border-style: solid; border-radius: 5px; }
+form > .notice { background-image: url(/styles/information.png); background-color: hsl(240, 100%, 95%); border-color: hsl(240, 100%, 90%); }
+form > .error { background-image: url(/styles/exclamation.png); background-color: hsl(0, 100%, 95%); border-color: hsl(0, 100%, 90%); }
+form > .notice > h3, form > .error > h3 { margin: 0 0 0.5em 0; }
+form > .notice > p, form > .error > p { margin: 0.5em 0 0 0; }
+
+form > ul.error {  list-style: none;  }
+form > ul.error > li { margin: 0.25em 0 0 0; padding: 0; }
+form > ul.error > li:first-child { margin-top: 0; }
+
+form p { margin: 0.5em 0; padding: 0; }
+form p > label { float: left; margin: 0 1em 0 0; padding: 0.3em 0; }
+form p > input { }
+form p > textarea { display: block; width: 100%; height: 30em; box-sizing: border-box; margin: 0; padding: 0.25em; }
+form p > button { }
+
+input, textarea { font-size: 1em; font-family: sans-serif; padding: 0.25em; border: 1px solid #ccc; border-radius: 5px; box-shadow: inset 0 0 5px #ccc; }
+input:focus, textarea:focus { border-color: #db0031; box-shadow: inset 0 0 5px #aaa; }
+button { font-size: 0.77em; padding: 0.25em 0.75em; color: inherit; text-shadow: 0 1px white; background: #eee; border: 1px solid #ccc; border-radius: 5px; box-shadow: 0 0 1px #aaa, inset 0 0.75em 2px white; }
+button:focus { border-color: #aaa; }
+button:active { border-color: #aaa; box-shadow: 0 0 1px #aaa, inset 0 -1em 2px white; }
+
+button.recommended { font-weight: bold; }
+
+form {
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em; }
+form > .notice, form > .error {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px; }
+form p > textarea {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box; }
+input, textarea {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-box-shadow: inset 0 0 5px #ccc;
+	-moz-box-shadow: inset 0 0 5px #ccc;
+	-webkit-box-shadow: inset 0 0 5px #ccc; }
+input:focus, textarea:focus {
+	-o-box-shadow: inset 0 0 5px #aaa;
+	-moz-box-shadow: inset 0 0 5px #aaa;
+	-webkit-box-shadow: inset 0 0 5px #aaa; }
+button {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-box-shadow: 0 0 1px #aaa, inset 0 0.75em 2px white;
+	-moz-box-shadow: 0 0 1px #aaa, inset 0 0.75em 2px white;
+	-webkit-box-shadow: 0 0 1px #aaa, inset 0 0.75em 2px white; }
+button:active {
+	-o-box-shadow: 0 0 1px #aaa, inset 0 -1em 2px white;
+	-moz-box-shadow: 0 0 1px #aaa, inset 0 -1em 2px white;
+	-webkit-box-shadow: 0 0 1px #aaa, inset 0 -1em 2px white; }
+
+
+/* message form styles */
+form.message { overflow: hidden; }
+
+form.message > .error, form.message > .notice { margin-right: 20.75em; }
+
+form.message > section.help { float: right; margin: 2em 0 0 0; padding: 0; width: 14.9em; }
+form.message > section.help > h3 { font-size: 1em; }
+form.message > section.help > dl { margin: 0; padding: 0; font-size: 0.77em; }
+form.message > section.help > dl > dt { font-weight: bold; }
+form.message > section.help > dl > dd { margin: 0; padding: 0 0 0 1em; }
+form.message > section.help > dl > dd > pre { font-size: 1em; font-family: sans-serif; }
+
+form.message > section.fields { margin-right: 15.5em; }
+form.message > section.fields > p { }
+form.message > section.fields > p > label[for='message_subject'] { margin-right: 1em; }
+form.message > section.fields > p > input#message_subject { width: 30em;  }
+form.message > section.fields > p > textarea { font-size: 1em; font-family: sans-serif; }
+
+/* hide stuff that is shown later by JavaScript */
+form.message > ul.error, form.message > #message-post-error, form.message > #message-accepted, form.message > article#post-preview { display: none; }
+
+
+/* action link list */
+ul.actions { overflow: hidden; min-height: 1.25em; line-height: 1.25em;  margin: -1.25em 0 0 0; padding: 0; list-style: none; }
+ul.actions > li { float: right; }
+ul.actions > li > a { padding-left: 20px; background-position: left center; background-repeat: no-repeat; }
+ul.actions > li > a.new.topic { background-image: url(/styles/comments_add.png); }
+
+
+/**
+ * Page specific styles
+ */
+
+/* styles shared by newsgroup and topic list */
+body > table { width: 100%; margin: 1em 0; padding: 0; border-spacing: 0; }
+body > table > thead { font-size: 0.77em; color: gray; }
+body > table > thead > tr > th { font-weight: normal; }
+body > table > tbody > tr:nth-child(odd) > td { background: hsla(0, 0%, 50%, 0.1); }
+body > table > tbody > tr > td { padding: 0.25em 0.5em; margin: 0; }
+body > table > tbody > tr > td.empty { padding: 2em; text-align: center; color: gray; }
+
+
+/* newsgroup list */
+body.newsgroups > table > tbody > tr > td:nth-child(2) { font-size: 0.77em; width: 5em; text-align: center; }
+body.newsgroups > table > tbody > tr > td:nth-child(3) { font-size: 0.77em; width: 35em; }
+
+
+/* topic list */
+body.topics > table > tbody > tr > td:nth-child(1) > a { padding-left: 20px; background: url(/styles/new.png) no-repeat left center; color: hsl(202, 56%, 25%); }
+body.topics > table > tbody > tr > td:nth-child(1) > a:visited { background-image: url(/styles/comments.png); color: hsl(202, 56%, 36%); }
+body.topics > table > tbody > tr > td:nth-child(2) { font-size: 0.77em; width: 5em; text-align: center; }
+body.topics > table > tbody > tr > td:nth-child(3) { font-size: 0.77em; width: 17.5em; }
+
+/* Hide stuff that is shown by JavaScript later on */
+body.topics > ul.actions > li > a.new.topic, body.topics > form.message { display: none; }
+
+
+/* post styles */
+article { margin: 0; padding: 0.5em; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); border-radius: 5px; }
+article > header { margin: -0.5em -0.5em 0 -0.5em; padding: 0.25em 0.5em; color: white; background: hsl(347, 100%, 40%); border-radius: 5px 5px 0 0; }
+article > header p { font-size: 0.77em; margin: 0; padding: 0; }
+article > *:nth-child(2) { margin-top: 0.5em; }
+article > *:last-child { margin-bottom: 0; }
+
+article > ul.attachments { margin: 1em -0.5em -0.5em -0.5em; padding: 0.5em; list-style: none; background: hsl(0, 0%, 90%); border-radius: 0 0 5px 5px; }
+article > ul.attachments > li { display: inline; margin: 0 0.5em 0 0; padding: 0; }
+article > ul.attachments > li:first-child:before { content: 'Anhänge: '; margin-right: 0.5em; }
+
+article blockquote { margin: 1em 0; padding: 0 0.5em; color: hsl(120, 100%, 25%); border-left: 2px solid hsl(120, 100%, 25%); }
+article blockquote blockquote { color: hsl(190, 100%, 25%); border-color: hsl(190, 100%, 25%); }
+article blockquote blockquote blockquote { color: hsl(260, 100%, 25%); border-color: hsl(260, 100%, 25%); }
+article blockquote blockquote blockquote blockquote { color: hsl(330, 100%, 25%); border-color: hsl(330, 100%, 25%); }
+
+article { -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	-moz-border-radius: 5px; -webkit-border-radius: 5px; }
+article > header { -moz-border-radius: 5px 5px 0 0; -webkit-border-radius: 5px 5px 0 0; }
+article > ul.attachments { -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; }
+
+/* message list styles */
+body.messages > ul { margin: 0; padding: 0; list-style: none; }
+body.messages > ul > li { margin: 1em 0; padding: 0; }
+
+body.messages > ul li > ul { margin: 0.5em 0; padding: 0.5em 0 0 0.5em; list-style: none; border-left: 1px dashed gray; }
+body.messages > ul li > ul > li { margin: 1em 0 0 0; padding: 0; }
+body.messages > ul li > ul > li:first-child { margin-top: 0; }
+
+body.messages > ul > li > ul { border-color: hsl(120, 100%, 25%); }
+body.messages > ul > li > ul > li > ul { border-color: hsl(190, 100%, 25%); }
+body.messages > ul > li > ul > li > ul > li > ul { border-color: hsl(260, 100%, 25%); }
+body.messages > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(330, 100%, 25%); }
+body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(40, 100%, 25%); }
+body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(110, 100%, 25%); }
+body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(180, 100%, 25%); }

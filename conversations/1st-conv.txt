@@ -1,0 +1,18 @@
+$ socat stdio openssl:news.hdm-stuttgart.de:563,verify=0
+200 news.hdm-stuttgart.de InterNetNews NNRP server INN 2.5.1 ready (no posting)
+> authinfo user ss209
+381 Enter password
+> authinfo pass [removed]
+281 Authentication succeeded
+> list
+215 Newsgroups in form "group high low flags"
+hdm.test.allgemein 0000000029 0000000017 y
+hdm.test.offiziell 0000000023 0000000016 y
+hdm.suche_biete 0000000536 0000000459 y
+hdm.allgemein 0000001151 0000000989 y
+hdm.mi.allgemein 0000001816 0000001412 y
+hdm.mi.mib-offiziell 0000002284 0000002087 y
+hdm.mi.csm-offiziell 0000000529 0000000370 y
+hdm.mi.mmb-offiziell 0000000161 0000000045 y
+hdm.mi.events 0000000009 0000000006 y
+.
