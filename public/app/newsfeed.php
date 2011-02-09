@@ -1,26 +1,20 @@
 <?php
 
 define('ROOT_DIR', '../../');
-
-if ( !isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) )
-	die('Keine Anmeldedaten vorhanden um die Newsgroup zu lesen!');
-
 require(ROOT_DIR . 'include/header.php');
 
 if ( !( isset($_GET['name']) and array_key_exists($_GET['name'], $CONFIG['newsfeeds']) ) )
-	die('Der angeforderte Newsfeed wurde leider nicht gefunden.');
-
-$nntp = new NntpConnection($CONFIG['news_uri'], $CONFIG['port']);
-$nntp->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+	exit_with_not_found_error();
 
 $feed_config = $CONFIG['newsfeeds'][$_GET['name']];
+$nntp = nntp_connect_and_authenticate($CONFIG);
 
 $start_date = date('Ymd His', time() - $feed_config['history_duration']);
 $nntp->command('newnews ' . $feed_config['newsgroups'] . ' ' . $start_date, 230);
-$new_post_ids = $nntp->get_text_response();
+$new_message_ids = $nntp->get_text_response();
 
 $posts = array();
-foreach(explode("\n", $new_post_ids) as $post_id){
+foreach(explode("\n", $new_message_ids) as $post_id){
 	$nntp->command('article ' . $post_id, 220);
 	$posts[] = new Message( $nntp->get_text_response() );
 	if ( count($posts) >= $feed_config['limit'] )

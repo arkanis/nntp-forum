@@ -28,13 +28,13 @@ foreach(explode("\n", $newsgroup_list) as $newsgroup){
 		// Query and decode information if there is a last post
 		$post_overview = $nntp->get_text_response();
 		list($number, $subject, $from, $date, $message_id, $references, $bytes, $lines) = explode("\t", $post_overview, 8);
-		list($author_name, $author_mail) = Message::split_from_header( Message::decode($from) );
+		list($author_name, $author_mail) = MessageParser::split_from_header( MessageParser::decode($from) );
 		$latest_post = array(
 			'number' => $number,
-			'subject' => Message::decode($subject),
+			'subject' => MessageParser::decode($subject),
 			'author_name' => $author_name,
 			'author_mail' => $author_mail,
-			'date' => Message::parse_date($date)
+			'date' => MessageParser::parse_date($date)
 		);
 	} else {
 		// Or just give up if there is none

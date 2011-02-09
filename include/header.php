@@ -2,7 +2,7 @@
 
 require('config.php');
 require('nntp_connection.php');
-require('message.php');
+require('message_parser.php');
 require('view_helpers.php');
 require('action_helpers.php');
 require('markdown.php');

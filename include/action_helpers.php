@@ -80,13 +80,13 @@ function built_message_tree($nntp_connection, $newsgroup){
 			$tree_level[$message_id] = array();
 			
 			// Only store display information for messages that started a new topic
-			list($author_name, $author_mail) = Message::split_from_header( Message::decode($from) );
+			list($author_name, $author_mail) = MessageParser::split_from_header( MessageParser::decode($from) );
 			$message_infos[$message_id] = array(
 				'number' => intval($number),
-				'subject' => Message::decode($subject),
+				'subject' => MessageParser::decode($subject),
 				'author_name' => $author_name,
 				'author_mail' => $author_mail,
-				'date' => Message::parse_date($date)
+				'date' => MessageParser::parse_date($date)
 			);
 		});
 	}

@@ -62,20 +62,42 @@ function traverse_tree($tree_level){
 			continue;
 		
 		$overview = $message_infos[$id];
-		$message_parser = new Message();
+		$content = null;
+		$content_encoding = null;
+		$attachments = array();
+		
+		$message_parser = new MessageParser(array(
+			'part-header' => function($headers, $content_type, $content_type_params) use(&$content, &$content_encoding, &$attachments){
+				if ($content == null and $content_type == 'text/plain') {
+					$content_encoding = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
+					return 'append_content_line';
+				} elseif ( isset($content_type_params['name']) ) {
+					$name = MessageParser::decode($content_type_params['name']);
+					$attachments[] = array('name' => $name, 'type' => $content_type, 'params' => $content_type_params, 'size' => null);
+					return 'record_attachment_size';
+				}
+			},
+			'append_content_line' => function($line) use(&$content){
+				$content .= $line;
+			},
+			'record_attachment_size' => function($line) use(&$attachments){
+				$current_attachment_index = count($attachments) - 1;
+				$attachments[$current_attachment_index]['size'] += strlen($line) / 1.37;
+			}
+		));
 		$nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
-		$message_parser->finish();
+		$content = iconv($content_encoding, 'UTF-8', $content);
 		
 		echo("<li>\n");
 		echo("<article>\n");
 		echo("	<header>\n");
 		echo('		<p><abbr title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</abbr>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
 		echo("	</header>\n");
-		echo('	' . Markdown($message_parser->content) . "\n");
+		echo('	' . Markdown($content) . "\n");
 		
-		if ( ! empty($message_parser->attachments) ){
+		if ( ! empty($attachments) ){
 			echo('	<ul class="attachments">' . "\n");
-			foreach($message_parser->attachments as $attachment)
+			foreach($attachments as $attachment)
 				echo('		<li><a href="/' . urlencode($group) . '/' . urlencode($overview['number']) . '/' . urlencode($attachment['name']) . '">' . h($attachment['name']) . '</a> (' . intval($attachment['size'] / 1024) . ' KiByte)</li>' . "\n");
 			echo("	</ul>\n");
 		}
