@@ -31,14 +31,25 @@ foreach($message_infos as $id => $overview_info){
 if ($message_id == null)
 	exit_with_not_found_error();
 
-// Select the specified newsgroup for later content retrieval. We know it does exist (otherwise
-// get_message_tree() would have failed).
-$nntp->command('group ' . $group, 211);
+// Query the article and parse the text response by line. If we found the mime part of the
+// attachment output all lines of it directly to the browser. The transfer encoding like base64
+// is handled by the message parser.
+$nntp->command('article ' . $message_id, 220);
 
-$message_parser = new Message($attachment_name);
+$message_parser = new MessageParser(array(
+	'part-header' => function($headers, $content_type, $content_type_params) use(&$attachment_name){
+		if ( isset($content_type_params['name']) and $content_type_params['name'] == $attachment_name ){
+			header('Content-Type: ' . $headers['content-type']);
+			if ( isset($headers['content-disposition']) )
+				header('Content-Disposition: ' . $headers['content-disposition']);
+			return 'emit-content';
+		}
+	},
+	'emit-content' => function($line){
+		echo($line);
+	}
+));
 $nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
-$message_parser->finish();
-
 $nntp->close();
 
 ?>

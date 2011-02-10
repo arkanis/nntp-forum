@@ -152,9 +152,11 @@ class MessageParser
 	 * This state is never left because plain text messages contain onthing else after the content.
 	 */
 	private function message_body($line){
-		$line_event = $this->events[$this->content_event];
-		if ( is_callable($line_event) )
-			call_user_func($line_event, $this->decode_content_line($line));
+		if ($this->content_event){
+			$line_event = $this->events[$this->content_event];
+			if ( is_callable($line_event) )
+				call_user_func($line_event, $this->decode_content_line($line));
+		}
 	}
 	
 	/**
@@ -222,9 +224,11 @@ class MessageParser
 			array_pop($this->mime_boundaries);
 			$this->state = 'mime_body';
 		} else {
-			$line_event = $this->events[$this->content_event];
-			if ( is_callable($line_event) )
-				call_user_func($line_event, $this->decode_content_line($line));
+			if ($this->content_event){
+				$line_event = $this->events[$this->content_event];
+				if ( is_callable($line_event) )
+					call_user_func($line_event, $this->decode_content_line($line));
+			}
 		}
 	}
 }
