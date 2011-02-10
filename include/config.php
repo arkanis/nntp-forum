@@ -18,7 +18,7 @@ $CONFIG = array(
 	),
 	
 	'cache_dir' => ROOT_DIR . '/cache',
-	'cache_lifetime' => 5 * 60
+	'cache_lifetime' => 5 * 60  // 5 minutes
 );
 
 ?>

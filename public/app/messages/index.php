@@ -55,6 +55,35 @@ $body_class = 'messages';
 function traverse_tree($tree_level){
 	global $nntp, $message_infos, $group;
 	
+	// Variables for the message parser event handlers to store their information in. These variables
+	// have to be reset after a message is parsed.
+	$content = null;
+	$content_encoding = null;
+	$attachments = array();
+	
+	// Setup the message parser events to record the first text/plain part and record attachment
+	// information if present.
+	$message_parser = new MessageParser(array(
+		'part-header' => function($headers, $content_type, $content_type_params) use(&$content, &$content_encoding, &$attachments){
+			if ($content == null and $content_type == 'text/plain') {
+				$content_encoding = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
+				$content = '';
+				return 'append-content-line';
+			} elseif ( isset($content_type_params['name']) ) {
+				$name = $content_type_params['name'];
+				$attachments[] = array('name' => $name, 'type' => $content_type, 'params' => $content_type_params, 'size' => null);
+				return 'record-attachment-size';
+			}
+		},
+		'append-content-line' => function($line) use(&$content){
+			$content .= $line;
+		},
+		'record-attachment-size' => function($line) use(&$attachments){
+			$current_attachment_index = count($attachments) - 1;
+			$attachments[$current_attachment_index]['size'] += strlen($line);
+		}
+	));
+	
 	echo("<ul>\n");
 	foreach($tree_level as $id => $replies){
 		list($status,) = $nntp->command('article ' . $id, array(220, 430));
@@ -62,29 +91,6 @@ function traverse_tree($tree_level){
 			continue;
 		
 		$overview = $message_infos[$id];
-		$content = null;
-		$content_encoding = null;
-		$attachments = array();
-		
-		$message_parser = new MessageParser(array(
-			'part-header' => function($headers, $content_type, $content_type_params) use(&$content, &$content_encoding, &$attachments){
-				if ($content == null and $content_type == 'text/plain') {
-					$content_encoding = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
-					return 'append_content_line';
-				} elseif ( isset($content_type_params['name']) ) {
-					$name = MessageParser::decode($content_type_params['name']);
-					$attachments[] = array('name' => $name, 'type' => $content_type, 'params' => $content_type_params, 'size' => null);
-					return 'record_attachment_size';
-				}
-			},
-			'append_content_line' => function($line) use(&$content){
-				$content .= $line;
-			},
-			'record_attachment_size' => function($line) use(&$attachments){
-				$current_attachment_index = count($attachments) - 1;
-				$attachments[$current_attachment_index]['size'] += strlen($line) / 1.37;
-			}
-		));
 		$nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
 		$content = iconv($content_encoding, 'UTF-8', $content);
 		
@@ -103,6 +109,12 @@ function traverse_tree($tree_level){
 		}
 		
 		echo("</article>\n");
+		
+		// Reset message variables to make a clean start for the next message
+		$content = null;
+		$content_encoding = null;
+		$attachments = array();
+		$message_parser->reset();
 		
 		if ( count($replies) > 0 )
 			traverse_tree($replies);

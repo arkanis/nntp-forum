@@ -48,7 +48,7 @@ class MessageParser
 	// Event handler functions or callbacks
 	private $events = array();
 	
-	// Keeps track of the state of the state machine. If it's `null` the automate will ignore input forever.
+	// Keeps track of the state of the state machine.
 	private $state = 'message_headers';
 	// Name of the event that should be called for each incomming content line.
 	private $content_event = null;
@@ -72,9 +72,23 @@ class MessageParser
 	function __construct($events = array()){
 		$default_events = array(
 			'message-header' => function($headers){ },
-			'part-header' => function($headers){ }
+			'part-header' => function($headers, $content_type, $content_type_params){ }
 		);
 		$this->events = array_merge($default_events, $events);
+	}
+	
+	/**
+	 * Resets the state machine to the beginning. It's then ready to parse a new message. Useful if you want
+	 * to parse multiple messages with the same state machine and event handler setup.
+	 * 
+	 * This functionality could also be implemented by tuning the end states to properly detect the end of a
+	 * message and automatically reset the state machine. However doing it explicit is more reliable and avoids
+	 * high complexity in the end states.
+	 */
+	function reset(){
+		$this->state = 'message_headers';
+		$this->headers = array();
+		$this->mime_boundaries = array();
 	}
 	
 	/**
@@ -120,11 +134,11 @@ class MessageParser
 			// If there is no last header ignore this line.
 			$last_header = end(array_keys($this->headers));
 			if ($last_header)
-				$this->headers[$last_header] .= ' ' . trim($line);
+				$this->headers[$last_header] .= ' ' . self::decode(trim($line));
 		} else {
 			// Lines that start with a letter are new headers
 			list($header_name, $header_content) = explode(':', $line, 2);
-			$this->headers[strtolower($header_name)] = trim($header_content);
+			$this->headers[strtolower($header_name)] = self::decode(trim($header_content));
 		}
 	}
 	
@@ -198,11 +212,11 @@ class MessageParser
 			// Lines that start with a whitespace are additional content of the previous header
 			$last_header = end(array_keys($this->headers));
 			if ($last_header)
-				$this->headers[$last_header] .= ' ' . trim($line);
+				$this->headers[$last_header] .= ' ' . self::decode(trim($line));
 		} else {
 			// Lines that start with a letter new headers
 			list($header_name, $header_content) = explode(':', $line, 2);
-			$this->headers[strtolower($header_name)] = trim($header_content);
+			$this->headers[strtolower($header_name)] = self::decode(trim($header_content));
 		}
 	}
 	
