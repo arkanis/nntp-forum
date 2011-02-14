@@ -1,14 +1,15 @@
 $(document).ready(function(){
-	// Show the new topic link and make it show the topic form when it's clicked
+	// Reattach the reply form as last element of the article the user want's to answer.
+	// We also hide the answer link and focus the textarea for the message.
 	$('ul.actions > li.new.message > a').show().click(function(){
 		var article = $(this).parents('article');
 		$('form.message').hide().detach().appendTo(article).show();
 		$(this).parentsUntil('ul').hide();
-		$('input#message_subject').focus();
+		$('textarea#message_body').focus();
 		return false;
 	});
 	
-	// Let the cancle link hide the form
+	// The cancel button hides the form and shows the reply link again
 	$('form.message button.cancel').click(function(){
 		$(this).parents('article').eq(0).
 			find('> form.message').hide().end().
@@ -19,28 +20,18 @@ $(document).ready(function(){
 	// Validates the form and shows the proper error messages. If the form data is
 	// invalid `false` is returned.
 	$('form.message').bind('validate', function(){
-		var valid = true;
 		var form = $(this);
 		
 		$('ul.error, ul.error > li').hide();
 		
-		if ( $.trim(form.find('#message_subject').val()) == "" ){
-			form.find('ul.error > li#message_subject_error').show();
-			valid = false;
-		}
 		if ( $.trim(form.find('#message_body').val()) == "" ){
-			form.find('ul.error > li#message_body_error').show();
-			valid = false;
-		}
-		
-		if ( !valid ){
-			var offset = form.find('ul.error').show().offset();
-			console.log(offset);
+			form.find('ul.error, ul.error > li#message_body_error').show();
+			var offset = form.find('ul.error').offset();
 			window.scrollTo(0, offset.top);
-			
+			return false;
 		}
 		
-		return valid;
+		return true;
 	});
 	
 	// Triggers the "validate" event to check if the form content is valid. If so the current post
@@ -52,7 +43,6 @@ $(document).ready(function(){
 		
 		$.post(window.location.pathname, {'preview_text': $('textarea').val()}, function(data){
 			var offset = $('article#post-preview').
-				find('> header > p').text( 'Vorschau: ' + $('input#message_subject').val() ).end().
 				find('> div').html(data).end().
 				show().offset();
 			window.scrollTo(0, offset.top);
@@ -69,15 +59,22 @@ $(document).ready(function(){
 		if ( ! $(this).triggerHandler('validate') )
 			return false;
 		
+		$('button.preview').removeClass('recommended');
+		$('button.create').addClass('recommended');
+		
+		var article = $(this).parents('article').eq(0);
+		var newsgroup = window.location.pathname.split('/')[1];
+		var message_number = parseInt(article.attr('data-number'), 10);
+		
 		$(this).find('button.create').get(0).disabled = true;
-		$.ajax(window.location.pathname, {
+		$.ajax('/' + newsgroup + '/' + message_number, {
 			type: 'POST',
-			data: {'subject': $('#message_subject').val(), 'body': $('#message_body').val()},
+			data: {'body': $('#message_body').val()},
 			context: this,
 			complete: function(request){
 				if (request.status == 201) {
-					// Posted
-					window.location.href = request.getResponseHeader('Location');
+					// Posted successfully, reload the page to show the new reply
+					window.location.href = window.location.href;
 				} else {
 					$(this).find('button.create').get(0).disabled = false;
 					if (request.status == 202) {

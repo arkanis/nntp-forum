@@ -1,7 +1,7 @@
 <?php
 
-define('ROOT_DIR', '../../');
-require(ROOT_DIR . 'include/header.php');
+define('ROOT_DIR', '../..');
+require(ROOT_DIR . '/include/header.php');
 
 $nntp = nntp_connect_and_authenticate($CONFIG);
 
@@ -81,4 +81,4 @@ $body_class = 'newsgroups';
 	</tbody>
 </table>
 
-<? require(ROOT_DIR . 'include/footer.php') ?>
+<? require(ROOT_DIR . '/include/footer.php') ?>

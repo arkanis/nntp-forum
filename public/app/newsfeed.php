@@ -1,7 +1,7 @@
 <?php
 
-define('ROOT_DIR', '../../');
-require(ROOT_DIR . 'include/header.php');
+define('ROOT_DIR', '../..');
+require(ROOT_DIR . '/include/header.php');
 
 if ( !( isset($_GET['name']) and array_key_exists($_GET['name'], $CONFIG['newsfeeds']) ) )
 	exit_with_not_found_error();
@@ -130,4 +130,4 @@ $updated = ( count($messages) > 0 ) ? $messages[reset(array_keys($messages))]['d
 	</entry>
 	
 <? endforeach ?>
-<? require(ROOT_DIR . 'include/footer.php') ?>
+<? require(ROOT_DIR . '/include/footer.php') ?>

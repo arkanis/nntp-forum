@@ -4,8 +4,8 @@
 // In that case the header is already included so do not define ROOT_DIR and don't include
 // the header again.
 if ( !defined('ROOT_DIR') ){
-	define('ROOT_DIR', '../../../');
-	require(ROOT_DIR . 'include/header.php');
+	define('ROOT_DIR', '../../..');
+	require(ROOT_DIR . '/include/header.php');
 }
 
 // Setup layout variables
@@ -23,4 +23,4 @@ $title = 'Unbekannte Adresse';
 		sicher schon dabei wieder alles gerade zu biegen.</li>
 </ul>
 
-<? require(ROOT_DIR . 'include/footer.php') ?>
+<? require(ROOT_DIR . '/include/footer.php') ?>

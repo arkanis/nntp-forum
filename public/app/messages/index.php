@@ -1,7 +1,7 @@
 <?php
 
-define('ROOT_DIR', '../../../');
-require(ROOT_DIR . 'include/header.php');
+define('ROOT_DIR', '../../..');
+require(ROOT_DIR . '/include/header.php');
 
 if( !isset($_GET['newsgroup']) )
 	exit_with_not_found_error();
@@ -102,7 +102,7 @@ function traverse_tree($tree_level){
 		$content = iconv($content_encoding, 'UTF-8', $content);
 		
 		echo("<li>\n");
-		echo("<article>\n");
+		echo('<article data-number="' . ha($overview['number']) . '">' . "\n");
 		echo("	<header>\n");
 		echo('		<p><abbr title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</abbr>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
 		echo("	</header>\n");
@@ -147,7 +147,6 @@ $nntp->close();
 <form action="/<?= urlencode($group) ?>" method="post" class="message">
 	
 	<ul class="error">
-		<li id="message_subject_error">Du hast vergessen einen Namen für das neue Thema anzugeben.</li>
 		<li id="message_body_error">Du hast noch keinen Text für die Nachricht eingeben.</li>
 	</ul>
 	
@@ -217,7 +216,7 @@ Link](http://www.hdm-stuttgart.de/).
 		</p>
 		<p class="buttons">
 			<button class="preview recommended">Vorschau ansehen</button> oder
-			<button class="create">Thema erstellen</button> oder
+			<button class="create">Antwort absenden</button> oder
 			<button class="cancel">Abbrechen</button>
 		</p>
 	</section>
@@ -231,4 +230,4 @@ Link](http://www.hdm-stuttgart.de/).
 	</article>
 </form>
 
-<? require(ROOT_DIR . 'include/footer.php') ?>
+<? require(ROOT_DIR . '/include/footer.php') ?>

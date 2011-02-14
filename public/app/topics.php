@@ -1,7 +1,7 @@
 <?php
 
-define('ROOT_DIR', '../../');
-require(ROOT_DIR . 'include/header.php');
+define('ROOT_DIR', '../..');
+require(ROOT_DIR . '/include/header.php');
 
 if( !isset($_GET['newsgroup']) )
 	exit_with_not_found_error();
@@ -179,4 +179,4 @@ Link](http://www.hdm-stuttgart.de/).
 <? endif ?>
 </ul>
 
-<? require(ROOT_DIR . 'include/footer.php') ?>
+<? require(ROOT_DIR . '/include/footer.php') ?>

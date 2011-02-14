@@ -118,7 +118,7 @@ function url_for($path){
 function exit_with_unauthorized_error(){
 	global $CONFIG, $layout, $breadcrumbs, $scripts;
 	header('HTTP/1.1 401 Unauthorized');
-	require(ROOT_DIR . '/public/app/unauthorized.php');
+	require(ROOT_DIR . '/public/app/errors/unauthorized.php');
 	exit();
 }
 
@@ -129,7 +129,7 @@ function exit_with_unauthorized_error(){
 function exit_with_forbidden_error(){
 	global $CONFIG, $layout, $breadcrumbs, $scripts;
 	header('HTTP/1.1 403 Forbidden');
-	require(ROOT_DIR . '/public/app/forbidden.php');
+	require(ROOT_DIR . '/public/app/errors/forbidden.php');
 	exit();
 }
 
@@ -140,7 +140,7 @@ function exit_with_forbidden_error(){
 function exit_with_not_found_error(){
 	global $CONFIG, $layout, $breadcrumbs, $scripts;
 	header('HTTP/1.1 404 Not Found');
-	require(ROOT_DIR . '/public/app/not_found.php');
+	require(ROOT_DIR . '/public/app/errors/not_found.php');
 	exit();
 }
 

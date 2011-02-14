@@ -39,7 +39,7 @@ body a:hover { text-decoration: underline; }
 
 
 /* general form styles */
-form { margin: 1em 0; padding: 1px 0.5em; border: 1em solid rgba(0, 0, 0, 0.5); border-radius: 1em; background: hsla(0, 0%, 50%, 0.1); }
+form { }
 
 form > .notice, form > .error { font-size: 0.77em; margin: 0.5em 0; padding: 0.5em 0.5em 0.5em 40px; background: no-repeat 10px 0.5em; border-width: 1px; border-style: solid; border-radius: 5px; }
 form > .notice { background-image: url(/styles/information.png); background-color: hsl(240, 100%, 95%); border-color: hsl(240, 100%, 90%); }
@@ -65,9 +65,6 @@ button:active { border-color: #aaa; box-shadow: 0 0 1px #aaa, inset 0 -1em 2px w
 
 button.recommended { font-weight: bold; }
 
-form {
-	-moz-border-radius: 1em;
-	-webkit-border-radius: 1em; }
 form > .notice, form > .error {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px; }
@@ -114,6 +111,8 @@ form.message > section.fields > p > label[for='message_subject'] { margin-right:
 form.message > section.fields > p > input#message_subject { width: 30em;  }
 form.message > section.fields > p > textarea { font-size: 1em; font-family: sans-serif; }
 
+form.message > article#post-preview { background: white; margin: 0.5em 0; }
+
 /* hide stuff that is shown later by JavaScript */
 form.message > ul.error, form.message > #message-post-error, form.message > #message-accepted, form.message > article#post-preview { display: none; }
 
@@ -154,6 +153,13 @@ body.topics > table > tbody > tr > td:nth-child(1) > a:visited { background-imag
 body.topics > table > tbody > tr > td:nth-child(2) { font-size: 0.77em; width: 5em; text-align: center; }
 body.topics > table > tbody > tr > td:nth-child(3) { font-size: 0.77em; width: 17.5em; }
 
+body.topics form.message { margin: 1em 0; padding: 1px 0.5em; border: 1em solid rgba(0, 0, 0, 0.5); border-radius: 1em; background: hsla(0, 0%, 50%, 0.1); }
+
+body.topics form.message {
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em; }
+
+
 /* Hide stuff that is shown by JavaScript later on */
 body.topics > ul.actions > li > a.new.topic, body.topics > form.message { display: none; }
 
@@ -169,7 +175,7 @@ article > ul.attachments { margin: 0 -0.5em 0 -0.5em; padding: 0.5em 0.5em 0.5em
 article > ul.attachments > li { display: inline; margin: 0 0.5em 0 0; padding: 0; }
 article > ul.attachments > li:first-child:before { content: 'Anhänge: '; margin-right: 0.5em; }
 
-article > ul.actions { margin: 0 -0.5em -0.5em -0.5em; padding: 0.5em; list-style: none; background: hsl(0, 0%, 90%); border-radius: 0 0 5px 5px; }
+article > ul.actions { overflow: hidden; margin: 0 -0.5em -0.5em -0.5em; padding: 0.5em; list-style: none; background: hsl(0, 0%, 90%); }
 article > ul.actions > li { display: inline; margin-right: 1em; }
 article > ul.actions > li.destroy.message { float: right; font-size: 0.77em; margin-right: 0; }
 article > ul.actions > li.destroy.message  > a { padding-top: 2px; padding-bottom: 2px; }
@@ -182,7 +188,13 @@ article blockquote blockquote blockquote blockquote { color: hsl(330, 100%, 25%)
 article { -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	-moz-border-radius: 5px; -webkit-border-radius: 5px; }
 article > header { -moz-border-radius: 5px 5px 0 0; -webkit-border-radius: 5px 5px 0 0; }
-article > ul.attachments { -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px; }
+
+/* reply form styles */
+body.messages form.message { margin: 0 -0.5em -0.5em -0.5em; padding: 0 0.5em 0 0.5em; background: hsl(0, 0%, 90%); }
+body.messages form.message > section.help { margin-top: 0; }
+
+/* hide the reply form, it's shown by a script */
+body.messages form.message { display: none; }
 
 /* message list styles */
 body.messages > ul { margin: 0; padding: 0; list-style: none; }

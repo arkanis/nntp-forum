@@ -25,7 +25,6 @@ $(document).ready(function(){
 		
 		if ( !valid ){
 			var offset = form.find('ul.error').show().offset();
-			console.log(offset);
 			window.scrollTo(0, offset.top);
 			
 		}
@@ -64,6 +63,9 @@ $(document).ready(function(){
 	$('form.message').submit(function(){
 		if ( ! $(this).triggerHandler('validate') )
 			return false;
+		
+		$('button.preview').removeClass('recommended');
+		$('button.create').addClass('recommended');
 		
 		$(this).find('button.create').get(0).disabled = true;
 		$.ajax(window.location.pathname, {

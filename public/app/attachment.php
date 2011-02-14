@@ -1,7 +1,7 @@
 <?php
 
-define('ROOT_DIR', '../../');
-require(ROOT_DIR . 'include/header.php');
+define('ROOT_DIR', '../..');
+require(ROOT_DIR . '/include/header.php');
 
 if( !isset($_GET['newsgroup']) or !isset($_GET['number']) or !isset($_GET['attachment']) )
 	exit_with_not_found_error();
