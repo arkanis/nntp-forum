@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	// Show the new topic link and make it show the topic form when it's clicked
-	$('ul.actions a.new.topic').show().click(function(){
-		$('form.message').slideDown();
+	$('ul.actions > li.new.topic > a').show().click(function(){
+		$('form.message').show();
 		$('input#message_subject').focus();
 		return false;
 	});
@@ -35,7 +35,7 @@ $(document).ready(function(){
 	
 	// Let the cancle link hide the form
 	$('form.message button.cancel').click(function(){
-		$(this).parents('form').slideUp();
+		$(this).parents('form').hide();
 		return false;
 	});
 	

@@ -35,6 +35,12 @@ if ($topic_id == null)
 // Extract the subtree for this topic
 $thread_tree = array( $topic_id => $message_tree[$topic_id] );
 
+// See if the current user is allowed to post in this newsgroup
+$nntp->command('list active ' . $group, 215);
+$group_info = $nntp->get_text_response();
+list($name, $last_article_number, $first_article_number, $post_flag) = explode(' ', $group_info);
+$posting_allowed = ($post_flag != 'n');
+
 // Select the specified newsgroup for later content retrieval. We know it does exist (otherwise
 // get_message_tree() would have failed).
 $nntp->command('group ' . $group, 211);
@@ -43,6 +49,7 @@ $nntp->command('group ' . $group, 211);
 $title = $message_infos[$topic_id]['subject'];
 $breadcrumbs[$group] = '/' . $group;
 $breadcrumbs[$title] = '/' . $group . '/' . $topic_number;
+$scripts[] = 'messages.js';
 $body_class = 'messages';
 ?>
 
@@ -53,7 +60,7 @@ $body_class = 'messages';
 // A recursive tree walker function. Unfortunately necessary because we start the recursion
 // within the function (otherwise we could use an iterator).
 function traverse_tree($tree_level){
-	global $nntp, $message_infos, $group;
+	global $nntp, $message_infos, $group, $posting_allowed;
 	
 	// Variables for the message parser event handlers to store their information in. These variables
 	// have to be reset after a message is parsed.
@@ -108,6 +115,13 @@ function traverse_tree($tree_level){
 			echo("	</ul>\n");
 		}
 		
+		echo('		<ul class="actions">' . "\n");
+		if($posting_allowed)
+			echo('			<li class="new message"><a href="#">Antworten</a></li>' . "\n");
+		if($overview['author_mail'] == $_SERVER['PHP_AUTH_USER'] . '@hdm-stuttgart.de')
+			echo('			<li class="destroy message"><a href="#">Nachricht löschen</a></li>' . "\n");
+		echo('		</ul>' . "\n");
+		
 		echo("</article>\n");
 		
 		// Reset message variables to make a clean start for the next message
@@ -128,5 +142,93 @@ function traverse_tree($tree_level){
 traverse_tree($thread_tree);
 $nntp->close();
 
-require(ROOT_DIR . 'include/footer.php');
 ?>
+
+<form action="/<?= urlencode($group) ?>" method="post" class="message">
+	
+	<ul class="error">
+		<li id="message_subject_error">Du hast vergessen einen Namen für das neue Thema anzugeben.</li>
+		<li id="message_body_error">Du hast noch keinen Text für die Nachricht eingeben.</li>
+	</ul>
+	
+	<section class="error" id="message-post-error">
+		<h3>Beitrag konnte nicht gesendet werden</h3>
+		
+		<p>Der Beitrag wurde vom Newsgroup-Server leider nicht angenommen. Wahrscheinlich
+		verfügst du nicht über die nötigen Rechte um in dieser Newsgroup Beiträge zu schreiben.</p>
+		
+		<p><samp>bla</samp></p>
+	</section>
+	
+	<section class="notice" id="message-accepted">
+		<h3>Beitrag noch nicht online</h3>
+		
+		<p>Der Beitrag wurde zwar akzeptiert, scheint aber noch nicht online zu sein. Möglicher
+		weise dauert es ein paar Sekunden oder er muss erst vom Moderator bestätigt werden.</p>
+		
+		<p>Damit im Fall aller Fälle nichts verlohren geht kannst du den Text deines Beitrags kopieren
+		und falls nötig später noch einmal senden.</p>
+		
+		<p>Ob der Beitrag online ist siehst du wenn du die Seite neu lädst.</p>
+	</section>
+	
+	<section class="help">
+		<h3>Kurze Format-Übersicht</h3>
+		
+		<dl>
+			<dt>Absätze</dt>
+				<dd>
+<pre>
+Absätze werden durch eine
+Leerzeile getrennt.
+
+Nächster Absatz.
+</pre>
+				</dd>
+			<dt>Listen</dt>
+				<dd>
+<pre>
+Listen können mit `*` oder `-`
+erstellt werden:
+
+- Erster Eintrag
+- Zweiter
+* Letzter
+</pre>
+				</dd>
+			<dt>Links</dt>
+				<dd>
+<pre>
+Übersichtlicher [Link][1] im
+Fließtext.
+
+[1]: http://www.hdm-stuttgart.de/
+
+Oder ein [direkter
+Link](http://www.hdm-stuttgart.de/).
+</pre>
+				</dd>
+		</dl>
+	</section>
+	
+	<section class="fields">
+		<p>
+			<textarea name="body" required id="message_body"></textarea>
+		</p>
+		<p class="buttons">
+			<button class="preview recommended">Vorschau ansehen</button> oder
+			<button class="create">Thema erstellen</button> oder
+			<button class="cancel">Abbrechen</button>
+		</p>
+	</section>
+	
+	<article id="post-preview">
+		<header>
+			<p>Vorschau</p>
+		</header>
+		
+		<div></div>
+	</article>
+</form>
+
+<? require(ROOT_DIR . 'include/footer.php') ?>

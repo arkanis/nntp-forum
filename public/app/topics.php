@@ -15,18 +15,6 @@ list($message_tree, $message_infos) = get_message_tree($nntp, $group);
 if ( $message_tree == null )
 	exit_with_not_found_error();
 
-/*
-// Query information abou the group we are supposed to display
-$group = $_GET['newsgroup'];
-list($status, $group_info) = $nntp->command('group ' . $group, array(211, 411));
-if ($status == 411)
-	exit_with_not_found_error();
-list($estimated_post_count, $first_article_number, $last_article_number,) = explode(' ', $group_info);
-
-// Build a message tree to get the name of all available topics
-list($message_tree, $message_infos) = get_message_tree($nntp, $first_article_number, $last_article_number);
-*/
-
 // See if the current user is allowed to post in this newsgroup
 $nntp->command('list active ' . $group, 215);
 $group_info = $nntp->get_text_response();
@@ -35,88 +23,18 @@ $posting_allowed = ($post_flag != 'n');
 
 $nntp->close();
 
-/*
-
-// Extract the topic list
-$topic_limit = 20;
-$overview_range_size = 50;
-
-$topics = array();
-$range_end_number = $last_article_number;
-
-$range_start_number = $range_end_number - $overview_range_size;
-if ($range_start_number < $first_article_number)
-	$range_start_number = $first_article_number;
-
-list($status,) = $nntp->command('over ' . $range_start_number . '-' . $range_end_number, array(224, 423));
-if ($status == 423)
-	die('exploded');
-
-print('<table>');
-$overview_info = $nntp->get_text_response();
-foreach(explode("\n", $overview_info) as $overview_line){
-	list($number, $subject, $from, $date, $message_id, $references, $bytes, $lines, $rest) = explode("\t", $overview_line, 9);
-	print('<tr><td>' . $number . '</td><td>' . h(Message::decode($subject)) . '</td><td>' . h($references) . '</td></tr>');
-}
-print('</table>');
-
-$nntp->close();
-
-exit();
-*/
-
-
-/*
-// 
-
-while( count($topics) < $topic_limit ){
-	$range_start_number = $range_end_number - $overview_range_size;
-	if ($range_start_number < $last_article_number)
-		$range_start_number = $last_article_number;
-	
-	list($status,) = $nntp->command('over ' . $range_start_number . '-' . $range_end_number, array(224, 423));
-	// Continue with the next range if there are no articles in the current range
-	if ($status == 423)
-		continue;
-	
-	$overview_info = $nntp->get_text_response();
-	foreach(explode("\r\n", $overview_info) as $overview_line){
-		list($number, $subject, $from, $date, $message_id, $references, $bytes, $lines) = explode("\t", $overview_line, 8);
-	}
-}
-
-$nntp->command('stat ' . $last_article_number, 223);
-while( count($topics) < $topic_limit ){
-	list($status, $post_info) = $nntp->command('head', 221);
-	list($post_number, $post_id,) = explode(' ', $post_info);
-	
-	$post = new Mail($nntp->get_text_response());
-	if ( is_null($post->references) )
-		$topics[] = array(
-			'number' => $post_number,
-			'title' => $post->subject,
-			'date' => $post->date_as_time,
-			'author' => $post->author_name
-		);
-	
-	list($status,) = $nntp->command('last', array(223, 422));
-	if ($status == 422)
-		break;
-}
-*/
-
 // Setup layout variables
 $title = 'Forum ' . $group;
 $breadcrumbs[$group] = '/' . $group;
-$scripts[] = 'topics_index.js';
+$scripts[] = 'topics.js';
 $body_class = 'topics';
 ?>
 
 <h2><?= h($title) ?></h2>
 
-<ul class="actions">
+<ul class="actions above">
 <? if($posting_allowed): ?>
-	<li><a href="#" class="new topic">Neues Thema eröffnen</a></li>
+	<li class="new topic"><a href="#">Neues Thema eröffnen</a></li>
 <? endif ?>
 </ul>
 
@@ -254,5 +172,11 @@ Link](http://www.hdm-stuttgart.de/).
 <? endif ?>
 	</tbody>
 </table>
+
+<ul class="actions below">
+<? if($posting_allowed): ?>
+	<li class="new topic"><a href="#">Neues Thema eröffnen</a></li>
+<? endif ?>
+</ul>
 
 <? require(ROOT_DIR . 'include/footer.php') ?>
