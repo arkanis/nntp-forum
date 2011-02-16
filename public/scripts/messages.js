@@ -93,4 +93,29 @@ $(document).ready(function(){
 		});
 		return false;
 	});
+	
+	$('ul.actions > li.destroy.message > a').show().click(function(){
+		var article = $(this).parents('article').eq(0);
+		var confirmation_form = $('<div class="confirmation"><form>' +
+			'<p>Willst du diese Nachricht wirklich löschen?</p>' +
+			'<p><button>Ja</button><button>Nein</button></p>' +
+		'</form></div>').appendTo(article).find('> form');
+		
+		confirmation_form.css({
+			top: (article.innerHeight() - confirmation_form.height()) / 2 + 'px',
+			left: (article.innerWidth() - confirmation_form.width()) / 2 + 'px'
+		});
+		
+		confirmation_form.find('button').
+			eq(0).click(function(){
+				// Send DELETE request
+				return false;
+			}).end().
+			eq(1).click(function(){
+				// Remove confirmation dialog
+				$(this).parents('div.confirmation').remove();
+				return false;
+			}).end();
+		return false;
+	});
 });

@@ -196,6 +196,17 @@ body.messages form.message > section.help { margin-top: 0; }
 /* hide the reply form, it's shown by a script */
 body.messages form.message { display: none; }
 
+/* delete confirmation dialog */
+article { position: relative; }
+article > div.confirmation { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); border-radius: 5px; }
+article > div.confirmation > form { position: absolute; width: 15em; margin: 0 auto; padding: 0.5em; text-align: center; color: #333; background: hsl(0, 0%, 90%); border-radius: 5px; }
+article > div.confirmation > form > p { margin: 0; padding: 0; }
+article > div.confirmation > form > p + p { margin: 0.5em 0 0 0; padding: 0; }
+article > div.confirmation > form button { margin: 0 2em; }
+article > div.confirmation > form button + button { font-weight: bold; }
+
+article > div.confirmation, article > div.confirmation > form { -moz-border-radius: 5px; -webkit-border-radius: 5px; }
+
 /* message list styles */
 body.messages > ul { margin: 0; padding: 0; list-style: none; }
 body.messages > ul > li { margin: 1em 0; padding: 0; }
