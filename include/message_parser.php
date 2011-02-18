@@ -20,10 +20,13 @@ class MessageParser
 	 * Splits a typical `From` header into its mail and name part.
 	 * 
 	 * 	`Mr. X <test@example.com>` → array('Mr. X', 'test@example.com')
+	 * 	`test@example.com`	→	array('test', 'test@example.com')
 	 */
 	static function split_from_header($decoded_from_header){
-		preg_match('/(.*)<([^@]+@[^>]+)>/', $decoded_from_header, $match);
-		return array(trim($match[1], ' "'), trim($match[2]));
+		if ( preg_match('/(.*)<([^@]+@[^>]+)>/', $decoded_from_header, $match) )
+			return array(trim($match[1], ' "'), trim($match[2]));
+		preg_match('/([^@]+)@.*/', $decoded_from_header, $match);
+		return array($match[1], trim($decoded_from_header));
 	}
 	
 	/**

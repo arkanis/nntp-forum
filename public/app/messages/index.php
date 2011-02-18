@@ -93,20 +93,24 @@ function traverse_tree($tree_level){
 	
 	echo("<ul>\n");
 	foreach($tree_level as $id => $replies){
-		list($status,) = $nntp->command('article ' . $id, array(220, 430));
-		if ($status == 430)
-			continue;
-		
 		$overview = $message_infos[$id];
-		$nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
-		$content = iconv($content_encoding, 'UTF-8', $content);
+		
+		list($status,) = $nntp->command('article ' . $id, array(220, 430));
+		if ($status == 220){
+			$nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
+			// $content, $content_encoding and $attachments are set by the event handlers of the parser
+			$content = Markdown( iconv($content_encoding, 'UTF-8', $content) );
+		} else {
+			$content = '<p class="empty">Dieser Beitrag wurde vom Autor gelöscht.</p>';
+			$attachments = array();
+		}
 		
 		echo("<li>\n");
 		echo('<article data-number="' . ha($overview['number']) . '">' . "\n");
 		echo("	<header>\n");
 		echo('		<p><abbr title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</abbr>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
 		echo("	</header>\n");
-		echo('	' . Markdown($content) . "\n");
+		echo('	' . $content . "\n");
 		
 		if ( ! empty($attachments) ){
 			echo('	<ul class="attachments">' . "\n");

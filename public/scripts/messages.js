@@ -96,6 +96,11 @@ $(document).ready(function(){
 	
 	$('ul.actions > li.destroy.message > a').show().click(function(){
 		var article = $(this).parents('article').eq(0);
+		var newsgroup_and_topic_number = window.location.pathname.split('/');
+		var newsgroup = newsgroup_and_topic_number[1];
+		var topic_number = parseInt(newsgroup_and_topic_number[2], 10);
+		var message_number = parseInt(article.attr('data-number'), 10);
+		
 		var confirmation_form = $('<div class="confirmation"><form>' +
 			'<p>Willst du diese Nachricht wirklich löschen?</p>' +
 			'<p><button>Ja</button><button>Nein</button></p>' +
@@ -108,7 +113,28 @@ $(document).ready(function(){
 		
 		confirmation_form.find('button').
 			eq(0).click(function(){
-				// Send DELETE request
+				// Send DELETE request to delete the message
+				$.ajax('/' + newsgroup + '/' + message_number, {
+					type: 'DELETE',
+					context: this,
+					complete: function(request){
+						if (request.status == 204 || request.status == 404) {
+							// In case of 204 the message has been deleted successfully. 404 means the message
+							// is already deleted. In both case reload the page to show the updated information.
+							// If we just deleted the root message of the topic load the newgroup topic list.
+							if (topic_number == message_number)
+								window.location.href = window.location.protocol + '//' + window.location.host + '/' + newsgroup;
+							else
+								window.location.reload();
+						} else {
+							// 422 happend… I'm lazy now, just hide the confirmation form and show an alert box
+							// with the error message.
+							$(this).parents('div.confirmation').remove();
+							alert(request.responseText);
+						}
+					}
+				});
+				
 				return false;
 			}).end().
 			eq(1).click(function(){
@@ -116,6 +142,7 @@ $(document).ready(function(){
 				$(this).parents('div.confirmation').remove();
 				return false;
 			}).end();
+		
 		return false;
 	});
 });

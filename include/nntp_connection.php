@@ -34,7 +34,7 @@ class NntpConnection
 	 * Logs the NNTP traffic for debugging.
 	 */
 	private function log($message){
-		//file_put_contents(ROOT_DIR . 'nntp.log', $message . "\n", FILE_APPEND);
+		//file_put_contents(ROOT_DIR . '/nntp.log', $message . "\n", FILE_APPEND);
 	}
 	
 	/**
