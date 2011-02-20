@@ -12,7 +12,7 @@ if ( !defined('ROOT_DIR') ){
 $title = 'Login nötig';
 ?>
 
-<h2>Login nötig</h2>
+<h2><?= h($title) ?></h2>
 
 <p>Sorry, aber bei dem Login irgendwas schief gegangen.</p>
 <ul>

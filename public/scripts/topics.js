@@ -57,41 +57,27 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	// Triggers the "validate" event to check if the form content is valid. If so sends the current
-	// form data to the server to be posted. Depending on the returned status code we redirect
-	// to the page of the new message or show the appropriate error message.
+	// Triggers the "validate" event to check if the form content is valid. If it's not abort the form
+	// submission.
 	$('form.message').submit(function(){
 		if ( ! $(this).triggerHandler('validate') )
 			return false;
-		
-		$('button.preview').removeClass('recommended');
-		$('button.create').addClass('recommended');
-		
-		$(this).find('button.create').get(0).disabled = true;
-		$.ajax(window.location.pathname, {
-			type: 'POST',
-			data: {'subject': $('#message_subject').val(), 'body': $('#message_body').val()},
-			context: this,
-			complete: function(request){
-				if (request.status == 201) {
-					// Posted
-					window.location.href = request.getResponseHeader('Location');
-				} else {
-					$(this).find('button.create').get(0).disabled = false;
-					if (request.status == 202) {
-						// Accepted
-						var offset = $(this).find('#message-accepted').show().offset();
-						window.scrollTo(0, offset.top);
-					} else {
-						// Newsgroup not found, invalid data or something exploded
-						var offset = $(this).find('#message-post-error').
-							find('samp').text(request.responseText).end().
-							show().offset();
-						window.scrollTo(0, offset.top);
-					}
-				}
-			}
-		});
+	});
+	
+	// Mange the attachment list. Allow to remove all but the last file input field in the list and
+	// create a new empty file input after the user chose a file for one.
+	$('form.message dl').find('a').click(function(){
+		var dd_element = $(this).parent();
+		if ( dd_element.next().length == 1 )
+			dd_element.remove();
+		else
+			$(this).siblings('input[type="file"]').val('');
+		return false;
+	}).end().
+	find("input[type='file']").change(function(){
+		var dd_element = $(this).parent();
+		if ( dd_element.next().length == 0 )
+			dd_element.clone(false).find('input[type="file"]').replaceWith('<input name="attachments[]" type="file" />').end().insertAfter(dd_element);
 		return false;
 	});
 });

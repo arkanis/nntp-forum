@@ -12,7 +12,7 @@ if ( !defined('ROOT_DIR') ){
 $title = 'Login ungültig';
 ?>
 
-<h2>Login ungültig</h2>
+<h2><?= h($title) ?></h2>
 
 <p>Sorry, aber mit deinen Login hast du leider keinen Zugriff. Der HdM-Account ist zwar gültig, aber leider konnte
 damit die Newsgroup nicht gelesen werden.</p>

@@ -52,48 +52,15 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	// Triggers the "validate" event to check if the form content is valid. If so sends the current
-	// form data to the server to be posted. Depending on the returned status code we redirect
-	// to the page of the new message or show the appropriate error message.
+	// Triggers the "validate" event to check if the form content is valid. If it's not abort the form
+	// submission.
 	$('form.message').submit(function(){
 		if ( ! $(this).triggerHandler('validate') )
 			return false;
-		
-		$('button.preview').removeClass('recommended');
-		$('button.create').addClass('recommended');
-		
-		var article = $(this).parents('article').eq(0);
-		var newsgroup = window.location.pathname.split('/')[1];
-		var message_number = parseInt(article.attr('data-number'), 10);
-		
-		$(this).find('button.create').get(0).disabled = true;
-		$.ajax('/' + newsgroup + '/' + message_number, {
-			type: 'POST',
-			data: {'body': $('#message_body').val()},
-			context: this,
-			complete: function(request){
-				if (request.status == 201) {
-					// Posted successfully, reload the page to show the new reply
-					window.location.href = window.location.href;
-				} else {
-					$(this).find('button.create').get(0).disabled = false;
-					if (request.status == 202) {
-						// Accepted
-						var offset = $(this).find('#message-accepted').show().offset();
-						window.scrollTo(0, offset.top);
-					} else {
-						// Newsgroup not found, invalid data or something exploded
-						var offset = $(this).find('#message-post-error').
-							find('samp').text(request.responseText).end().
-							show().offset();
-						window.scrollTo(0, offset.top);
-					}
-				}
-			}
-		});
-		return false;
 	});
 	
+	// Create a confirmation dialog. If the user confirms that he want's to delete the message
+	// kick of background request. Otherwise just destroy the confirmation dialog.
 	$('ul.actions > li.destroy.message > a').show().click(function(){
 		var article = $(this).parents('article').eq(0);
 		var newsgroup_and_topic_number = window.location.pathname.split('/');
@@ -143,6 +110,23 @@ $(document).ready(function(){
 				return false;
 			}).end();
 		
+		return false;
+	});
+	
+	// Mange the attachment list. Allow to remove all but the last file input field in the list and
+	// create a new empty file input after the user chose a file for one.
+	$('form.message dl a').live('click', function(){
+		var dd_element = $(this).parent();
+		if ( dd_element.next().length == 1 )
+			dd_element.remove();
+		else
+			$(this).siblings('input[type="file"]').val('');
+		return false;
+	});
+	$('form.message dl input[type="file"]').live('change', function(){
+		var dd_element = $(this).parent();
+		if ( dd_element.next().length == 0 )
+			dd_element.clone(false).find('input[type="file"]').replaceWith('<input type="file" />').end().insertAfter(dd_element);
 		return false;
 	});
 });

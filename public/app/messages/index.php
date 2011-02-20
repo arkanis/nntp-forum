@@ -148,32 +148,11 @@ $nntp->close();
 
 ?>
 
-<form action="/<?= urlencode($group) ?>" method="post" class="message">
+<form action="/<?= urlencode($group) ?>" method="post" enctype="multipart/form-data" class="message">
 	
 	<ul class="error">
 		<li id="message_body_error">Du hast noch keinen Text für die Nachricht eingeben.</li>
 	</ul>
-	
-	<section class="error" id="message-post-error">
-		<h3>Beitrag konnte nicht gesendet werden</h3>
-		
-		<p>Der Beitrag wurde vom Newsgroup-Server leider nicht angenommen. Wahrscheinlich
-		verfügst du nicht über die nötigen Rechte um in dieser Newsgroup Beiträge zu schreiben.</p>
-		
-		<p><samp>bla</samp></p>
-	</section>
-	
-	<section class="notice" id="message-accepted">
-		<h3>Beitrag noch nicht online</h3>
-		
-		<p>Der Beitrag wurde zwar akzeptiert, scheint aber noch nicht online zu sein. Möglicher
-		weise dauert es ein paar Sekunden oder er muss erst vom Moderator bestätigt werden.</p>
-		
-		<p>Damit im Fall aller Fälle nichts verlohren geht kannst du den Text deines Beitrags kopieren
-		und falls nötig später noch einmal senden.</p>
-		
-		<p>Ob der Beitrag online ist siehst du wenn du die Seite neu lädst.</p>
-	</section>
 	
 	<section class="help">
 		<h3>Kurze Format-Übersicht</h3>
@@ -218,6 +197,10 @@ Link](http://www.hdm-stuttgart.de/).
 		<p>
 			<textarea name="body" required id="message_body"></textarea>
 		</p>
+		<dl>
+			<dt>Anhänge</dt>
+				<dd><input type="file" /> <a href="#" class="destroy attachment">löschen</a></dd>
+		</dl>
 		<p class="buttons">
 			<button class="preview recommended">Vorschau ansehen</button> oder
 			<button class="create">Antwort absenden</button> oder

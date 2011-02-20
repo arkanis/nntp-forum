@@ -12,7 +12,7 @@ if ( !defined('ROOT_DIR') ){
 $title = 'Unbekannte Adresse';
 ?>
 
-<h2>Unbekannte Adresse</h2>
+<h2><?= h($title) ?></h2>
 
 <p>Sorry, aber zu der Adresse <code><?= h($_SERVER['REQUEST_URI']) ?></code> konnte nichts passendes gefunden werden.</p>
 <ul>

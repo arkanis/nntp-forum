@@ -38,7 +38,7 @@ try {
 		exit_with_not_found_error();
 	
 	// If we got a message number parameter the new post is a reply. In that case fetch the original
-	// to determine the subject and the references header.
+	// message to determine the subject and the references header.
 	if ( isset($_GET['number']) ) {
 		$parent_number = intval($_GET['number']);
 		list($status, $parent_infos) = $nntp->command('head ' . $parent_number, array(221, 423));
@@ -64,6 +64,7 @@ try {
 		$references = array();
 	}
 	
+	// We got everything we need, assemble the headers for the message
 	$headers = array(
 		'Subject: ' . $subject,
 		'From: ' . $_SERVER['PHP_AUTH_USER'] . ' <' . $_SERVER['PHP_AUTH_USER'] . '@hdm-stuttgart.de>',
@@ -71,11 +72,54 @@ try {
 	);
 	if ( !empty($references) )
 		$headers[] = 'References: ' . join(' ', $references);
-	$headers[] = 'Content-Type: text/plain; charset=utf-8';
-	$message = join("\n", $headers) . "\n\n" . $_POST['body'];
 	
-	$nntp->command('post', 340);
-	list($status, $confirmation) = $nntp->send_text($message, 240);
+	if ( empty($_FILES) ) {
+		// If we have no attachments build a normal message just with headers and text body
+		$headers[] = 'Content-Type: text/plain; charset=utf-8';
+		$message = join("\n", $headers) . "\n\n" . $_POST['body'];
+		
+		$nntp->command('post', 340);
+		list($status, $confirmation) = $nntp->send_text($message, 240);
+	} else {
+		// We have attachments for the message. Build a MIME message with the text body and
+		// the attachments.
+		$boundary = md5($subject) . '=_' . md5($_SERVER['PHP_AUTH_USER']);
+		$headers[] = 'MIME-Version: 1.0';
+		$headers[] = 'Content-Type: multipart/mixed; boundary=' . $boundary;
+		
+		$nntp->command('post', 340);
+		list($status, $confirmation) = $nntp->send_text_per_chunk(240, function($send) use($headers, $boundary){
+			// Send the message headers
+			$send(join("\n", $headers) . "\n\n");
+			$boundary_line = '--' . $boundary . "\n";
+			
+			// Send the text part
+			$send($boundary_line);
+			$send('Content-Type: text/plain; charset=utf-8' . "\n\n");
+			$send($_POST['body'] . "\n");
+			
+			// Send the attachments
+			foreach($_FILES['attachments']['name'] as $index => $name){
+				$file_path = $_FILES['attachments']['tmp_name'][$index];
+				if ( is_uploaded_file($file_path) ) {
+					$mime_type = $_FILES['attachments']['type'][$index];
+					// Remove all double quotes from the file name so no one can escape
+					$name = str_replace('"', '', $name);
+					$part_headers = 'Content-Type: ' . $mime_type . '; name="' . $name . '"' . "\n" .
+						'Content-Transfer-Encoding: base64' . "\n" .
+						'Content-Disposition: attachment; filename="' . $name . '"';
+					
+					$send($boundary_line);
+					$send($part_headers . "\n\n");
+					$send( chunk_split(base64_encode(file_get_contents($file_path))) );
+				}
+			}
+			
+			// Send MIME message terminator
+			$send('--' . $boundary . '--');
+		});
+		
+	}
 	
 	// Get the new message id
 	preg_match('/<[^>]+>/', $confirmation, $match);
@@ -86,18 +130,48 @@ try {
 	
 	$nntp->close();
 } catch(NntpException $exception) {
+	// If something exploded send a 422 response and show an error page
 	header('HTTP/1.1 422 Unprocessable Entity');
-	echo($exception->getMessage());
+	$title = 'Beitrag konnte nicht gesendet werden';
+?>
+
+<h2><?= h($title) ?></h2>
+
+<p>Der Beitrag wurde vom Newsgroup-Server leider nicht angenommen. Wahrscheinlich
+verfügst du nicht über die nötigen Rechte um in dieser Newsgroup Beiträge zu schreiben.</p>
+
+<p>Falls du den Fehler melden willst gibt bitte die folgende genaue Fehlerbeschreibung
+mit an:</p>
+
+<p><?= h($exception->getMessage()) ?></p>
+
+<?
+	require(ROOT_DIR . '/include/footer.php');
 	exit();
 }
 
 if ( array_key_exists($new_message_id, $message_infos) ) {
-	// 201 Created is send for a confirmed post, including its new location
+	// 303 See Other is send for a confirmed post, along with its new location
 	header('Location: ' . url_for('/' . $group . '/' . $message_infos[$new_message_id]['number']));
-	header('HTTP/1.1 201 Created');
-} else {
-	// A 202 Accepted response code is send if the new post could not be confirmed yet
-	header('HTTP/1.1 202 Accepted');
+	header('HTTP/1.1 303 See Other');
+	exit();
 }
 
+// Post was send but could not be confirmed. Send a 202 Accepted response code and output
+// an information page.
+header('HTTP/1.1 202 Accepted');
+$title = 'Beitrag noch nicht online';
 ?>
+
+<h2><?= h($title) ?></h2>
+
+<p>Der Beitrag wurde zwar akzeptiert, scheint aber noch nicht online zu sein. Möglicher
+weise dauert es ein paar Sekunden oder er muss erst vom Moderator bestätigt werden.</p>
+
+<p>Damit im Fall aller Fälle nichts verlohren geht kannst zurück zum Formular, den Text
+deines Beitrags kopieren und falls nötig später noch einmal senden.</p>
+
+<p>Ob der Beitrag online ist siehst du wenn er innerhalb der nächsten paar Minuten in
+<a href="/<?= urlencode($group) ?>">der Newsgroup</a> erscheint.</p>
+
+<? require(ROOT_DIR . '/include/footer.php') ?>

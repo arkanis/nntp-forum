@@ -111,6 +111,10 @@ form.message > section.fields > p > label[for='message_subject'] { margin-right:
 form.message > section.fields > p > input#message_subject { width: 30em;  }
 form.message > section.fields > p > textarea { font-size: 1em; font-family: sans-serif; }
 
+form.message > section.fields > dl > dt, form.message > section.fields > dl > dd { font-size: 0.77em; margin: 0.5em 0; padding: 0; }
+form.message > section.fields > dl > dt { padding-left: 20px; background: url(/styles/attach.png) no-repeat left center; }
+form.message > section.fields > dl > dd:last-child > a { display: none; }
+
 form.message > article#post-preview { background: white; margin: 0.5em 0; }
 
 /* hide stuff that is shown later by JavaScript */

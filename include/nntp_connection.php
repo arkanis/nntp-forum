@@ -116,34 +116,72 @@ class NntpConnection
 			throw new NntpException('fwrite failed on command: ' . $command);
 		
 		list($status, $rest) = $this->get_status_response();
-		if ( is_array($expected_status_code) ) {
-			if ( !in_array($status, $expected_status_code) )
-				throw new NntpException('Expected one of the status codes ' . join(', ', $expected_status_code) . " but got: $status $rest");
-		} else {
-			if ($status != $expected_status_code)
-				throw new NntpException("Expected status code $expected_status_code but got: $status $rest");
-		}
+		$this->check_status_code($expected_status_code, $status, $rest);
 		
 		return array($status, $rest);
 	}
 	
+	/**
+	 * Sends the specified `$text` in one piece thought the NNTP connection. After this
+	 * a server response is expected and the returned status code is compared to the one
+	 * in `$expected_status_code` (which can be an array).
+	 */
 	function send_text($text, $expected_status_code){
 		$this->log('SEND TEXT: ' . $text);
 		
 		$bytes_written = fwrite($this->connection, $text . "\r\n.\r\n");
-		if ($bytes_written == false)
+		if ($bytes_written === false)
 			throw new NntpException('fwrite failed on text: ' . $text);
 		
 		list($status, $rest) = $this->get_status_response();
-		if ( is_array($expected_status_code) ) {
-			if ( !in_array($status, $expected_status_code) )
-				throw new NntpException('Expected one of the status codes ' . join(', ', $expected_status_code) . " but got: $status $rest");
-		} else {
-			if ($status != $expected_status_code)
-				throw new NntpException("Expected status code $expected_status_code but got: $status $rest");
-		}
+		$this->check_status_code($expected_status_code, $status, $rest);
 		
 		return array($status, $rest);
+	}
+	
+	/**
+	 * Allows to send data over the NNTP channel without first concatenating everything into one
+	 * big string (useful for attachments). `$send_function` is assumed to be a function that contains
+	 * all the code that has to send data over the connection. It is called onec by this function and the
+	 * first parameter contains a function object that can be used to write data to the connection.
+	 * 
+	 * After `$send_function` has complted we wait for a status response from the server and compare
+	 * it to `$expected_status_code`.
+	 */
+	function send_text_per_chunk($expected_status_code, $send_function){
+		$socket = $this->connection;
+		$writer = function($text) use($socket){
+			$bytes_written = fwrite($socket, $text);
+			if ($bytes_written === false)
+				throw new NntpException('fwrite failed on text: ' . $text);
+			return $bytes_written;
+		};
+		
+		$send_function($writer);
+		
+		$bytes_written = fwrite($socket, "\r\n.\r\n");
+		if ($bytes_written === false)
+			throw new NntpException('fwrite failed while sending content terminator');
+		
+		list($status, $rest) = $this->get_status_response();
+		$this->check_status_code($expected_status_code, $status, $rest);
+		return array($status, $rest);
+	}
+	
+	/**
+	 * Compares the `$expected_status_code` with the `$received_status_code`. The expected
+	 * status code can be an array defining a list of valid status codes. In case the received status
+	 * code is invalid an NntpException is thrown. `$rest` is added to the exception message and
+	 * is expected to be the rest of the status response line.
+	 */
+	private function check_status_code($expected_status_code, $received_status_code, $rest){
+		if ( is_array($expected_status_code) ) {
+			if ( !in_array($received_status_code, $expected_status_code) )
+				throw new NntpException('Expected one of the status codes ' . join(', ', $expected_status_code) . " but got: $received_status_code $rest");
+		} else {
+			if ($received_status_code != $expected_status_code)
+				throw new NntpException("Expected status code $expected_status_code but got: $received_status_code $rest");
+		}
 	}
 	
 	/**
