@@ -3,10 +3,24 @@
 class MessageParser
 {
 	/**
-	 * Decodes MIME header field content into UTF-8.
+	 * Decodes any "encoded-words" like "=?iso-8859-1?q?this=20is=20some=20text?="
+	 * to UTF-8. This is useful to decode headers in mail and NNTP messages. Assumes that
+	 * the rest of the string is already UTF-8 encoded and leaves it in peace.
+	 * 
+	 * The built in function `iconv_mime_decode()` does basically the same but fails on some
+	 * cases and handels text outside of encoded words as US-ASCII encoding.
 	 */
-	static function decode($content){
-		return iconv_mime_decode($content, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'UTF-8');
+	static function decode_words($content){
+		return preg_replace_callback('/ =\? (?<charset> [^? ]+ ) \? (?<encoding> [^? ]+ ) \? (?<encoded_text> [^?]+ ) \?= /x', function($match){
+			// Handle transfer encoding
+			if ( strtolower($match['encoding']) == 'q' )
+				$word_content = quoted_printable_decode(str_replace('_', ' ', $match['encoded_text']));
+			else
+				$word_content = base64_decode($match['encoded_text']);
+			
+			// Decode content to UTF-8
+			return iconv($match['charset'], 'UTF-8', $word_content);
+		}, $content);
 	}
 	
 	/**
@@ -137,11 +151,11 @@ class MessageParser
 			// If there is no last header ignore this line.
 			$last_header = end(array_keys($this->headers));
 			if ($last_header)
-				$this->headers[$last_header] .= ' ' . self::decode(trim($line));
+				$this->headers[$last_header] .= ' ' . self::decode_words(trim($line));
 		} else {
 			// Lines that start with a letter are new headers
 			list($header_name, $header_content) = explode(':', $line, 2);
-			$this->headers[strtolower($header_name)] = self::decode(trim($header_content));
+			$this->headers[strtolower($header_name)] = self::decode_words(trim($header_content));
 		}
 	}
 	
@@ -215,11 +229,11 @@ class MessageParser
 			// Lines that start with a whitespace are additional content of the previous header
 			$last_header = end(array_keys($this->headers));
 			if ($last_header)
-				$this->headers[$last_header] .= ' ' . self::decode(trim($line));
+				$this->headers[$last_header] .= ' ' . self::decode_words(trim($line));
 		} else {
 			// Lines that start with a letter new headers
 			list($header_name, $header_content) = explode(':', $line, 2);
-			$this->headers[strtolower($header_name)] = self::decode(trim($header_content));
+			$this->headers[strtolower($header_name)] = self::decode_words(trim($header_content));
 		}
 	}
 	

@@ -80,10 +80,10 @@ function built_message_tree($nntp_connection, $newsgroup){
 			$tree_level[$message_id] = array();
 			
 			// Only store display information for messages that started a new topic
-			list($author_name, $author_mail) = MessageParser::split_from_header( MessageParser::decode($from) );
+			list($author_name, $author_mail) = MessageParser::split_from_header( MessageParser::decode_words($from) );
 			$message_infos[$message_id] = array(
 				'number' => intval($number),
-				'subject' => MessageParser::decode($subject),
+				'subject' => MessageParser::decode_words($subject),
 				'author_name' => $author_name,
 				'author_mail' => $author_mail,
 				'date' => MessageParser::parse_date($date)

@@ -172,6 +172,7 @@ body.topics > ul.actions > li > a.new.topic, body.topics > form.message { displa
 article { margin: 0; padding: 0.5em; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); border-radius: 5px; }
 article > header { margin: -0.5em -0.5em 0 -0.5em; padding: 0.25em 0.5em; color: white; background: hsl(347, 100%, 40%); border-radius: 5px 5px 0 0; }
 article > header p { font-size: 0.77em; margin: 0; padding: 0; }
+article > header p a { color: inherit; }
 article > *:nth-child(2) { margin-top: 0.5em; }
 article > *:last-child { margin-bottom: 0; }
 
@@ -190,6 +191,12 @@ article blockquote { margin: 1em 0; padding: 0 0.5em; color: hsl(120, 100%, 25%)
 article blockquote blockquote { color: hsl(190, 100%, 25%); border-color: hsl(190, 100%, 25%); }
 article blockquote blockquote blockquote { color: hsl(260, 100%, 25%); border-color: hsl(260, 100%, 25%); }
 article blockquote blockquote blockquote blockquote { color: hsl(330, 100%, 25%); border-color: hsl(330, 100%, 25%); }
+
+article > p.quote-guardian { cursor: pointer; padding-left: 16px; background: url(/styles/bullet_toggle_minus.png) no-repeat left center; }
+article > p.quote-guardian:hover { color: hsl(202, 56%, 36%); text-decoration: underline; }
+article > p.quote-guardian.collapsed { background-image: url(/styles/bullet_toggle_plus.png); }
+article > p.quote-guardian.collapsed:after { content: ' …'; }
+article > p.quote-guardian.collapsed + blockquote{ display: none; }
 
 article { -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	-moz-border-radius: 5px; -webkit-border-radius: 5px; }

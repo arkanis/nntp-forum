@@ -1,10 +1,18 @@
 $(document).ready(function(){
-	// Reattach the reply form as last element of the article the user want's to answer.
-	// We also hide the answer link and focus the textarea for the message.
+	// Reattach the reply form as last element of the article the user want's to answer
+	// and update the form action URL so the answer is really associated with that message.
+	// We also hide the answer link and focus the textarea for the message. Note that first
+	// all answer links are shown again. This is to prevent other answer links from vanishing
+	// when this form is moved to another article.
 	$('ul.actions > li.new.message > a').show().click(function(){
 		var article = $(this).parents('article');
-		$('form.message').hide().detach().appendTo(article).show();
-		$(this).parentsUntil('ul').hide();
+		var newsgroup = window.location.pathname.split('/')[1];
+		var message_number = parseInt(article.attr('data-number'), 10);
+		
+		$('form.message').hide().detach().appendTo(article).show().
+			attr('action', '/' + newsgroup + '/' + message_number);
+		$('article > ul.actions > li.new.message').show();
+		$(this).parents('li.new.message').hide();
 		$('textarea#message_body').focus();
 		return false;
 	});
@@ -129,4 +137,19 @@ $(document).ready(function(){
 			dd_element.clone(false).find('input[type="file"]').replaceWith('<input type="file" />').end().insertAfter(dd_element);
 		return false;
 	});
+	
+	// Collapse the block quotes of the previous messages. It's somewhat nice that mail clients do that
+	// but in a forum it's just visual clutter since the previous post is displayed right above the current
+	// one.
+	$('article > p + blockquote').each(function(){
+		// Ignore blockquotes with less than 3 paragraphs. Seems to be a good rule of thumb to leave
+		// small quotes in tact but yet catch the big message quotes.
+		if ( $(this).find('> p').length >= 3 )
+			$(this).prev('p').addClass('quote-guardian collapsed').attr('title', 'Zitierte Nachricht ein- oder ausblenden');
+	});
+	
+	$('p.quote-guardian').live('click', function(){
+		$(this).toggleClass('collapsed');
+	})
+	
 });

@@ -73,6 +73,10 @@ try {
 	if ( !empty($references) )
 		$headers[] = 'References: ' . join(' ', $references);
 	
+	// Add our little imprint to the world (so other NNTP client programmers know who is
+	// responsible for the code of that message).
+	$headers[] = 'User-Agent: ' . $CONFIG['user-agent'];
+	
 	if ( empty($_FILES) ) {
 		// If we have no attachments build a normal message just with headers and text body
 		$headers[] = 'Content-Type: text/plain; charset=utf-8';
@@ -126,7 +130,7 @@ try {
 	$new_message_id = $match[0];
 	
 	// Rebuit the message tree to get the number of the new message
-	list(, $message_infos) = rebuilt_message_tree($nntp, $group);
+	list($message_tree, $message_infos) = rebuilt_message_tree($nntp, $group);
 	
 	$nntp->close();
 } catch(NntpException $exception) {
@@ -151,8 +155,20 @@ mit an:</p>
 }
 
 if ( array_key_exists($new_message_id, $message_infos) ) {
+	// The new message was confirmed. Now redirect the user to the topic this message was
+	// posted in. For that we need the topic number… therefore search the message tree for
+	// a topic that contains our new message.
+	$target_topic_id = $new_message_id;
+	foreach($message_tree as $topic_id => $topic_tree){
+		$reply_iterator = new RecursiveIteratorIterator( new RecursiveArrayIterator($topic_tree),  RecursiveIteratorIterator::SELF_FIRST );
+		foreach($reply_iterator as $message_id => $children){
+			if ($message_id == $new_message_id)
+				$target_topic_id = $topic_id;
+		}
+	}
+	
 	// 303 See Other is send for a confirmed post, along with its new location
-	header('Location: ' . url_for('/' . $group . '/' . $message_infos[$new_message_id]['number']));
+	header('Location: ' . url_for('/' . $group . '/' . $message_infos[$target_topic_id]['number']));
 	header('HTTP/1.1 303 See Other');
 	exit();
 }

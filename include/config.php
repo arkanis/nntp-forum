@@ -18,7 +18,11 @@ $CONFIG = array(
 	),
 	
 	'cache_dir' => ROOT_DIR . '/cache',
-	'cache_lifetime' => 5 * 60  // 5 minutes
+	'cache_lifetime' => 5 * 60,  // 5 minutes
+	
+	// The user agent string added as a message header. Important for others to see who is
+	// responsible for an idealistically UTF-8 encoded message.
+	'user-agent' => 'NNTP-Forum/1.0.0'
 );
 
 ?>

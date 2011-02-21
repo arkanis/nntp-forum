@@ -108,7 +108,7 @@ function traverse_tree($tree_level){
 		echo("<li>\n");
 		echo('<article data-number="' . ha($overview['number']) . '">' . "\n");
 		echo("	<header>\n");
-		echo('		<p><abbr title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</abbr>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
+		echo('		<p><a href="mailto:' . urlencode($overview['author_mail']) . '" title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</a>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
 		echo("	</header>\n");
 		echo('	' . $content . "\n");
 		
@@ -148,7 +148,7 @@ $nntp->close();
 
 ?>
 
-<form action="/<?= urlencode($group) ?>" method="post" enctype="multipart/form-data" class="message">
+<form action="/<?= urlencode($group) ?>/<?= urlencode($topic_number) ?>" method="post" enctype="multipart/form-data" class="message">
 	
 	<ul class="error">
 		<li id="message_body_error">Du hast noch keinen Text für die Nachricht eingeben.</li>

@@ -905,8 +905,9 @@ class Markdown_Parser {
 		#	  Header 2
 		#	  --------
 		#
-		$text = preg_replace_callback('{ ^(.+?)[ ]*\n(=+|-+)[ ]*\n+ }mx',
-			array(&$this, '_doHeaders_callback_setext'), $text);
+		// CHANGED: Some people like to use that as signature separators in their mails…
+		//$text = preg_replace_callback('{ ^(.+?)[ ]*\n(=+|-+)[ ]*\n+ }mx',
+		//	array(&$this, '_doHeaders_callback_setext'), $text);
 
 		# atx-style headers:
 		#	# Header 1
@@ -1442,7 +1443,8 @@ class Markdown_Parser {
 
 
 	function doAutoLinks($text) {
-		$text = preg_replace_callback('{<((https?|ftp|dict):[^\'">\s]+)>}i', 
+		// CHANGED: removed the angel brackets, no one uses this syntax here...
+		$text = preg_replace_callback('{((https?|ftp|dict):[^\'">\s]+)}i', 
 			array(&$this, '_doAutoLinks_url_callback'), $text);
 
 		# Email addresses: <address@domain.foo>
@@ -2232,13 +2234,14 @@ class MarkdownExtra_Parser extends Markdown_Parser {
 		#	  Header 2  {#header2}
 		#	  --------
 		#
-		$text = preg_replace_callback(
-			'{
-				(^.+?)								# $1: Header text
-				(?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})?	# $2: Id attribute
-				[ ]*\n(=+|-+)[ ]*\n+				# $3: Header footer
-			}mx',
-			array(&$this, '_doHeaders_callback_setext'), $text);
+		// CHANGED: Some people like to use that as signature separators in their mails…
+		//$text = preg_replace_callback(
+		//	'{
+		//		(^.+?)								# $1: Header text
+		//		(?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})?	# $2: Id attribute
+		//		[ ]*\n(=+|-+)[ ]*\n+				# $3: Header footer
+		//	}mx',
+		//	array(&$this, '_doHeaders_callback_setext'), $text);
 
 		# atx-style headers:
 		#	# Header 1        {#header1}
