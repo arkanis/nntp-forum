@@ -108,7 +108,7 @@ function traverse_tree($tree_level){
 		echo("<li>\n");
 		echo('<article data-number="' . ha($overview['number']) . '">' . "\n");
 		echo("	<header>\n");
-		echo('		<p><a href="mailto:' . urlencode($overview['author_mail']) . '" title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</a>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
+		echo('		<p><a href="mailto:' . ha($overview['author_mail']) . '" title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</a>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
 		echo("	</header>\n");
 		echo('	' . $content . "\n");
 		
