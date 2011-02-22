@@ -15,6 +15,29 @@
  *   message was not accepted by the newsgroup server.
  */
 
+/**
+ * A small lookup function that connects to the LDAP server configured in `$CONFIG` and tries
+ * to translate the user name into a full display name. This name is then used to post the message.
+ */
+function ldap_name_lookup($hdm_user_id){
+	global $CONFIG;
+	$ldap_config = $CONFIG['ldap'];
+	
+	$con = ldap_connect($ldap_config['host']);
+	if ($con){
+		if ( @ldap_bind($con, $ldap_config['user'], $ldap_config['pass']) ){
+			$match_resource = ldap_search($con, $ldap_config['directory'], 'uid=' . $hdm_user_id, array('cn'));
+			if ($match_resource){
+				$match_data = ldap_get_entries($con, $match_resource);
+				return $match_data[0]['cn'][0];
+			}
+			ldap_unbind($con);
+		}
+	}
+	
+	return $hdm_user_id;
+}
+
 define('ROOT_DIR', '../../..');
 require(ROOT_DIR . '/include/header.php');
 
@@ -67,7 +90,7 @@ try {
 	// We got everything we need, assemble the headers for the message
 	$headers = array(
 		'Subject: ' . $subject,
-		'From: ' . $_SERVER['PHP_AUTH_USER'] . ' <' . $_SERVER['PHP_AUTH_USER'] . '@hdm-stuttgart.de>',
+		'From: ' . ldap_name_lookup($_SERVER['PHP_AUTH_USER']) . ' <' . $_SERVER['PHP_AUTH_USER'] . '@hdm-stuttgart.de>',
 		'Newsgroups: ' . $group
 	);
 	if ( !empty($references) )

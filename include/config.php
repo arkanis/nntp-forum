@@ -17,6 +17,14 @@ $CONFIG = array(
 		)
 	),
 	
+	// Connection and search settings for the LDAP name lookup
+	'ldap' => array(
+		'host' => 'ldap2.mi.hdm-stuttgart.de',
+		'user' => 'uid=nobody,ou=userlist,dc=hdm-stuttgart,dc=de',
+		'pass' => '',
+		'directory' => 'ou=userlist,dc=hdm-stuttgart,dc=de'
+	),
+	
 	'cache_dir' => ROOT_DIR . '/cache',
 	'cache_lifetime' => 5 * 60,  // 5 minutes
 	
