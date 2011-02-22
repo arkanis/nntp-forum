@@ -187,6 +187,8 @@ article > ul.actions > li { display: inline; margin-right: 1em; }
 article > ul.actions > li.destroy.message { float: right; font-size: 0.77em; margin-right: 0; }
 article > ul.actions > li.destroy.message  > a { padding-top: 2px; padding-bottom: 2px; }
 
+article hr { margin: 0.5em 0; padding: 1px 0 0 0; border: none; background: hsl(0, 0%, 70%); }
+
 article blockquote { margin: 1em 0; padding: 0 0.5em; color: hsl(120, 100%, 25%); border-left: 2px solid hsl(120, 100%, 25%); }
 article blockquote blockquote { color: hsl(190, 100%, 25%); border-color: hsl(190, 100%, 25%); }
 article blockquote blockquote blockquote { color: hsl(260, 100%, 25%); border-color: hsl(260, 100%, 25%); }
