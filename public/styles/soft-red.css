@@ -194,7 +194,7 @@ article blockquote blockquote { color: hsl(190, 100%, 25%); border-color: hsl(19
 article blockquote blockquote blockquote { color: hsl(260, 100%, 25%); border-color: hsl(260, 100%, 25%); }
 article blockquote blockquote blockquote blockquote { color: hsl(330, 100%, 25%); border-color: hsl(330, 100%, 25%); }
 
-article > p.quote-guardian { cursor: pointer; padding-left: 16px; background: url(/styles/bullet_toggle_minus.png) no-repeat left center; }
+article > p.quote-guardian { cursor: pointer; padding-left: 16px; font-size: 0.77em; background: url(/styles/bullet_toggle_minus.png) no-repeat left center; }
 article > p.quote-guardian:hover { color: hsl(202, 56%, 36%); text-decoration: underline; }
 article > p.quote-guardian.collapsed { background-image: url(/styles/bullet_toggle_plus.png); }
 article > p.quote-guardian.collapsed:after { content: ' …'; }
