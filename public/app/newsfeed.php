@@ -112,7 +112,7 @@ $updated = ( count($messages) > 0 ) ? $messages[reset(array_keys($messages))]['d
 ?>
 <? foreach ($messages as $message_id => $message): ?>
 	<entry>
-		<id>nntp://<?= urlencode(trim($message_id, '<>')) ?>/</id>
+		<id>nntp://<?= ha(trim($message_id, '<>')) ?>/</id>
 		<title><?= h($message['subject']) ?></title>
 		<updated><?= date('c', $message['date']); ?></updated>
 		<author>
