@@ -28,7 +28,9 @@
 <?= $content ?>
 
 <footer>
-	Prototyp eines NNTP-basierenden Forums. Entwickelt von <a href="http://arkanis.de/">Arkanis Development</a>.
+<?	list($name, $version) = explode('/', $CONFIG['user_agent'], 2) ?>
+	<?= h($name) ?> v<?= h($version) ?>, entwickelt von <a href="http://arkanis.de/">Stephan Soller</a>.
+	<a href="http://www.famfamfam.com/lab/icons/silk/">Silk Icons</a> von <a href="http://www.famfamfam.com/">famfamfam.com</a>.
 </footer>
 
 <? foreach($scripts as $script): ?>

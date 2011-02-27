@@ -98,7 +98,7 @@ try {
 	
 	// Add our little imprint to the world (so other NNTP client programmers know who is
 	// responsible for the code of that message).
-	$headers[] = 'User-Agent: ' . $CONFIG['user-agent'];
+	$headers[] = 'User-Agent: ' . $CONFIG['user_agent'];
 	
 	if ( empty($_FILES) ) {
 		// If we have no attachments build a normal message just with headers and text body

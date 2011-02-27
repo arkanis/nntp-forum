@@ -3,6 +3,42 @@
 class MessageParser
 {
 	/**
+	 * 
+	 */
+	static function for_text_and_attachments(&$message_data, $custome_events = array()){
+		$events = array(
+			'message-header' => function($headers) use(&$message_data){
+				$message_data['newsgroup'] = trim(reset(explode(',', $headers['newsgroups'])));
+			},
+			'part-header' => function($headers, $content_type, $content_type_params) use(&$message_data){
+				if ($message_data['content'] == null and $content_type == 'text/plain') {
+					$message_data['content_encoding'] = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
+					return 'append-content-line';
+				} else {
+					list($disposition_type, $disposition_parms) = MessageParser::parse_type_params_header($headers['content-disposition']);
+					if ( isset($content_type_params['name']) )
+						$name = $content_type_params['name'];
+					if ( isset($disposition_parms['filename']) )
+						$name = $disposition_parms['filename'];
+					if ( isset($name) ) {
+						$message_data['attachments'][] = array('name' => $name, 'type' => $content_type, 'params' => $content_type_params, 'size' => null);
+						return 'record-attachment-size';
+					} 
+				}
+			},
+			'append-content-line' => function($line) use(&$message_data){
+				$message_data['content'] .= $line;
+			},
+			'record-attachment-size' => function($line) use(&$message_data){
+				$current_attachment_index = count($message_data['attachments']) - 1;
+				$message_data['attachments'][$current_attachment_index]['size'] += strlen($line);
+			}
+		);
+		$events = array_merge($events, $custome_events);
+		return new self($events);
+	}
+	
+	/**
 	 * Decodes any "encoded-words" like "=?iso-8859-1?q?this=20is=20some=20text?="
 	 * to UTF-8. This is useful to decode headers in mail and NNTP messages. Assumes that
 	 * the rest of the string is already UTF-8 encoded and leaves it in peace.
@@ -44,13 +80,18 @@ class MessageParser
 	}
 	
 	/**
-	 * Parses a Content-Type header into its MIME type and additional parameters. Returns
-	 * an array with the MIME type as first element and an associative parameter array as
+	 * Parses a type-param header values such as the contents of the Content-Type and Content-Disposition
+	 * headers. Returns an array with the type as the first element and an associative parameter array as
 	 * second element.
+	 * 
+	 * Examples:
+	 * 
+	 * 	parse_type_params_header('text/plain; charset=utf-8');
+	 * 	// => array('text/plain', array('charset' => 'utf-8'));
 	 */
-	private static function disassemble_content_type($content_type_value){
-		$parts = explode(';', $content_type_value);
-		$mime_type = array_shift($parts);
+	static function parse_type_params_header($type_params_value){
+		$parts = explode(';', $type_params_value);
+		$type = array_shift($parts);
 		
 		$parameters = array();
 		foreach($parts as $part){
@@ -58,7 +99,7 @@ class MessageParser
 			$parameters[strtolower(trim($name))] = ($value) ? trim($value, '"') : null;
 		}
 		
-		return array($mime_type, $parameters);
+		return array($type, $parameters);
 	}
 	
 	
@@ -134,7 +175,7 @@ class MessageParser
 			// Now decide if start to parse MIME parts or use the entire message body
 			// as message content.
 			$content_type = isset($this->headers['content-type']) ? $this->headers['content-type'] : $this->default_content_type;
-			list($type, $params) = self::disassemble_content_type($content_type);
+			list($type, $params) = self::parse_type_params_header($content_type);
 			if ( preg_match('#multipart/.*#', $type) ){
 				// For a multipart body push the boundary on the stack and prepare to parse it
 				array_push($this->mime_boundaries, array('--' . $params['boundary'], '--' . $params['boundary'] . '--'));
@@ -213,7 +254,7 @@ class MessageParser
 			// An empty line ends the header list and starts the body of that mime part. If we have
 			// multipart content push the boundary on the stack and parse it, otherwise call the
 			// `part-header` event and prepare to parse the content lines.
-			list($type, $params) = self::disassemble_content_type($this->headers['content-type']);
+			list($type, $params) = self::parse_type_params_header($this->headers['content-type']);
 			if ( preg_match('#multipart/.*#', $type) ){
 				// For a multipart body push the boundary on the stack and prepare to parse it
 				array_push($this->mime_boundaries, array('--' . $params['boundary'], '--' . $params['boundary'] . '--'));

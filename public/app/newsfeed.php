@@ -38,28 +38,7 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	// Setup the parser. We need a newsgroup the message is posted in, the first text/plain part found and
 	// all attachments. The subject and author information is extracted from the overview information of the
 	// message tree later one.
-	$message_parser = new MessageParser(array(
-		'message-header' => function($headers) use(&$message_data){
-			$message_data['newsgroup'] = trim(reset(explode(',', $headers['newsgroups'])));
-		},
-		'part-header' => function($headers, $content_type, $content_type_params) use(&$message_data){
-			if ($message_data['content'] == null and $content_type == 'text/plain') {
-				$message_data['content_encoding'] = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
-				return 'append-content-line';
-			} elseif ( isset($content_type_params['name']) ) {
-				$name = $content_type_params['name'];
-				$message_data['attachments'][] = array('name' => $name, 'type' => $content_type, 'params' => $content_type_params, 'size' => null);
-				return 'record-attachment-size';
-			}
-		},
-		'append-content-line' => function($line) use(&$message_data){
-			$message_data['content'] .= $line;
-		},
-		'record-attachment-size' => function($line) use(&$message_data){
-			$current_attachment_index = count($message_data['attachments']) - 1;
-			$message_data['attachments'][$current_attachment_index]['size'] += strlen($line);
-		}
-	));
+	$message_parser = MessageParser::for_text_and_attachments($message_data);
 	
 	// Message tree cache
 	$message_trees = array();
