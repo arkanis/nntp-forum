@@ -142,9 +142,9 @@ $(document).ready(function(){
 	// but in a forum it's just visual clutter since the previous post is displayed right above the current
 	// one.
 	$('article > p + blockquote').each(function(){
-		// Ignore blockquotes with less than 3 paragraphs. Seems to be a good rule of thumb to leave
-		// small quotes in tact but yet catch the big message quotes.
-		if ( $(this).find('> p').length >= 3 )
+		// Ignore blockquotes with less than 3 paragraphs or blockquotes. Seems to be a good rule of
+		// thumb to leave small quotes in tact but yet catch the big message quotes.
+		if ( $(this).find('> p, > blockquote').length >= 3 )
 			$(this).prev('p').addClass('quote-guardian collapsed').attr('title', 'Zitierte Nachricht ein- oder ausblenden');
 	});
 	

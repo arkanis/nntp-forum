@@ -25,7 +25,7 @@ body > header > nav > ul#utilities > li > a.newsfeed { padding: 1px 0 1px 20px; 
 body > header > nav > ul#breadcrumbs { overflow: hidden; margin: 0; padding: 0; list-style: none; }
 body > header > nav > ul#breadcrumbs > li { float: left; margin: 0 1em 0 0; padding: 0; }
 body > header > nav > ul#breadcrumbs > li:before { content: '→'; margin-right: 1em; }
-body > header > nav > ul#breadcrumbs > li:first-child:before { content: none;}
+body > header > nav > ul#breadcrumbs > li:first-child:before { content: none; }
 
 body > footer { font-size: 0.77em; margin: 1em 0; padding: 0; text-align: center; color: gray; }
 body > footer a { color: inherit; text-decoration: none; }
@@ -123,8 +123,9 @@ form.message > ul.error, form.message > #message-post-error, form.message > #mes
 
 /* action link list for main content */
 body > ul.actions { overflow: hidden; margin: 0; padding: 2px 0; }
-body > ul.actions.above { min-height: 1.25em; margin-top: -1.35em; }
-body > ul.actions.above > li.new.topic { float: right; }
+body > ul.actions > li.new.topic { float: left; }
+body > ul.actions > li.all.read { float: right; font-size: 0.77em; }
+body > ul.actions.above { }
 body > ul.actions.below { border-top: 1px solid #ccc; }
 
 ul.actions { list-style: none; }
@@ -132,6 +133,7 @@ ul.actions > li > a { padding-left: 20px; background-position: left center; back
 ul.actions > li.new.topic > a { background-image: url(/styles/comments_add.png); }
 ul.actions > li.new.message > a { background-image: url(/styles/comment_add.png); }
 ul.actions > li.destroy.message > a { background-image: url(/styles/comment_delete.png); }
+ul.actions > li.all.read > a { padding-top: 1px; padding-bottom: 1px; background-image: url(/styles/newspaper_delete.png); }
 
 /**
  * Page specific styles
@@ -149,13 +151,17 @@ body > table > tbody > tr > td.empty { padding: 2em; text-align: center; color: 
 /* newsgroup list */
 body.newsgroups > table > tbody > tr > td:nth-child(2) { font-size: 0.77em; width: 5em; text-align: center; }
 body.newsgroups > table > tbody > tr > td:nth-child(3) { font-size: 0.77em; width: 35em; }
+body.newsgroups > table > tbody > tr.unread > td:nth-child(1) a { padding-left: 20px; background: url(/styles/newspaper.png) no-repeat left center; color: hsl(202, 56%, 25%); }
 
 
 /* topic list */
-body.topics > table > tbody > tr > td:nth-child(1) > a { padding-left: 20px; background: url(/styles/new.png) no-repeat left center; color: hsl(202, 56%, 25%); }
-body.topics > table > tbody > tr > td:nth-child(1) > a:visited { background-image: url(/styles/comments.png); color: hsl(202, 56%, 36%); }
 body.topics > table > tbody > tr > td:nth-child(2) { font-size: 0.77em; width: 5em; text-align: center; }
 body.topics > table > tbody > tr > td:nth-child(3) { font-size: 0.77em; width: 17.5em; }
+
+/* the ":link" removes the unread highlight when the user uses the back button to get back to the topic overview */
+body.topics > table > tbody > tr.unread > td:nth-child(1) > a:link { padding-left: 20px; background: url(/styles/newspaper.png) no-repeat left center; color: hsl(202, 56%, 25%); }
+/* chrome has trouble with the :link class… do some extra reseting for chrome */
+body.topics > table > tbody > tr.unread > td:nth-child(1) > a:visited { padding-left: 0; background: none; }
 
 body.topics form.message { margin: 1em 0; padding: 1px 0.5em; border: 1em solid rgba(0, 0, 0, 0.5); border-radius: 1em; background: hsla(0, 0%, 50%, 0.1); }
 
@@ -170,11 +176,13 @@ body.topics > ul.actions > li > a.new.topic, body.topics > form.message { displa
 
 /* post styles */
 article { margin: 0; padding: 0.5em; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); border-radius: 5px; }
-article > header { margin: -0.5em -0.5em 0 -0.5em; padding: 0.25em 0.5em; color: white; background: hsl(347, 100%, 40%); border-radius: 5px 5px 0 0; }
+article > header { margin: -0.5em -0.5em 0 -0.5em; padding: 0.25em 0.5em; color: white; background: #28698f; border-radius: 5px 5px 0 0; }
 article > header p { font-size: 0.77em; margin: 0; padding: 0; }
 article > header p a { color: inherit; }
 article > *:nth-child(2) { margin-top: 0.5em; }
 article > *:last-child { margin-bottom: 0; }
+
+article.unread > header { background: hsl(347, 100%, 40%); }
 
 article > p.empty { margin: 1em; text-align: center; color: gray; }
 

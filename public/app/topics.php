@@ -23,6 +23,18 @@ $posting_allowed = ($post_flag != 'n');
 
 $nntp->close();
 
+// Load existing unread tracking information and mark new topics as unread
+$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($_SERVER['PHP_AUTH_USER']));
+$tracker->update_and_save($group, $message_tree, $message_infos, $CONFIG['unread_tracker_topic_limit']);
+
+if ( isset($_GET['all-read']) ){
+	// If the `all-read` parameter is set mark all topics in this group as read and
+	// reload the page with a redirect (so the parameter is no longer in the URL).
+	$tracker->mark_all_topics_read($group);
+	header('Location: ' . url_for('/' . $group));
+	exit();
+}
+
 // Setup layout variables
 $title = 'Forum ' . $group;
 $breadcrumbs[$group] = '/' . $group;
@@ -34,8 +46,9 @@ $body_class = 'topics';
 
 <ul class="actions above">
 <? if($posting_allowed): ?>
-	<li class="new topic"><a href="#">Neues Thema eröffnen</a></li>
+	<li class="new topic"><a href="#" title="">Neues Thema eröffnen</a></li>
 <? endif ?>
+	<li class="all read"><a href="/<?= urlencode($group) ?>?all-read">Alles als gelesen markieren</a></li>
 </ul>
 
 <form action="/<?= urlencode($group) ?>" method="post" enctype="multipart/form-data" class="message">
@@ -143,7 +156,11 @@ Link](http://www.hdm-stuttgart.de/).
 		$reply_count = 1 + count($message_tree[$message_id], COUNT_RECURSIVE);
 		$latest_message = $message_infos[$last_message_id];
 ?>
+<?		if ( $tracker->is_topic_unread($group, $topic['number']) ): ?>
+		<tr class="unread">
+<?		else: ?>
 		<tr>
+<?		endif ?>
 			<td><a href="/<?= urlencode($group) ?>/<?= urlencode($topic['number']) ?>?<?= $reply_count ?>"><?= h($topic['subject']) ?></a></td>
 			<td><?= $reply_count ?></td>
 			<td>
@@ -160,6 +177,7 @@ Link](http://www.hdm-stuttgart.de/).
 <? if($posting_allowed): ?>
 	<li class="new topic"><a href="#">Neues Thema eröffnen</a></li>
 <? endif ?>
+	<li class="all read"><a href="/<?= urlencode($group) ?>?all-read">Alles als gelesen markieren</a></li>
 </ul>
 
 <? require(ROOT_DIR . '/include/footer.php') ?>

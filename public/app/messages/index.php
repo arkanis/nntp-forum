@@ -35,6 +35,13 @@ if ($topic_id == null)
 // Extract the subtree for this topic
 $thread_tree = array( $topic_id => $message_tree[$topic_id] );
 
+// Load existing unread tracking information and update it in case the user jumped here with
+// a direct link the tracker was not updated by the topic indes before. Otherwise messages added
+// since the last update (newer than the tracked watermark) will be marked as unread on the
+// next update, even if the user alread viewed the message now.
+$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($_SERVER['PHP_AUTH_USER']));
+$tracker->update($group, $message_tree, $message_infos, $CONFIG['unread_tracker_topic_limit']);
+
 // See if the current user is allowed to post in this newsgroup
 $nntp->command('list active ' . $group, 215);
 $group_info = $nntp->get_text_response();
@@ -60,7 +67,7 @@ $body_class = 'messages';
 // A recursive tree walker function. Unfortunately necessary because we start the recursion
 // within the function (otherwise we could use an iterator).
 function traverse_tree($tree_level){
-	global $nntp, $message_infos, $group, $posting_allowed;
+	global $nntp, $message_infos, $group, $posting_allowed, $tracker, $topic_number;
 	
 	// Variables for the message parser event handlers to store their information in. These variables
 	// have to be reset after a message is parsed.
@@ -106,7 +113,8 @@ function traverse_tree($tree_level){
 		}
 		
 		echo("<li>\n");
-		echo('<article data-number="' . ha($overview['number']) . '">' . "\n");
+		$unread_class = $tracker->is_message_unread($group, $topic_number, $overview['number']) ? ' class="unread"' : '';
+		echo('<article data-number="' . ha($overview['number']) . '"' . $unread_class . '>' . "\n");
 		echo("	<header>\n");
 		echo('		<p><a href="mailto:' . ha($overview['author_mail']) . '" title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</a>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
 		echo("	</header>\n");
@@ -145,6 +153,7 @@ function traverse_tree($tree_level){
 
 traverse_tree($thread_tree);
 $nntp->close();
+$tracker->mark_topic_read($group, $topic_number);
 
 ?>
 

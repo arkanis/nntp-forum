@@ -28,6 +28,13 @@ $CONFIG = array(
 	'cache_dir' => ROOT_DIR . '/cache',
 	'cache_lifetime' => 5 * 60,  // 5 minutes
 	
+	'unread_tracker_dir' => ROOT_DIR . '/unread-tracker',
+	'unread_tracker_topic_limit' => 50,
+	// Used by the clean-expired-trackers cron. Tracker that have not been modified for the
+	// time specified here (in seconds) are deleted by the cron job. This will prevent a slow
+	// disk overflow when students come and go.
+	'unread_tracker_unused_expire_time' => 60 * 60 * 24 * 30 * 6,
+	
 	// The user agent string added as a message header. Important for others to see who is
 	// responsible for an idealistically UTF-8 encoded message.
 	'user-agent' => 'NNTP-Forum/1.0.0'
