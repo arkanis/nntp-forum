@@ -13,7 +13,7 @@ body { font-family: sans-serif; font-size: medium; color: #333; background: whit
 
 body { -moz-box-shadow: 0 0 10px black; -webkit-box-shadow: 0 0 10px black; }
 
-body > header { margin: 0 -1em; padding: 0; color: white; background: #db0031; }
+body > header { margin: 0 -1em; padding: 0; color: white; background: #db0031; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); }
 body > header h1 { margin: 0; padding: 0.5em 0.5em; font-size: 1.5em; font-weight: normal; }
 body > header a { text-decoration: none; color: inherit; }
 
@@ -183,6 +183,7 @@ article > *:nth-child(2) { margin-top: 0.5em; }
 article > *:last-child { margin-bottom: 0; }
 
 article.unread > header { background: hsl(347, 100%, 40%); }
+article.unread > header p { padding-left: 20px; background: url(/styles/newspaper.png) no-repeat left center; }
 
 article > p.empty { margin: 1em; text-align: center; color: gray; }
 
