@@ -235,9 +235,9 @@ article > div.confirmation, article > div.confirmation > form { -moz-border-radi
 body.messages > ul { margin: 0; padding: 0; list-style: none; }
 body.messages > ul > li { margin: 1em 0; padding: 0; }
 
-body.messages > ul li > ul { margin: 0.5em 0; padding: 0.5em 0 0 0.5em; list-style: none; border-left: 1px dashed gray; }
-body.messages > ul li > ul > li { margin: 1em 0 0 0; padding: 0; }
-body.messages > ul li > ul > li:first-child { margin-top: 0; }
+body.messages > ul > li article + ul { margin: 0.5em 0; padding: 0.5em 0 0 0.5em; list-style: none; border-left: 1px dashed gray; }
+body.messages > ul > li article + ul > li { margin: 1em 0 0 0; padding: 0; }
+body.messages > ul > li article + ul > li:first-child { margin-top: 0; }
 
 body.messages > ul > li > ul { border-color: hsl(120, 100%, 25%); }
 body.messages > ul > li > ul > li > ul { border-color: hsl(190, 100%, 25%); }
