@@ -149,6 +149,7 @@ body > table > tbody > tr > td.empty { padding: 2em; text-align: center; color: 
 
 
 /* newsgroup list */
+body.newsgroups > table > tbody > tr > td > small { display: block; font-size: 0.77em; color: gray; }
 body.newsgroups > table > tbody > tr > td:nth-child(2) { font-size: 0.77em; width: 5em; text-align: center; }
 body.newsgroups > table > tbody > tr > td:nth-child(3) { font-size: 0.77em; width: 35em; }
 body.newsgroups > table > tbody > tr.unread > td:nth-child(1) a { padding-left: 20px; background: url(/styles/newspaper.png) no-repeat left center; color: hsl(202, 56%, 25%); }

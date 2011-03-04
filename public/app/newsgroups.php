@@ -50,7 +50,23 @@ foreach(explode("\n", $newsgroup_list) as $newsgroup){
 	);
 }
 
+// Query the newsgroup description file. The order of the file is also used as display order.
+$nntp->command('list newsgroups', 215);
+$descriptions = $nntp->get_text_response();
 $nntp->close();
+
+$ordered_newsgroups = array();
+foreach(explode("\n", $descriptions) as $group_info){
+	list($name, $description) = preg_split('/\s+/', $group_info, 2);
+	$ordered_newsgroups[$name] = $newsgroups[$name];
+	$ordered_newsgroups[$name]['description'] = trim($description);
+}
+
+// Append the newsgroups not mentioned in the description file below the ordered newsgroups.
+foreach($newsgroups as $name => $infos){
+	if ( ! array_key_exists($name, $ordered_newsgroups) )
+		$ordered_newsgroups[$name] = $infos;
+}
 
 // Load the unread tracking information for this user
 $tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($_SERVER['PHP_AUTH_USER']));
@@ -71,13 +87,18 @@ $body_class = 'newsgroups';
 		</tr>
 	</thead>
 	<tbody>
-<?	foreach($newsgroups as $name => $newsgroup): ?>
+<?	foreach($ordered_newsgroups as $name => $newsgroup): ?>
 <?		if ( $tracker->is_newsgroup_unread($name, $newsgroup['last_post']['number']) ): ?>
 		<tr class="unread">
 <?		else: ?>
 		<tr>
 <?		endif ?>
-			<td><a href="/<?= urlencode($name) ?>"><?= h($name) ?></a></td>
+			<td>
+				<a href="/<?= urlencode($name) ?>"><?= h($name) ?></a>
+<?				if ( isset($newsgroup['description']) ): ?>
+				<small><?= h($newsgroup['description']) ?></small>
+<?				endif ?>
+			</td>
 			<td><?= h($newsgroup['post_count']) ?></td>
 <?			if($newsgroup['last_post']): ?>
 			<td>
