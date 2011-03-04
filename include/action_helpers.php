@@ -12,7 +12,7 @@ function nntp_connect_and_authenticate($config){
 	if ( !isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) )
 		exit_with_unauthorized_error();
 	
-	$nntp = new NntpConnection($config['news_uri'], $config['port']);
+	$nntp = new NntpConnection($config['nntp']['uri'], $config['nntp']['timeout'], $config['nntp']['options']);
 	if ( ! $nntp->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) ){
 		$nntp->close();
 		exit_with_forbidden_error();

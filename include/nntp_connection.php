@@ -7,14 +7,13 @@ class NntpConnection
 	private $connection;
 	
 	/**
-	 * Opens a NNTP connection to the specified host and port. Also checks the initial server
+	 * Opens a NNTP connection to the specified `$uri`. If  Also checks the initial server
 	 * ready status response.
-	 * 
-	 * TODO: Verify HdM certificate?
 	 */
-	function __construct($host, $port){
-		//$ssl_context = stream_context_create(array('ssl' => array('verify_peer' => false)));
-		$this->connection = fsockopen($host, $port, $errno, $errstr);
+	function __construct($uri, $timeout, $options = array()){
+		$ssl_context = stream_context_create($options);
+		$this->connection = stream_socket_client($uri, $errno, $errstr, $timeout, STREAM_CLIENT_CONNECT, $ssl_context);
+		
 		if ($this->connection === false)
 			throw new NntpException("Could not open NNTP connection: $errstr ($errno)");
 		list($status, $rest) = $this->get_status_response();

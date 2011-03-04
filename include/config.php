@@ -1,10 +1,24 @@
 <?php
 
 $CONFIG = array(
-	// URI passed to the NntpConnection class which uses fsockopen() for the NNTP connection
-	'news_uri' => 'ssl://news.hdm-stuttgart.de',
-	// The port on which the NNTP server listens
-	'port' => 563,
+	'nntp' => array(
+		// Transport URI for the NNTP connection, see http://php.net/transports.inet
+		'uri' => 'ssl://news.hdm-stuttgart.de:563',
+		// Timeout for the connection. Should be short since the user will see nothing but a white page during the timeout.
+		'timeout' => 0.5,
+		// Stream options for the NNTP connection socket
+		'options' => array(
+			// SSL options to verify the connection certificate agains a CA certificate. See http://php.net/context.ssl
+			'ssl' => array(
+				'verify_peer' => true,
+				// CA to verify against. The file have to be in the PEM format. To convert a DER file to PEM use
+				// openssl x509 -inform DER -outform PEM -in hdm-stuttgart.de.der -out hdm-stuttgart.de.pem
+				// To verify that all is working correctly with the cert use
+				// socat stdio openssl:news.hdm-stuttgart.de:563,cafile=hdm-stuttgart.de.pem
+				'cafile' => ROOT_DIR . '/certs/hdm-stuttgart.de.pem',
+			)
+		)
+	),
 	
 	// A list of newsfeeds
 	'newsfeeds' => array(
