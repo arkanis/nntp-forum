@@ -102,7 +102,11 @@ function traverse_tree($tree_level){
 		$unread_class = $tracker->is_message_unread($group, $topic_number, $overview['number']) ? ' class="unread"' : '';
 		echo('<article data-number="' . ha($overview['number']) . '"' . $unread_class . '>' . "\n");
 		echo("	<header>\n");
-		echo('		<p><a href="mailto:' . ha($overview['author_mail']) . '" title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</a>, ' . date('j.m.Y G:i', $overview['date']) . ' Uhr</p>' . "\n");
+		echo("		<p>");
+		echo('<a href="mailto:' . ha($overview['author_mail']) . '" title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</a>, ');
+		echo(date('j.m.Y G:i', $overview['date']) . ' Uhr');
+		echo('<a class="permalink" href="/' . urlencode($group) . '/' . urlencode($overview['number']) . '">permalink</a>' . "\n");
+		echo("		</p>\n");
 		echo("	</header>\n");
 		echo('	' . $content . "\n");
 		
