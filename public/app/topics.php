@@ -35,6 +35,19 @@ if ( isset($_GET['all-read']) ){
 	exit();
 }
 
+// Sort topics after their unread flag (unread topics are shown first, done by grouping and merging the
+// message tree) and after their date (newest topics first, done by reversing the original message tree).
+$topic_ids = array_reverse(array_keys($message_tree));
+$unread_message_tree = array();
+$read_message_tree = array();
+foreach($topic_ids as $topic_id){
+	if ( $tracker->is_topic_unread($group, $message_infos[$topic_id]['number']) )
+		$unread_message_tree[$topic_id] = $message_tree[$topic_id];
+	else
+		$read_message_tree[$topic_id] = $message_tree[$topic_id];
+}
+$sorted_message_tree = $unread_message_tree + $read_message_tree;
+
 // Setup layout variables
 $title = 'Forum ' . $group;
 $breadcrumbs[$group] = '/' . $group;
@@ -141,7 +154,7 @@ Link](http://www.hdm-stuttgart.de/).
 			</td>
 		</tr>
 <? else: ?>
-<?	foreach(array_reverse($message_tree) as $message_id => $replies): ?>
+<?	foreach($sorted_message_tree as $message_id => $replies): ?>
 <?		// Find the last message of this thread by walking the array recursivly to
 		// find the highest (newest) date. array_walk_recursive() only works with
 		// leaves, therefore we have to use PHPs interesting iterators.
