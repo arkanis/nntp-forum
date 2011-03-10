@@ -35,18 +35,42 @@ if ( isset($_GET['all-read']) ){
 	exit();
 }
 
-// Sort topics after their unread flag (unread topics are shown first, done by grouping and merging the
-// message tree) and after their date (newest topics first, done by reversing the original message tree).
-$topic_ids = array_reverse(array_keys($message_tree));
-$unread_message_tree = array();
-$read_message_tree = array();
-foreach($topic_ids as $topic_id){
-	if ( $tracker->is_topic_unread($group, $message_infos[$topic_id]['number']) )
-		$unread_message_tree[$topic_id] = $message_tree[$topic_id];
-	else
-		$read_message_tree[$topic_id] = $message_tree[$topic_id];
+// Gather all information for the topics so we can do easy sorting and don't have to do so much in the template
+$topics = array();
+foreach($message_tree as $message_id => $replies){
+	// Find the last message of this thread by walking the replys recursivly to
+	// find the highest (newest) date. array_walk_recursive() only works with
+	// leaves, therefore we have to use PHPs interesting iterators.
+	$last_message_id = $message_id;
+	$reply_iterator = new RecursiveIteratorIterator( new RecursiveArrayIterator($replies),  RecursiveIteratorIterator::SELF_FIRST );
+	foreach($reply_iterator as $id => $children){
+		if ( $message_infos[$id]['date'] > $message_infos[$last_message_id]['date'] )
+			$last_message_id = $id;
+	}
+	
+	$latest_message = $message_infos[$last_message_id];
+	$topic_message = $message_infos[$message_id];
+	$reply_count = 1 + count($message_tree[$message_id], COUNT_RECURSIVE);
+	
+	$topics[] = array(
+		'message' => $topic_message,
+		'latest_message' => $latest_message,
+		'reply_count' => $reply_count,
+		'unread' => $tracker->is_topic_unread($group, $topic_message['number'])
+	);
 }
-$sorted_message_tree = $unread_message_tree + $read_message_tree;
+
+// Sort the topics. If one of the two topics is unread the unread topic will always be shown first.
+// If both are read or unread compare by date (newest is shown first).
+usort($topics, function($a, $b){
+	if ($a['unread'] and !$b['unread']) {
+		return -1;
+	} elseif (!$a['unread'] and $b['unread']) {
+		return 1;
+	} else {
+		return ($a['latest_message']['date'] > $b['latest_message']['date']) ? -1 : 1;
+	}
+});
 
 // Setup layout variables
 $title = 'Forum ' . $group;
@@ -154,31 +178,17 @@ Link](http://www.hdm-stuttgart.de/).
 			</td>
 		</tr>
 <? else: ?>
-<?	foreach($sorted_message_tree as $message_id => $replies): ?>
-<?		// Find the last message of this thread by walking the array recursivly to
-		// find the highest (newest) date. array_walk_recursive() only works with
-		// leaves, therefore we have to use PHPs interesting iterators.
-		$last_message_id = $message_id;
-		$reply_iterator = new RecursiveIteratorIterator( new RecursiveArrayIterator($replies),  RecursiveIteratorIterator::SELF_FIRST );
-		foreach($reply_iterator as $id => $children){
-			if ( $message_infos[$id]['date'] > $message_infos[$last_message_id]['date'] )
-				$last_message_id = $id;
-		}
-		
-		$topic = $message_infos[$message_id];
-		$reply_count = 1 + count($message_tree[$message_id], COUNT_RECURSIVE);
-		$latest_message = $message_infos[$last_message_id];
-?>
-<?		if ( $tracker->is_topic_unread($group, $topic['number']) ): ?>
+<?	foreach($topics as $topic): ?>
+<?		if ( $tracker->is_topic_unread($group, $topic['message']['number']) ): ?>
 		<tr class="unread">
 <?		else: ?>
 		<tr>
 <?		endif ?>
-			<td><a href="/<?= urlencode($group) ?>/<?= urlencode($topic['number']) ?>?<?= $reply_count ?>"><?= h($topic['subject']) ?></a></td>
+			<td><a href="/<?= urlencode($group) ?>/<?= urlencode($topic['message']['number']) ?>?<?= $topic['reply_count'] ?>"><?= h($topic['message']['subject']) ?></a></td>
 			<td><?= $reply_count ?></td>
 			<td>
-				Von <abbr title="<?= ha($latest_message['author_mail']) ?>"><?= h($latest_message['author_name']) ?></abbr><br />
-				am <?= date('j.m.Y G:i', $latest_message['date']) ?> Uhr
+				Von <abbr title="<?= ha($topic['latest_message']['author_mail']) ?>"><?= h($topic['latest_message']['author_name']) ?></abbr><br />
+				am <?= date('j.m.Y G:i', $topic['latest_message']['date']) ?> Uhr
 			</td>
 		</tr>
 <?	endforeach ?>
