@@ -150,6 +150,18 @@ $(document).ready(function(){
 	
 	$('p.quote-guardian').live('click', function(){
 		$(this).toggleClass('collapsed');
+		return false;
 	})
 	
+	// Add links that collapse all replies to a message ("reply guardians"). The main work is done by the
+	// style sheet that uses different styles for collapsed reply lists. We only toggle the `collapsed` class
+	// here.
+	$('article + ul').each(function(){
+		var reply_count = $(this).find('article').length;
+		$(this).prepend('<li class="reply-guardian" title="' + reply_count + ' Antworten ein- oder ausblenden"><a href="#">' + reply_count + ' Antworten ein- oder ausblenden</a></li>');
+	});
+	$('li.reply-guardian').live('click', function(){
+		$(this).parent('ul').toggleClass('collapsed');
+		return false;
+	})
 });
