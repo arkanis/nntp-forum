@@ -249,7 +249,7 @@ body.messages > ul > li { margin: 1em 0; padding: 0; }
 
 body.messages > ul > li article + ul { margin: 0.5em 0; padding: 0.5em 0 0 0.5em; list-style: none; border-left: 1px dashed gray; }
 body.messages > ul > li article + ul > li { margin: 1em 0 0 0; padding: 0; }
-body.messages > ul > li article + ul > li:first-child { margin-top: 0; }
+body.messages > ul > li article + ul > li:nth-child(2) { margin-top: 0; }  /* first child is the reply guardian */
 
 body.messages > ul > li > ul { border-color: hsl(120, 100%, 25%); }
 body.messages > ul > li > ul > li > ul { border-color: hsl(190, 100%, 25%); }
@@ -260,9 +260,9 @@ body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul {
 body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(180, 100%, 25%); }
 
 body.messages article + ul { position: relative; }
-body.messages article + ul > li.reply-guardian { position: absolute; top: 2.25em; left: -0.6em; margin: 0; padding: 0 0 0 16px; background: url(/styles/bullet_toggle_minus.png) no-repeat left center; cursor: pointer; font-size: 0.77em; }
+body.messages article + ul > li.reply-guardian { position: absolute; top: 1.0em; left: -8px; margin: 0; padding: 0 0 0 16px; background: url(/styles/bullet_toggle_minus.png) no-repeat left center; cursor: pointer; font-size: 0.77em; }
 
 body.messages article + ul.collapsed { margin: 0.5em 0; padding: 0; }
-body.messages article + ul.collapsed > li.reply-guardian { position: static; margin: 0.5em 0 0.5em -0.6em; background-image: url(/styles/bullet_toggle_plus.png); }
+body.messages article + ul.collapsed > li.reply-guardian { position: static; margin: 0.5em 0 0.5em -8px; background-image: url(/styles/bullet_toggle_plus.png); }
 body.messages article + ul.collapsed > li.reply-guardian:hover { color: hsl(202, 56%, 36%); text-decoration: underline; }
 body.messages ul.collapsed > li:not(.reply-guardian) { display: none; }
