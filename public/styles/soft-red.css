@@ -258,3 +258,11 @@ body.messages > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(3
 body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(40, 100%, 25%); }
 body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(110, 100%, 25%); }
 body.messages > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul { border-color: hsl(180, 100%, 25%); }
+
+body.messages article + ul { position: relative; }
+body.messages article + ul > li.reply-guardian { position: absolute; top: 2.25em; left: -0.6em; margin: 0; padding: 0 0 0 16px; background: url(/styles/bullet_toggle_minus.png) no-repeat left center; cursor: pointer; font-size: 0.77em; }
+
+body.messages article + ul.collapsed { margin: 0.5em 0; padding: 0; }
+body.messages article + ul.collapsed > li.reply-guardian { position: static; margin: 0.5em 0 0.5em -0.6em; background-image: url(/styles/bullet_toggle_plus.png); }
+body.messages article + ul.collapsed > li.reply-guardian:hover { color: hsl(202, 56%, 36%); text-decoration: underline; }
+body.messages ul.collapsed > li:not(.reply-guardian) { display: none; }
