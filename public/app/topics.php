@@ -115,6 +115,8 @@ Listen können mit `*` oder `-`
 erstellt werden:
 
 - Erster Eintrag
+  - Eintrag 1a
+  - Eintrag 1b
 - Zweiter
 * Letzter
 </pre>
@@ -129,6 +131,24 @@ Fließtext.
 
 Oder ein [direkter
 Link](http://www.hdm-stuttgart.de/).
+</pre>
+				</dd>
+			<dt>Code</dt>
+				<dd>
+<pre>
+Code muss mit mindestens 4
+Leerzeichen oder einem Tab
+eingerückt sein:
+
+    printf("hello world!");
+</pre>
+				</dd>
+			<dt>Zitate</dt>
+				<dd>
+<pre>
+Beginnen mit einem ">"-Zeichen:
+
+> Sein oder nicht sein…
 </pre>
 				</dd>
 		</dl>

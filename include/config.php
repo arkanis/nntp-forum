@@ -4,8 +4,8 @@ $CONFIG = array(
 	'nntp' => array(
 		// Transport URI for the NNTP connection, see http://php.net/transports.inet
 		'uri' => 'ssl://news.hdm-stuttgart.de:563',
-		// Timeout for the connection. Should be short since the user will see nothing but a white page during the timeout.
-		'timeout' => 0.5,
+		// Timeout for the connection. Should be short since the user will see nothing but a white page during the timeouit. A value of 0.5 resulted in a page timeout on the Debian VM, the value 1 worked.
+		'timeout' => 1,
 		// Stream options for the NNTP connection socket
 		'options' => array(
 			// SSL options to verify the connection certificate agains a CA certificate. See http://php.net/context.ssl

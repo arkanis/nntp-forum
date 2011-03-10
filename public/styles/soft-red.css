@@ -46,7 +46,7 @@ body > footer a:hover { text-decoration: underline; }
 body > h2 { font-size: 1.5em; margin: 1em 0 0 0; padding: 0; font-family: serif; border-bottom: 1px solid #ccc; }
 body a { color: hsl(202, 56%, 36%); text-decoration: none; }
 body a:hover { text-decoration: underline; }
-
+code { font-family: 'DejaVu Sans Mono', monospace; }
 
 /* general form styles */
 form { }
@@ -110,10 +110,10 @@ form.message > .error, form.message > .notice { margin-right: 20.75em; }
 
 form.message > section.help { float: right; margin: 2em 0 0 0; padding: 0; width: 14.9em; }
 form.message > section.help > h3 { font-size: 1em; }
-form.message > section.help > dl { margin: 0; padding: 0; font-size: 0.77em; }
+form.message > section.help > dl { margin: 0; padding: 0; font-size: 0.7em; }
 form.message > section.help > dl > dt { font-weight: bold; }
 form.message > section.help > dl > dd { margin: 0; padding: 0 0 0 1em; }
-form.message > section.help > dl > dd > pre { font-size: 1em; font-family: sans-serif; }
+form.message > section.help > dl > dd > pre { margin: 0.5em 0 0.75em 0; padding: 0; font-size: 1em; font-family: sans-serif; }
 
 form.message > section.fields { margin-right: 15.5em; }
 form.message > section.fields > p { }
