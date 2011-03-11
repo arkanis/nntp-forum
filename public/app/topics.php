@@ -205,7 +205,7 @@ Beginnen mit einem ">"-Zeichen:
 		<tr>
 <?		endif ?>
 			<td><a href="/<?= urlencode($group) ?>/<?= urlencode($topic['message']['number']) ?>?<?= $topic['reply_count'] ?>"><?= h($topic['message']['subject']) ?></a></td>
-			<td><?= $reply_count ?></td>
+			<td><?= $topic['reply_count'] ?></td>
 			<td>
 				Von <abbr title="<?= ha($topic['latest_message']['author_mail']) ?>"><?= h($topic['latest_message']['author_name']) ?></abbr><br />
 				am <?= date('j.m.Y G:i', $topic['latest_message']['date']) ?> Uhr
