@@ -100,7 +100,10 @@ function built_message_tree($nntp_connection, $newsgroup){
 		// not important since the topic list is sorted later on any way.
 		$recursive_cleaner = null;
 		$recursive_cleaner = function(&$tree) use(&$recursive_cleaner, $message_infos){
-			foreach($tree as $id => &$replies){
+			reset($tree);
+			// While with each() is needed here since for and foreach will only handle one appended
+			// element before exiting the loop.
+			while( list($id, $replies) = each($tree) ){
 				if ( ! isset($message_infos[$id]) ) {
 					// Message does not exist any more, add its replies to the parent level (those
 					// are checked later on in the iteration too). Delete the message id after that.
@@ -109,14 +112,14 @@ function built_message_tree($nntp_connection, $newsgroup){
 					unset($tree[$id]);
 				} else {
 					// Message exists, check it's replies
-					$recursive_cleaner($replies);
+					$recursive_cleaner($tree[$id]);
 				}
 			}
 		};
 		$recursive_cleaner($message_tree);
 		
-		/*
 		// A nice debug output of the generated message tree
+		/*
 		$tree_iterator = new RecursiveIteratorIterator( new RecursiveArrayIterator($message_tree),  RecursiveIteratorIterator::SELF_FIRST );
 		foreach($tree_iterator as $id => $children){
 			echo( str_repeat('  ', $tree_iterator->getDepth()) . '- ' . $id . ': ' );
