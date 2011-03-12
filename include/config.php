@@ -31,7 +31,8 @@ $CONFIG = array(
 		)
 	),
 	
-	// Connection and search settings for the LDAP name lookup
+	// Connection and search settings for the LDAP name lookup. ldap2 only works in the student
+	// IP range, ldap1 is the server for the internal IP range.
 	'ldap' => array(
 		'host' => 'ldap2.mi.hdm-stuttgart.de',
 		'user' => 'uid=nobody,ou=userlist,dc=hdm-stuttgart,dc=de',

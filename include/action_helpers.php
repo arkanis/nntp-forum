@@ -70,16 +70,22 @@ function built_message_tree($nntp_connection, $newsgroup){
 	if ($status == 224){
 		$nntp_connection->get_text_response_per_line(function($overview_line) use(&$message_tree, &$message_infos){
 			list($number, $subject, $from, $date, $message_id, $references, $bytes, $lines, $rest) = explode("\t", $overview_line, 9);
-			$referenced_ids = explode(' ', $references);
+			$referenced_ids = preg_split('/\s+/', $references, 0, PREG_SPLIT_NO_EMPTY);
 			
+			// Add this message to the tree, creating tree nodes for the referenced message if they
+			// do not exists already. These nodes will be cleaned out later on if there is no matching
+			// message in the message info array. The node for the current message is only initialized
+			// with an empty array if it was not already created by a previously found child of it.
 			$tree_level = &$message_tree;
 			foreach($referenced_ids as $ref_id){
-				if ( array_key_exists($ref_id, $tree_level) )
-					$tree_level = &$tree_level[$ref_id];
+				if ( ! array_key_exists($ref_id, $tree_level) )
+					$tree_level[$ref_id] = array();
+				$tree_level = &$tree_level[$ref_id];
 			}
-			$tree_level[$message_id] = array();
+			if ( ! isset($tree_level[$message_id]) )
+				$tree_level[$message_id] = array();
 			
-			// Only store display information for messages that started a new topic
+			// Store display information for the message
 			list($author_name, $author_mail) = MessageParser::split_from_header( MessageParser::decode_words($from) );
 			$message_infos[$message_id] = array(
 				'number' => intval($number),
@@ -89,6 +95,37 @@ function built_message_tree($nntp_connection, $newsgroup){
 				'date' => MessageParser::parse_date($date)
 			);
 		});
+		
+		// Remove all nodes from the message tree that point to not existing message. The order is
+		// not important since the topic list is sorted later on any way.
+		$recursive_cleaner = null;
+		$recursive_cleaner = function(&$tree) use(&$recursive_cleaner, $message_infos){
+			foreach($tree as $id => &$replies){
+				if ( ! isset($message_infos[$id]) ) {
+					// Message does not exist any more, add its replies to the parent level (those
+					// are checked later on in the iteration too). Delete the message id after that.
+					foreach($replies as $reply_id => $reply_children)
+						$tree[$reply_id] = $reply_children;
+					unset($tree[$id]);
+				} else {
+					// Message exists, check it's replies
+					$recursive_cleaner($replies);
+				}
+			}
+		};
+		$recursive_cleaner($message_tree);
+		
+		/*
+		// A nice debug output of the generated message tree
+		$tree_iterator = new RecursiveIteratorIterator( new RecursiveArrayIterator($message_tree),  RecursiveIteratorIterator::SELF_FIRST );
+		foreach($tree_iterator as $id => $children){
+			echo( str_repeat('  ', $tree_iterator->getDepth()) . '- ' . $id . ': ' );
+			if ( isset($message_infos[$id]) )
+				printf("%s (%s)\n", $message_infos[$id]['subject'], date('r', $message_infos[$id]['date']));
+			else
+				echo("DELETED\n");
+		}
+		*/
 	}
 	
 	return array($message_tree, $message_infos);
