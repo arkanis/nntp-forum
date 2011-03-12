@@ -38,7 +38,12 @@ $nntp->command('article ' . $message_id, 220);
 
 $message_parser = new MessageParser(array(
 	'part-header' => function($headers, $content_type, $content_type_params) use(&$attachment_name){
-		list($disposition_type, $disposition_parms) = MessageParser::parse_type_params_header($headers['content-disposition']);
+		if( isset($headers['content-disposition']) ) {
+			list($disposition_type, $disposition_parms) = MessageParser::parse_type_params_header($headers['content-disposition']);
+		} else {
+			$disposition_type = null;
+			$disposition_parms = array();
+		}
 		
 		if ( isset($content_type_params['name']) )
 			$name = $content_type_params['name'];
