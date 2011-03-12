@@ -41,8 +41,8 @@ $CONFIG = array(
 			// 
 			'newsgroups' => 'hdm.mi.*-offiziell',
 			'title' => 'Offizielle News',
-			'history_duration' => 60 * 60 * 24 * 30 // 1 month
-			'limit' => 10,
+			'history_duration' => 60 * 60 * 24 * 30, // 1 month
+			'limit' => 10
 		),
 		'messages' => array(
 			// Listed the newsgroups explicitly since some users might see more newsgroups than others. The
@@ -50,8 +50,8 @@ $CONFIG = array(
 			// gets cached newsfeed data.
 			'newsgroups' => 'hdm.allgemein,hdm.suche_biete,hdm.mi.allgemein,hdm.mi.*-offiziell,!hdm.test.*',
 			'title' => 'Neue Beiträge',
-			'history_duration' => 60 * 60 * 24 * 30 // 1 month
-			'limit' => 10,
+			'history_duration' => 60 * 60 * 24 * 30, // 1 month
+			'limit' => 10
 		)
 	),
 	
