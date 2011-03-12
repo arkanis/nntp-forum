@@ -185,13 +185,15 @@ if ( array_key_exists($new_message_id, $message_infos) ) {
 	foreach($message_tree as $topic_id => $topic_tree){
 		$reply_iterator = new RecursiveIteratorIterator( new RecursiveArrayIterator($topic_tree),  RecursiveIteratorIterator::SELF_FIRST );
 		foreach($reply_iterator as $message_id => $children){
-			if ($message_id == $new_message_id)
+			if ($message_id == $new_message_id){
 				$target_topic_id = $topic_id;
+				break 2;
+			}
 		}
 	}
 	
 	// 303 See Other is send for a confirmed post, along with its new location
-	header('Location: ' . url_for('/' . $group . '/' . $message_infos[$target_topic_id]['number']));
+	header('Location: ' . url_for(sprintf( '/%s/%d#message-%d', urlencode($group), $message_infos[$target_topic_id]['number'], $message_infos[$new_message_id]['number'] )));
 	header('HTTP/1.1 303 See Other');
 	exit();
 }

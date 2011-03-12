@@ -100,12 +100,11 @@ function traverse_tree($tree_level){
 		
 		echo("<li>\n");
 		$unread_class = $tracker->is_message_unread($group, $topic_number, $overview['number']) ? ' class="unread"' : '';
-		echo('<article data-number="' . ha($overview['number']) . '"' . $unread_class . '>' . "\n");
+		printf('<article id="message-%d" data-number="%d"%s>' . "\n", $overview['number'], $overview['number'], $unread_class);
 		echo("	<header>\n");
 		echo("		<p>");
-		echo('<a href="mailto:' . ha($overview['author_mail']) . '" title="' . ha($overview['author_mail']) . '">' . h($overview['author_name']) . '</a>, ');
-		echo(date('j.m.Y G:i', $overview['date']) . ' Uhr');
-		echo('<a class="permalink" href="/' . urlencode($group) . '/' . urlencode($overview['number']) . '">permalink</a>' . "\n");
+		printf('			<a href="mailto:%s" title="%s">%s</a>, %s Uhr' . "\n", ha($overview['author_mail']), ha($overview['author_mail']), h($overview['author_name']), date('j.m.Y G:i', $overview['date']));
+		printf('			<a class="permalink" href="/%s/%d#message-%d">permalink</a>' . "\n", urlencode($group), $topic_number, $overview['number']);
 		echo("		</p>\n");
 		echo("	</header>\n");
 		echo('	' . $content . "\n");
