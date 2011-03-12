@@ -14,7 +14,9 @@
 	<h1><a href="/">HdM Newsgroups Forum</a></h1>
 	<nav>
 		<ul id="utilities">
-			<li><a class="newsfeed" href="/offiziell.xml" type="application/atom+xml" rel="alternate">Offizielle News</a></li>
+<?	foreach($CONFIG['newsfeeds'] as $name => $newsfeed): ?>
+			<li><a class="newsfeed" href="/<?= urlencode($name) ?>.xml" type="application/atom+xml" rel="alternate"><?= h($newsfeed['title']) ?></a></li>
+<?	endforeach ?>
 		</ul>
 		<ul id="breadcrumbs">
 			<li><a href="/">Übersicht</a></li>

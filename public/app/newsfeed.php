@@ -13,7 +13,9 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	$nntp = nntp_connect_and_authenticate($CONFIG);
 	
 	// The feed configuration can contain a "wildmat" (newsgroup name with wildcards). With that alone
-	// we can query the message IDs of all new messages (`newnews` command). But if we want links back
+	// we can query the message IDs of all new messages (`newnews` command). Since the message IDs might
+	// be unorderd (happend after the move to a new NNTP server) we first query the date of each message,
+	// sort them do dertermine the messsages we really want in the newsfeed. If we want links back
 	// to the messages on the website or links to attachments we need the message _number_ within a
 	// newsgroup. Therefore we query the overview information of the message tree a message was posted
 	// in later on.
@@ -23,7 +25,23 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	$start_date = date('Ymd His', time() - $feed_config['history_duration']);
 	$nntp->command('newnews ' . $feed_config['newsgroups'] . ' ' . $start_date, 230);
 	$new_message_ids = $nntp->get_text_response();
-
+	
+	// Query the dates of all new messages
+	$message_dates = array();
+	foreach(explode("\n", $new_message_ids) as $id){
+		$nntp->command('hdr date ' . $id, 225);
+		list(,$date) = explode(' ', $nntp->get_text_response(), 2);
+		$message_dates[$id] = MessageParser::parse_date($date);
+	}
+	
+	// Sort message ids by date and limit the number to the configured feed limit
+	uasort($message_dates, function($a, $b){
+		if ($a == $b)
+			return 0;
+		return ($a > $b) ? -1 : 1;
+	});
+	$message_dates = array_slice($message_dates, 0, $feed_config['limit']);
+	
 	// Default storage area for each message. This array is used to reset the storage area for the event
 	// handlers after a message is parsed.
 	$empty_message_data = array(
@@ -44,7 +62,7 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	$message_trees = array();
 	
 	$messages = array();
-	foreach(explode("\n", $new_message_ids) as $message_id){
+	foreach($message_dates as $message_id => $date){
 		// Fetch the article source
 		$nntp->command('article ' . $message_id, 220);
 		// Parse it. The parser event handlers store the message information in $message_data.
@@ -65,14 +83,11 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 		if ( isset($message_infos[$message_id]) ){
 			// Add the overview information of the message tree to this message.
 			$message_data = array_merge($message_infos[$message_id], $message_data);
-			
-			// Append the message data to the list and stop if we already have enought messages for the feed
+			// Append the message data to the message list
 			$messages[$message_id] = $message_data;
-			if ( count($messages) >= $feed_config['limit'] )
-				break;
 		}
 		
-		// Reset the parser and the storage variable
+		// Reset the parser and the storage variable to make them ready for the next iteration
 		$message_parser->reset();
 		$message_data = $empty_message_data;
 	}

@@ -4,7 +4,8 @@ $CONFIG = array(
 	'nntp' => array(
 		// Transport URI for the NNTP connection, see http://php.net/transports.inet
 		'uri' => 'ssl://news.hdm-stuttgart.de:563',
-		// Timeout for the connection. Should be short since the user will see nothing but a white page during the timeouit. A value of 0.5 resulted in a page timeout on the Debian VM, the value 1 worked.
+		// Timeout for the connection. Should be short since the user will see nothing but a white page during the
+		// timeout. A value of 0.5 resulted in a connection timeout on the Debian VM, the value 1 worked.
 		'timeout' => 1,
 		// Stream options for the NNTP connection socket
 		'options' => array(
@@ -20,14 +21,37 @@ $CONFIG = array(
 		)
 	),
 	
-	// A list of newsfeeds
+	/**
+	 * A list of newsfeeds. The key of every entry in this array will be the URL for the newsfeed (e.g. "offiziell" will
+	 * be available as "/offiziell.xml" on the website. Each newsfeed needs to define the following configuration
+	 * options:
+	 * 
+	 * 	'newsgroups': An RFC 977 wildmat (http://tools.ietf.org/html/rfc977#section-3.8) that lists the newsgroups
+	 * 		that will be searched for new messages. Examples: "hdm.allgemein", "hdm.mi.*-offiziell",
+	 * 		"hdm.*,!hdm.test.*" (matches all newsgroups in "hdm" but not any "hdm.test.*" newsgroups).
+	 * 		Note that newsfeeds are cached and this cached data is not checked for authorization. Therefore using
+	 * 		wildmats that might include messages not everyone should see is a bad idea.
+	 * 	'title': The display name of the newsfeed.
+	 * 	'history_duration': The number of seconds the NNTP server will look into the past to search for messages.
+	 * 		Messages older than that time will not be reported by the NNTP server.
+	 * 	'limit': The number of messages actually shown in the newsfeed.
+	 */
 	'newsfeeds' => array(
 		'offiziell' => array(
-			// http://tools.ietf.org/html/rfc977#section-3.8
+			// 
 			'newsgroups' => 'hdm.mi.*-offiziell',
-			'title' => 'Offizielle MI-Newsgroups',
-			'limit' => 10,
+			'title' => 'Offizielle News',
 			'history_duration' => 60 * 60 * 24 * 30 // 1 month
+			'limit' => 10,
+		),
+		'messages' => array(
+			// Listed the newsgroups explicitly since some users might see more newsgroups than others. The
+			// wildmat "hdm.*" might contain messages meant for staff only but would be leaked when a student
+			// gets cached newsfeed data.
+			'newsgroups' => 'hdm.allgemein,hdm.suche_biete,hdm.mi.allgemein,hdm.mi.*-offiziell,!hdm.test.*',
+			'title' => 'Neue Beiträge',
+			'history_duration' => 60 * 60 * 24 * 30 // 1 month
+			'limit' => 10,
 		)
 	),
 	

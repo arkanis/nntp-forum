@@ -20,7 +20,7 @@ body > header a { text-decoration: none; color: inherit; }
 body > header > nav { font-size: 0.77em; margin: 0; padding: 0.75em 1.2em; background: #28698f; border-top: 1px solid white; }
 body > header > nav a:hover { text-decoration: underline; }
 body > header > nav > ul#utilities { float: right; margin: 0; padding: 0; list-style: none; }
-body > header > nav > ul#utilities > li { display: inline; }
+body > header > nav > ul#utilities > li { display: inline; margin-left: 0.5em; }
 body > header > nav > ul#utilities > li > a.newsfeed { padding: 1px 0 1px 20px; background: url(/styles/feed.png) left center no-repeat; }
 body > header > nav > ul#breadcrumbs { overflow: hidden; margin: 0; padding: 0; list-style: none; }
 body > header > nav > ul#breadcrumbs > li { float: left; margin: 0 1em 0 0; padding: 0; }
