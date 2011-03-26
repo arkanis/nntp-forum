@@ -100,7 +100,7 @@ try {
 	// responsible for the code of that message).
 	$headers[] = 'User-Agent: ' . $CONFIG['user_agent'];
 	
-	if ( empty($_FILES) ) {
+	if ( empty($_FILES) or empty($_FILES['attachments']['name'][0]) ) {
 		// If we have no attachments build a normal message just with headers and text body
 		$headers[] = 'Content-Type: text/plain; charset=utf-8';
 		$message = join("\n", $headers) . "\n\n" . $_POST['body'];
@@ -128,7 +128,7 @@ try {
 			// Send the attachments
 			foreach($_FILES['attachments']['name'] as $index => $name){
 				$file_path = $_FILES['attachments']['tmp_name'][$index];
-				if ( is_uploaded_file($file_path) ) {
+				if ( !empty($file_path) and is_uploaded_file($file_path) ) {
 					$mime_type = $_FILES['attachments']['type'][$index];
 					// Remove all double quotes from the file name so no one can escape
 					$name = str_replace('"', '', $name);
