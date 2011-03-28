@@ -1,4 +1,5 @@
 /var/www/nntp-forum/logs/*.log {
+	weekly
 	missingok
 	compress
 	delaycompress
@@ -6,6 +7,6 @@
 	create 640 root adm
 	sharedscripts
 	postrotate
-		/etc/init.d/apache2 reload > /dev/null
+		/usr/sbin/apache2ctl graceful
 	endscript
 }
