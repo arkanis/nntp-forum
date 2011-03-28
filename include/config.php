@@ -3,7 +3,9 @@
 $CONFIG = array(
 	'nntp' => array(
 		// Transport URI for the NNTP connection, see http://php.net/transports.inet
-		'uri' => 'ssl://news.hdm-stuttgart.de:563',
+		// For unencrypted NNTP servers use "tcp://news.example.com:119" (tcp on port 119), for encrypted
+		// "ssl://news.example.com:563" (ssl on port 563).
+		'uri' => 'tcp://news.example.com:119',
 		// Timeout for the connection. Should be short since the user will see nothing but a white page during the
 		// timeout. A value of 0.5 resulted in a connection timeout on the Debian VM, the value 1 worked.
 		'timeout' => 1,
@@ -11,12 +13,15 @@ $CONFIG = array(
 		'options' => array(
 			// SSL options to verify the connection certificate agains a CA certificate. See http://php.net/context.ssl
 			'ssl' => array(
-				'verify_peer' => true,
+				// Set to `true` to enable the certificate check for encrypted connections.
+				'verify_peer' => false,
 				// CA to verify against. The file have to be in the PEM format. To convert a DER file to PEM use
-				// openssl x509 -inform DER -outform PEM -in hdm-stuttgart.de.der -out hdm-stuttgart.de.pem
-				// To verify that all is working correctly with the cert use
-				// socat stdio openssl:news.hdm-stuttgart.de:563,cafile=hdm-stuttgart.de.pem
-				'cafile' => ROOT_DIR . '/certs/hdm-stuttgart.de.pem',
+				// openssl x509 -inform DER -outform PEM -in yourcert.der -out yourcert.pem
+				// To verify that the converted certificate works correctly you can use the `socat` command to
+				// connect to a newsgroup directly:
+				// socat stdio openssl:news.example.com:563,cafile=yourcert.pem
+				// If you see a welcome message from the news server everything worked perfectly.
+				'cafile' => '/path/to/yourcert.pem',
 			)
 		)
 	),
@@ -37,46 +42,53 @@ $CONFIG = array(
 	 * 	'limit': The number of messages actually shown in the newsfeed.
 	 */
 	'newsfeeds' => array(
-		'offiziell' => array(
-			// 
-			'newsgroups' => 'hdm.mi.*-offiziell',
-			'title' => 'Offizielle News',
-			'history_duration' => 60 * 60 * 24 * 30, // 1 month
-			'limit' => 10
-		),
-		'messages' => array(
-			// Listed the newsgroups explicitly since some users might see more newsgroups than others. The
-			// wildmat "hdm.*" might contain messages meant for staff only but would be leaked when a student
-			// gets cached newsfeed data.
-			'newsgroups' => 'hdm.allgemein,hdm.suche_biete,hdm.mi.allgemein,hdm.mi.*-offiziell,!hdm.test.*',
-			'title' => 'Neue Beiträge',
+		/* a small example newsfeed config
+		'example' => array(
+			'newsgroups' => 'all.news-*',
+			'title' => 'All news',
 			'history_duration' => 60 * 60 * 24 * 30, // 1 month
 			'limit' => 10
 		)
+		*/
 	),
 	
-	// Connection and search settings for the LDAP name lookup. ldap2 only works in the student
-	// IP range, ldap1 is the server for the internal IP range.
+	// Connection and search settings for the LDAP name lookup. This lookup is performed before a new message
+	// is send to the NNTP server. It translates the login of the user into a display name that can then be used to
+	// build a proper sender address (see below).
+	// If 'host' is empty no LDAP lookup is performed. Otherwise insert your LDAP configuration here. For details
+	// about the lookup itself take a look at the ldap_name_lookup() function in public/app/messages/create.php.
 	'ldap' => array(
-		'host' => 'ldap2.mi.hdm-stuttgart.de',
-		'user' => 'uid=nobody,ou=userlist,dc=hdm-stuttgart,dc=de',
-		'pass' => '',
-		'directory' => 'ou=userlist,dc=hdm-stuttgart,dc=de'
+		'host' => null,
+		'user' => 'uid=nobody,ou=userlist,dc=example,dc=com',
+		'pass' => 'unknown',
+		'directory' => 'ou=userlist,dc=example,dc=com'
 	),
+	
+	// This function here builds the sender address of a new message (the thing that shows up in the "From" field
+	// of the message). $login is the name used to connect to the NNTP server. $name is whatever the LDAP name
+	// lookup returned (see above). If no LDAP name lookup is configured $name is the same as $login.
+	'sender_address' => function($login, $name){
+		return "$name <$login@example.com>";
+	},
 	
 	'cache_dir' => ROOT_DIR . '/cache',
 	'cache_lifetime' => 5 * 60,  // 5 minutes
 	
 	'unread_tracker_dir' => ROOT_DIR . '/unread-tracker',
 	'unread_tracker_topic_limit' => 50,
-	// Used by the clean-expired-trackers cron. Tracker that have not been modified for the
-	// time specified here (in seconds) are deleted by the cron job. This will prevent a slow
-	// disk overflow when students come and go.
+	// Used by the clean-expired-trackers cron job. Tracker that have not been modified for
+	// the time specified here (in seconds) are deleted by the cron job. This will prevent a
+	// slow disk overflow when students come and go.
 	'unread_tracker_unused_expire_time' => 60 * 60 * 24 * 30 * 6,
 	
 	// The user agent string added as a message header. Important for others to see who is
 	// responsible for an idealistically UTF-8 encoded message.
-	'user_agent' => 'NNTP-Forum/1.0.0'
+	'user_agent' => 'NNTP-Forum/1.0.0',
+	
+	// Newsgroups howto link (e.g. 'http://example.com/news-howto.html'). This link is displayed
+	// in the footer to provide a clue for newcommers on how to set up the newsgroups in
+	// Thunderbird, etc.
+	'howto_url' => null
 );
 
 ?>

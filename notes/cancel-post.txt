@@ -1,9 +1,0 @@
-post
-340 Ok, recommended message-ID <ihh935$b1m$2@news.hdm-stuttgart.de>
-control: cancel <ihh5oc$34i$4@news.hdm-stuttgart.de>
-from: Stephan <ss209@hdm-stuttgart.de>
-newsgroups: hdm.test.allgemein
-subject: posting over a plain TCP/IP channel
-
-.
-240 Article received <ihh935$b1m$2@news.hdm-stuttgart.de>

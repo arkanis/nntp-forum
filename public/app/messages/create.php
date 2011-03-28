@@ -19,14 +19,17 @@
  * A small lookup function that connects to the LDAP server configured in `$CONFIG` and tries
  * to translate the user name into a full display name. This name is then used to post the message.
  */
-function ldap_name_lookup($hdm_user_id){
+function ldap_name_lookup($user_id){
 	global $CONFIG;
 	$ldap_config = $CONFIG['ldap'];
+	
+	if ( empty($ldap_config['host']) )
+		return $user_id;
 	
 	$con = ldap_connect($ldap_config['host']);
 	if ($con){
 		if ( @ldap_bind($con, $ldap_config['user'], $ldap_config['pass']) ){
-			$match_resource = ldap_search($con, $ldap_config['directory'], 'uid=' . $hdm_user_id, array('cn'));
+			$match_resource = ldap_search($con, $ldap_config['directory'], 'uid=' . $user_id, array('cn'));
 			if ($match_resource){
 				$match_data = ldap_get_entries($con, $match_resource);
 				return $match_data[0]['cn'][0];
@@ -35,7 +38,7 @@ function ldap_name_lookup($hdm_user_id){
 		}
 	}
 	
-	return $hdm_user_id;
+	return $user_id;
 }
 
 define('ROOT_DIR', '../../..');
@@ -90,7 +93,7 @@ try {
 	// We got everything we need, assemble the headers for the message
 	$headers = array(
 		'Subject: ' . $subject,
-		'From: ' . ldap_name_lookup($_SERVER['PHP_AUTH_USER']) . ' <' . $_SERVER['PHP_AUTH_USER'] . '@hdm-stuttgart.de>',
+		'From: ' . $CONFIG['sender_address']($_SERVER['PHP_AUTH_USER'], ldap_name_lookup($_SERVER['PHP_AUTH_USER'])),
 		'Newsgroups: ' . $group
 	);
 	if ( !empty($references) )

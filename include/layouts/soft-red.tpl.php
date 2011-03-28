@@ -30,6 +30,9 @@
 <?= $content ?>
 
 <footer>
+<? if (isset($CONFIG['howto_url'])): ?>
+	<a class="help" href="<?= ha($CONFIG['howto_url']) ?>">Newsgroups in E-Mail-Program (z.B. Thunderbird) einrichten</a><br />
+<? endif ?>
 <?	list($name, $version) = explode('/', $CONFIG['user_agent'], 2) ?>
 	<?= h($name) ?> v<?= h($version) ?>, entwickelt von <a href="http://arkanis.de/">Stephan Soller</a>.
 	<a href="http://www.famfamfam.com/lab/icons/silk/">Silk Icons</a> von <a href="http://www.famfamfam.com/">famfamfam.com</a>.
