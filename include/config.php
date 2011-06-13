@@ -2,6 +2,9 @@
 
 $CONFIG = array(
 	'nntp' => array(
+		// The login for the NNTP server. By default we pick up the HTTP authentication configured in the
+		// webserver. If you want a public reader you can configure the NNTP user here that will be used
+		// by the frontend.
 		'user' => $_SERVER['PHP_AUTH_USER'],
 		'pass' => $_SERVER['PHP_AUTH_PW'],
 		
