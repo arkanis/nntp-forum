@@ -2,6 +2,9 @@
 
 $CONFIG = array(
 	'nntp' => array(
+		'user' => $_SERVER['PHP_AUTH_USER'],
+		'pass' => $_SERVER['PHP_AUTH_PW'],
+		
 		// Transport URI for the NNTP connection, see http://php.net/transports.inet
 		// For unencrypted NNTP servers use "tcp://news.example.com:119" (tcp on port 119), for encrypted
 		// "ssl://news.example.com:563" (ssl on port 563).
@@ -70,6 +73,13 @@ $CONFIG = array(
 	'sender_address' => function($login, $name){
 		return "$name <$login@example.com>";
 	},
+	
+	// Function that determines if the specified address $mail belongs to the user $login. Right now this is used
+	// to display the delete button only for messages you posted yourself (that is for all messages where this
+	// function returns `true`).
+	'sender_is_self' => function($mail, $login){
+		return ($mail == "$login@example.com");
+	}
 	
 	'cache_dir' => ROOT_DIR . '/cache',
 	'cache_lifetime' => 5 * 60,  // 5 minutes

@@ -9,11 +9,11 @@
  * NNTP authentication failed `exit_with_forbidden_error()` is called.
  */
 function nntp_connect_and_authenticate($config){
-	if ( !isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW']) )
+	if ( !isset($config['nntp']['user']) or !isset($config['nntp']['pass']) )
 		exit_with_unauthorized_error();
 	
 	$nntp = new NntpConnection($config['nntp']['uri'], $config['nntp']['timeout'], $config['nntp']['options']);
-	if ( ! $nntp->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) ){
+	if ( ! $nntp->authenticate($config['nntp']['user'], $config['nntp']['pass']) ){
 		$nntp->close();
 		exit_with_forbidden_error();
 	}

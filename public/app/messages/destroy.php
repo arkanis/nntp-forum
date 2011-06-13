@@ -57,7 +57,7 @@ try {
 	$message_parser->parse_line('');
 	
 	// Now we got all we need to construct the cancel message
-	$from = $_SERVER['PHP_AUTH_USER'] . '@hdm-stuttgart.de';
+	$from = $CONFIG['sender_address']($CONFIG['nntp']['user'], $CONFIG['nntp']['user']);
 	$cancel_message = <<<EOD
 Control: cancel $message_id
 From: $from

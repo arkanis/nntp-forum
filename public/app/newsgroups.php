@@ -69,7 +69,7 @@ foreach($newsgroups as $name => $infos){
 }
 
 // Load the unread tracking information for this user
-$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($_SERVER['PHP_AUTH_USER']));
+$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($CONFIG['nntp']['user']));
 
 // Setup layout variables
 $title = null;

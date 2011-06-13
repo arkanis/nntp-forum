@@ -24,7 +24,7 @@ $posting_allowed = ($post_flag != 'n');
 $nntp->close();
 
 // Load existing unread tracking information and mark new topics as unread
-$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($_SERVER['PHP_AUTH_USER']));
+$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($CONFIG['nntp']['user']));
 $tracker->update_and_save($group, $message_tree, $message_infos, $CONFIG['unread_tracker_topic_limit']);
 
 if ( isset($_GET['all-read']) ){

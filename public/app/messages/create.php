@@ -93,7 +93,7 @@ try {
 	// We got everything we need, assemble the headers for the message
 	$headers = array(
 		'Subject: ' . $subject,
-		'From: ' . $CONFIG['sender_address']($_SERVER['PHP_AUTH_USER'], ldap_name_lookup($_SERVER['PHP_AUTH_USER'])),
+		'From: ' . $CONFIG['sender_address']($CONFIG['nntp']['user'], ldap_name_lookup($CONFIG['nntp']['user'])),
 		'Newsgroups: ' . $group
 	);
 	if ( !empty($references) )
@@ -113,7 +113,7 @@ try {
 	} else {
 		// We have attachments for the message. Build a MIME message with the text body and
 		// the attachments.
-		$boundary = md5($subject) . '=_' . md5($_SERVER['PHP_AUTH_USER']);
+		$boundary = md5($subject) . '=_' . md5(time());
 		$headers[] = 'MIME-Version: 1.0';
 		$headers[] = 'Content-Type: multipart/mixed; boundary=' . $boundary;
 		

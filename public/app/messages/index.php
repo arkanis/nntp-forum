@@ -39,7 +39,7 @@ $thread_tree = array( $topic_id => $message_tree[$topic_id] );
 // a direct link the tracker was not updated by the topic indes before. Otherwise messages added
 // since the last update (newer than the tracked watermark) will be marked as unread on the
 // next update, even if the user alread viewed the message now.
-$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($_SERVER['PHP_AUTH_USER']));
+$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($CONFIG['nntp']['user']));
 $tracker->update($group, $message_tree, $message_infos, $CONFIG['unread_tracker_topic_limit']);
 
 // See if the current user is allowed to post in this newsgroup
@@ -119,7 +119,7 @@ function traverse_tree($tree_level){
 		echo('		<ul class="actions">' . "\n");
 		if($posting_allowed)
 			echo('			<li class="new message"><a href="#">Antworten</a></li>' . "\n");
-		if($overview['author_mail'] == $_SERVER['PHP_AUTH_USER'] . '@hdm-stuttgart.de')
+		if($CONFIG['sender_is_self']($overview['author_mail'], $CONFIG['nntp']['user']))
 			echo('			<li class="destroy message"><a href="#">Nachricht löschen</a></li>' . "\n");
 		echo('		</ul>' . "\n");
 		
