@@ -82,7 +82,7 @@ $CONFIG = array(
 	// function returns `true`).
 	'sender_is_self' => function($mail, $login){
 		return ($mail == "$login@example.com");
-	}
+	},
 	
 	'cache_dir' => ROOT_DIR . '/cache',
 	'cache_lifetime' => 5 * 60,  // 5 minutes
