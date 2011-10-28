@@ -1,6 +1,13 @@
 <?php
 
-require('config.php');
+// If we are run in an environment load the matching config file. Otherwise just load the
+// defaul config.
+if ($_CONFIG_ENV = getenv('ENVIRONMENT'))
+	require("config.$_CONFIG_ENV.php");
+else
+	require('config.php');
+
+// Load the used classes, functions and helpers
 require('nntp_connection.php');
 require('message_parser.php');
 require('unread_tracker.php');

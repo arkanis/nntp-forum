@@ -1,0 +1,3 @@
+news.localhost.conf
+local-passwd
+include/config.hdm.php
