@@ -1,5 +1,9 @@
 <?php
 
+//
+// This file contains helper functions used by the processing logic (actions) of the system.
+//
+
 /**
  * Creates a new NNTP connection and authenticates it with the user and password from the
  * requests HTTP headers. This is common in almost any page therefore it deserves a function

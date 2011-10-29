@@ -1,5 +1,16 @@
 <?php
 
+// This is the default configuration file for the NNTP forum. This file contains the details
+// of how the NNTP forum interacts with your infrastructure.
+// 
+// If the environment variable `ENVIRONMENT` is set a config file for that special
+// environment is loaded. If `ENVIRONMENT` is set to `production` then `config.production.php`
+// is loaded instead of `config.php`. This is a good way to keep your testing and development
+// configuration seperate from your production configuration.
+// 
+// Environment variables can usually be set in the webserver configuration. In case of the
+// Apache2 webserver you can use the `SetEnv` e.g. in the virtual host of the NNTP forum.
+
 $CONFIG = array(
 	'nntp' => array(
 		// The login for the NNTP server. By default we pick up the HTTP authentication configured in the

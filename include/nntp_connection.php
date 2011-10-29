@@ -2,12 +2,16 @@
 
 class NntpException extends Exception { }
 
+/**
+ * `NntpConnection` is a class to manage the low level communication of the NNTP protocol.
+ * It takes care of sending commands or text and receiving the status and text responses.
+ */
 class NntpConnection
 {
 	private $connection;
 	
 	/**
-	 * Opens a NNTP connection to the specified `$uri`. If  Also checks the initial server
+	 * Opens a NNTP connection to the specified `$uri`. Also checks the initial server
 	 * ready status response.
 	 */
 	function __construct($uri, $timeout, $options = array()){
@@ -31,6 +35,8 @@ class NntpConnection
 	
 	/**
 	 * Logs the NNTP traffic for debugging.
+	 * 
+	 * USE WITH CAUTION: User credentials are also logged by this function!
 	 */
 	private function log($message){
 		//file_put_contents(ROOT_DIR . '/nntp.log', $message . "\n", FILE_APPEND);

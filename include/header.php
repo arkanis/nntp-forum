@@ -1,5 +1,8 @@
 <?php
 
+// This page is meant to be included at the begin of each page. Right after the `ROOT_DIR`
+// constant has been defined.
+
 // If we are run in an environment load the matching config file. Otherwise just load the
 // defaul config.
 if ($_CONFIG_ENV = getenv('ENVIRONMENT'))

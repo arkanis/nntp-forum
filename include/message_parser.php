@@ -1,9 +1,76 @@
 <?php
 
+/**
+ * The `MessageParser` is an event based parser for newsgroup messages (like SAX is for XML).
+ * 
+ * The parser works on a line by line basis. You feed it with lines of the message (e.g. out of an
+ * NNTP connection) and it processes each new line. This keeps the memory footprint low (only
+ * one line at a time) and helps performance (important when dealing with attachments).
+ * 
+ * During the parsing the message parser triggers several events:
+ * 
+ * 	message-header ( part-header <line event>* )+
+ * 
+ * - `message-header`: Triggered first and only once after all message headers have been parsed.
+ *   The handler gets all message headers. All header names are converted to lower case.
+ * - For each MIME part:
+ *   - `part-header`: Triggered after all headers of the MIME part have been parsed. The handler
+ *     gets the headers, the content type and the content type parameters. If you are interested in the
+ *     content of the part the handler has to return the name of the event that will be triggered for each
+ *     line of the content (the placeholder `<line event>` is used for this name in the documentation).
+ *     The handler can also return `null` in which case the content lines are discarded. This is useful
+ *     for skipping over large attachment content if you are only interested in the attachment names
+ *     (which are already in the headers given to the `part-header` event).
+ *   - `<line event>`: If the `part-header` event returned an event name this event is triggered for each
+ *     content line of the part.
+ * 
+ * Normal non MIME encoded messages are handled like a MIME message with just one part. This
+ * way handlers don't need any extra modifications to handle non MIME messages.
+ * 
+ * Handlers for these events can be given to the constructor as an associative array. Note that any
+ * outside variables the handlers changes must be declared with `use(&$var)`. Otherwise the anonymous
+ * handler function can not access or change the outside variable. This example code extracts the first
+ * `text/plain` part of a message:
+ * 
+ * 	$message_data = array('subject' => null, 'content' => null);
+ * 	$parser = new MessageParser(array(
+ * 		'message-header' => function($headers) use(&$message_data){
+ * 			// Take the subject out of the message headers
+ * 			$message_data['subject'] = $headers['subject'];
+ * 		},
+ * 		'part-header' => function($headers, $content_type, $content_type_params) use(&$message_data){
+ * 			// If we got a `text/plain` part and have no content yet make the parser call
+ * 			// `append-content-line` for each line of that part.
+ * 			if ($content_type == 'text/plain' and $message_data['content'] == null) {
+ * 				return 'append-content-line';
+ * 			}
+ * 			
+ * 			// Ignore the content of all other parts (attachments, etc.)
+ * 			return null;
+ * 		},
+ * 		'append-content-line' => function($line) use(&$message_data){
+ * 			// Append each line to the message content
+ * 			$message_data['content'] .= $line;
+ * 		}
+ * 	));
+ * 
+ * 	while ( ! $con->end_of_message() )
+ * 		$parser->parse_line($con->get_line());
+ * 	
+ * 	var_dump($message_data);
+ * 
+ */
+
 class MessageParser
 {
 	/**
+	 * Constructs a message parser that extracts the first `text/plain` part and records information
+	 * about the attachments of the message (name, size, content type, etc.). The information is
+	 * stored in the `$message_data` argument.
 	 * 
+	 * The `$custome_events` argument can be used to override the handlers defined by this function.
+	 * You should onyl do that if you know what you are doing and have read the source code of this
+	 * function.
 	 */
 	static function for_text_and_attachments(&$message_data, $custome_events = array()){
 		$events = array(
@@ -23,7 +90,7 @@ class MessageParser
 					if ( isset($name) ) {
 						$message_data['attachments'][] = array('name' => $name, 'type' => $content_type, 'params' => $content_type_params, 'size' => null);
 						return 'record-attachment-size';
-					} 
+					}
 				}
 			},
 			'append-content-line' => function($line) use(&$message_data){
@@ -221,7 +288,7 @@ class MessageParser
 	
 	/**
 	 * State function to parse a plain text message body. 
-	 * This state is never left because plain text messages contain onthing else after the content.
+	 * This state is never left because plain text messages contain nothing else after the content.
 	 */
 	private function message_body($line){
 		if ($this->content_event){
