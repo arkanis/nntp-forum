@@ -67,7 +67,7 @@ $body_class = 'messages';
 // A recursive tree walker function. Unfortunately necessary because we start the recursion
 // within the function (otherwise we could use an iterator).
 function traverse_tree($tree_level){
-	global $nntp, $message_infos, $group, $posting_allowed, $tracker, $topic_number;
+	global $nntp, $message_infos, $group, $posting_allowed, $tracker, $topic_number, $CONFIG;
 	
 	// Default storage area for each message. This array is used to reset the storage area for the event
 	// handlers after a message is parsed.
