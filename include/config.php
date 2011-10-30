@@ -109,6 +109,12 @@ $CONFIG = array(
 	// responsible for an idealistically UTF-8 encoded message.
 	'user_agent' => 'NNTP-Forum/1.0.0',
 	
+	// The title of the website shown in the header of each page.
+	'title' => 'Newsgroups Forum',
+	
+	// The language file (locale) used for the forum.
+	'lang' => 'de',
+	
 	// Newsgroups howto link (e.g. 'http://example.com/news-howto.html'). This link is displayed
 	// in the footer to provide a clue for newcommers on how to set up the newsgroups in
 	// Thunderbird, etc.

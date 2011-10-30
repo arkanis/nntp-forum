@@ -10,8 +10,7 @@
  * 
  * This is a shortcut mimicing the Ruby on Rails "h" helper.
  */
-function h($text_to_escape)
-{
+function h($text_to_escape){
 	return htmlspecialchars($text_to_escape, ENT_NOQUOTES, 'UTF-8');
 }
 
@@ -21,10 +20,51 @@ function h($text_to_escape)
  * 
  * This is a shortcut mimicing the Ruby on Rails "h" helper.
  */
-function ha($text_to_escape)
-{
+function ha($text_to_escape){
 	return htmlspecialchars($text_to_escape, ENT_COMPAT, 'UTF-8');
 }
+
+/**
+ * General localization helper to lookup entries from a language file. The argument list
+ * is processed by the function itself.
+ */
+function l(){
+	global $_LOCALE;
+	
+	$entry = $_LOCALE;
+	$args = func_get_args();
+	
+	for($i = 0; $i < count($args); $i++){
+		$key = $args[$i];
+		if ( array_key_exists($key, $entry) ) {
+			$entry = $entry[$key];
+			if ( ! is_array($entry) )
+				break;
+		} else {
+			$entry = 'Missing entry in language file: ' . join(' → ', array_slice($args, 0, $i + 1));
+			break;
+		}
+	}
+	
+	return vsprintf($entry, array_slice($args, $i + 1));
+}
+
+/**
+ * A small helper function that pipes the output of `l()` though `h()`. This makes sure the
+ * output can be safely inserted as HTML tag content.
+ */
+function lh(){
+	return h( call_user_func_array('l', func_get_args()) );
+}
+
+/**
+ * A small helper function that pipes the output of `l()` though `ha()`. This makes sure the
+ * output can be safely inserted as an HTML attribute value.
+ */
+function lha(){
+	return ha( call_user_func_array('l', func_get_args()) );
+}
+
 
 /**
  * Converts the specified number of bytes into a more human readable format like KiByte

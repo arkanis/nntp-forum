@@ -6,9 +6,12 @@
 // If we are run in an environment load the matching config file. Otherwise just load the
 // defaul config.
 if ($_CONFIG_ENV = getenv('ENVIRONMENT'))
-	require("config.$_CONFIG_ENV.php");
+	require( basename("config.$_CONFIG_ENV.php") );
 else
 	require('config.php');
+
+// Load the configured locale
+$_LOCALE = require(ROOT_DIR . '/locales/' . $CONFIG['lang'] . '.php');
 
 // Load the used classes, functions and helpers
 require('nntp_connection.php');
