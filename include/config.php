@@ -119,26 +119,9 @@ $CONFIG = array(
 	// configure this list for every error page and every locale. For example you can add a note
 	// to the `unauthorized` error page that users should send a mail to your support staff.
 	'suggestions' => array(
-		'forbidden' => array(
-			'de' => array(
-				'Bitte wende dich an einen Mitarbeiter der Hochschule oder des Studiengangs Medieninformatik. Am besten
-					an den Mitarbeiter, der die Newsgroup pflegt.'
-			)
-		),
-		'not_found' => array(
-			'de' => array(
-				'Vielleicht gibt es aber auch gerade Probleme mit den Newsgroups oder der Website. Wenn das so ist sind wir
-					sicher schon dabei wieder alles gerade zu biegen.'
-			)
-		),
-		'unauthorized' => array(
-			'de' => array(
-				'Vielleicht hast du dich bei deinem Passwort oder Benutzernamen vertippt. Versuche dich mit den gleichen
-					Daten in deinem persönlichen Studenplan anzumelden.',
-				'Wenn du gerade erst deinen HdM Account bekommen hast kann es sein, dass es bis zu einem Tag dauert,
-					bis du dich hier anmelden kannst. In dem Fall bitte etwas Gedult.'
-			)
-		),
+		'forbidden' => array(),
+		'not_found' => array(),
+		'unauthorized' => array()
 	),
 	
 	// Newsgroups howto link (e.g. 'http://example.com/news-howto.html'). This link is displayed
