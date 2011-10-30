@@ -94,7 +94,7 @@ function traverse_tree($tree_level){
 			// All the stuff in `$message_data` is set by the event handlers of the parser
 			$content = Markdown( iconv($message_data['content_encoding'], 'UTF-8', $message_data['content']) );
 		} else {
-			$content = '<p class="empty">Dieser Beitrag wurde vom Autor gelöscht.</p>';
+			$content = '<p class="empty">' . l('messages', 'deleted') . '</p>';
 			$message_data['attachments'] = array();
 		}
 		
@@ -103,8 +103,11 @@ function traverse_tree($tree_level){
 		printf('<article id="message-%d" data-number="%d"%s>' . "\n", $overview['number'], $overview['number'], $unread_class);
 		echo("	<header>\n");
 		echo("		<p>");
-		printf('			<a href="mailto:%s" title="%s">%s</a>, %s Uhr' . "\n", ha($overview['author_mail']), ha($overview['author_mail']), h($overview['author_name']), date('j.m.Y G:i', $overview['date']));
-		printf('			<a class="permalink" href="/%s/%d#message-%d">permalink</a>' . "\n", urlencode($group), $topic_number, $overview['number']);
+		echo('			' . l('messages', 'message_header', 
+			sprintf('<a href="mailto:%1$s" title="%1$s">%2$s</a>', ha($overview['author_mail']), h($overview['author_name'])),
+			date( l('messages', 'message_header_date_format'), $overview['date'] )
+		) . "\n");
+		printf('			<a class="permalink" href="/%s/%d#message-%d">%s</a>' . "\n", urlencode($group), $topic_number, $overview['number'], l('messages', 'permalink'));
 		echo("		</p>\n");
 		echo("	</header>\n");
 		echo('	' . $content . "\n");
@@ -118,9 +121,9 @@ function traverse_tree($tree_level){
 		
 		echo('		<ul class="actions">' . "\n");
 		if($posting_allowed)
-			echo('			<li class="new message"><a href="#">Antworten</a></li>' . "\n");
+			echo('			<li class="new message"><a href="#">' . l('messages', 'answer') . '</a></li>' . "\n");
 		if($CONFIG['sender_is_self']($overview['author_mail'], $CONFIG['nntp']['user']))
-			echo('			<li class="destroy message"><a href="#">Nachricht löschen</a></li>' . "\n");
+			echo('			<li class="destroy message"><a href="#">' . l('messages', 'delete') . '</a></li>' . "\n");
 		echo('		</ul>' . "\n");
 		
 		echo("</article>\n");
@@ -147,66 +150,11 @@ $tracker->mark_topic_read($group, $topic_number);
 <form action="/<?= urlencode($group) ?>/<?= urlencode($topic_number) ?>" method="post" enctype="multipart/form-data" class="message">
 	
 	<ul class="error">
-		<li id="message_body_error">Du hast noch keinen Text für die Nachricht eingeben.</li>
+		<li id="message_body_error"><?= lh('message_form', 'errors', 'missing_body') ?></li>
 	</ul>
 	
 	<section class="help">
-		<h3>Kurze Format-Übersicht</h3>
-		
-		<dl>
-			<dt>Absätze</dt>
-				<dd>
-<pre>
-Absätze werden durch eine
-Leerzeile getrennt.
-
-Nächster Absatz.
-</pre>
-				</dd>
-			<dt>Listen</dt>
-				<dd>
-<pre>
-Listen können mit `*` oder `-`
-erstellt werden:
-
-- Erster Eintrag
-  - Eintrag 1a
-  - Eintrag 1b
-- Zweiter
-* Letzter
-</pre>
-				</dd>
-			<dt>Links</dt>
-				<dd>
-<pre>
-Übersichtlicher [Link][1] im
-Fließtext.
-
-[1]: http://www.hdm-stuttgart.de/
-
-Oder ein [direkter
-Link](http://www.hdm-stuttgart.de/).
-</pre>
-				</dd>
-			<dt>Code</dt>
-				<dd>
-<pre>
-Code muss mit mindestens 4
-Leerzeichen oder einem Tab
-eingerückt sein:
-
-    printf("hello world!");
-</pre>
-				</dd>
-			<dt>Zitate</dt>
-				<dd>
-<pre>
-Beginnen mit einem ">"-Zeichen:
-
-> Sein oder nicht sein…
-</pre>
-				</dd>
-		</dl>
+		<?= l('message_form', 'format_help') ?> 
 	</section>
 	
 	<section class="fields">
@@ -214,19 +162,21 @@ Beginnen mit einem ">"-Zeichen:
 			<textarea name="body" required id="message_body"></textarea>
 		</p>
 		<dl>
-			<dt>Anhänge</dt>
-				<dd><input type="file" /> <a href="#" class="destroy attachment">löschen</a></dd>
+			<dt><?= lh('message_form', 'attachments_label') ?></dt>
+				<dd><input type="file" /> <a href="#" class="destroy attachment"><?= l('message_form', 'delete_attachment') ?></a></dd>
 		</dl>
 		<p class="buttons">
-			<button class="preview recommended">Vorschau ansehen</button> oder
-			<button class="create">Antwort absenden</button> oder
-			<button class="cancel">Abbrechen</button>
+			<button class="preview recommended"><?= lh('message_form', 'preview_button') ?></button>
+			<?= lh('message_form', 'button_separator') ?> 
+			<button class="create"><?= lh('message_form', 'create_answer_button') ?></button>
+			<?= lh('message_form', 'button_separator') ?> 
+			<button class="cancel"><?= lh('message_form', 'cancle_button') ?></button>
 		</p>
 	</section>
 	
 	<article id="post-preview">
 		<header>
-			<p>Vorschau</p>
+			<p><?= lh('message_form', 'preview_heading') ?></p>
 		</header>
 		
 		<div></div>

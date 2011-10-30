@@ -91,38 +91,38 @@ $body_class = 'topics';
 <form action="/<?= urlencode($group) ?>" method="post" enctype="multipart/form-data" class="message">
 	
 	<ul class="error">
-		<li id="message_subject_error"><?= lh('topics', 'topic_form', 'message_subject_error') ?></li>
-		<li id="message_body_error"><?= lh('topics', 'topic_form', 'message_body_error') ?></li>
+		<li id="message_subject_error"><?= lh('message_form', 'errors', 'missing_subject') ?></li>
+		<li id="message_body_error"><?= lh('message_form', 'errors', 'missing_body') ?></li>
 	</ul>
 	
 	<section class="help">
-		<?= l('topics', 'topic_form', 'format_help') ?> 
+		<?= l('message_form', 'format_help') ?> 
 	</section>
 	
 	<section class="fields">
 		<p>
-			<label for="message_subject"><?= lh('topics', 'topic_form', 'topic_label') ?></label>
+			<label for="message_subject"><?= lh('message_form', 'topic_label') ?></label>
 			<input name="subject" required id="message_subject" type="text" value="" />
 		</p>
 		<p>
 			<textarea name="body" required id="message_body"></textarea>
 		</p>
 		<dl>
-			<dt><?= lh('topics', 'topic_form', 'attachments_label') ?></dt>
-				<dd><input name="attachments[]" type="file" /> <a href="#" class="destroy attachment">löschen</a></dd>
+			<dt><?= lh('message_form', 'attachments_label') ?></dt>
+				<dd><input name="attachments[]" type="file" /> <a href="#" class="destroy attachment"><?= l('message_form', 'delete_attachment') ?></a></dd>
 		</dl>
 		<p class="buttons">
-			<button class="preview recommended"><?= lh('topics', 'topic_form', 'preview_button') ?></button>
-			<?= lh('topics', 'topic_form', 'button_separator') ?> 
-			<button class="create"><?= lh('topics', 'topic_form', 'create_topic_button') ?></button>
-			<?= lh('topics', 'topic_form', 'button_separator') ?> 
-			<button class="cancel"><?= lh('topics', 'topic_form', 'cancle_button') ?></button>
+			<button class="preview recommended"><?= lh('message_form', 'preview_button') ?></button>
+			<?= lh('message_form', 'button_separator') ?> 
+			<button class="create"><?= lh('message_form', 'create_topic_button') ?></button>
+			<?= lh('message_form', 'button_separator') ?> 
+			<button class="cancel"><?= lh('message_form', 'cancle_button') ?></button>
 		</p>
 	</section>
 	
 	<article id="post-preview">
 		<header>
-			<p><?= lh('topics', 'topic_form', 'preview_heading') ?></p>
+			<p><?= lh('message_form', 'preview_heading') ?></p>
 		</header>
 		
 		<div></div>

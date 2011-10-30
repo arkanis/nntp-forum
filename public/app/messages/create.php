@@ -162,18 +162,22 @@ try {
 } catch(NntpException $exception) {
 	// If something exploded send a 422 response and show an error page
 	header('HTTP/1.1 422 Unprocessable Entity');
-	$title = 'Beitrag konnte nicht gesendet werden';
+	$title = l('error_pages', 'send_failed', 'title');
 ?>
 
 <h2><?= h($title) ?></h2>
 
-<p>Der Beitrag wurde vom Newsgroup-Server leider nicht angenommen. Wahrscheinlich
-verfügst du nicht über die nötigen Rechte um in dieser Newsgroup Beiträge zu schreiben.</p>
-
-<p>Falls du den Fehler melden willst gibt bitte die folgende genaue Fehlerbeschreibung
-mit an:</p>
-
+<p><?= lh('error_pages', 'send_failed', 'description') ?></p>
+<p><?= lh('error_pages', 'send_failed', 'error_reporting_hint') ?></p>
 <p><?= h($exception->getMessage()) ?></p>
+
+<? if ( count(l('error_pages', 'send_failed', 'suggestions')) ): ?>
+<ul>
+<? foreach(l('error_pages', 'send_failed', 'suggestions') as $suggestion): ?>
+	<li><?= $suggestion ?></li>
+<? endforeach ?>
+</ul>
+<? endif ?>
 
 <?
 	require(ROOT_DIR . '/include/footer.php');
@@ -204,18 +208,19 @@ if ( array_key_exists($new_message_id, $message_infos) ) {
 // Post was send but could not be confirmed. Send a 202 Accepted response code and output
 // an information page.
 header('HTTP/1.1 202 Accepted');
-$title = 'Beitrag noch nicht online';
+$title = l('error_pages', 'not_yet_online', 'title');
 ?>
 
 <h2><?= h($title) ?></h2>
 
-<p>Der Beitrag wurde zwar akzeptiert, scheint aber noch nicht online zu sein. Möglicher
-weise dauert es ein paar Sekunden oder er muss erst vom Moderator bestätigt werden.</p>
+<p><?= lh('error_pages', 'not_yet_online', 'description') ?></p>
 
-<p>Damit im Fall aller Fälle nichts verlohren geht kannst zurück zum Formular, den Text
-deines Beitrags kopieren und falls nötig später noch einmal senden.</p>
-
-<p>Ob der Beitrag online ist siehst du wenn er innerhalb der nächsten paar Minuten in
-<a href="/<?= urlencode($group) ?>">der Newsgroup</a> erscheint.</p>
+<? if ( count(l('error_pages', 'not_yet_online', 'suggestions')) ): ?>
+<ul>
+<? foreach(l('error_pages', 'not_yet_online', 'suggestions') as $suggestion): ?>
+	<li><?= sprintf($suggestion, '/' . urlencode($group)) ?></li>
+<? endforeach ?>
+</ul>
+<? endif ?>
 
 <? require(ROOT_DIR . '/include/footer.php') ?>
