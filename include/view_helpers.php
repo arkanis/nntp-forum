@@ -46,7 +46,7 @@ function l(){
 		}
 	}
 	
-	return vsprintf($entry, array_slice($args, $i + 1));
+	return is_string($entry) ? vsprintf($entry, array_slice($args, $i + 1)) : $entry;
 }
 
 /**

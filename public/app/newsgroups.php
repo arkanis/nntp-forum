@@ -76,14 +76,14 @@ $title = null;
 $body_class = 'newsgroups';
 ?>
 
-<h2>Forenübersicht</h2>
+<h2><?= lh('newsgroups', 'title') ?></h2>
 
 <table>
 	<thead>
 		<tr>
-			<th>Newsgroup</th>
-			<th>Beiträge</th>
-			<th>Letzter Beitrag</th>
+			<th><?= lh('newsgroups', 'newsgroup_header') ?></th>
+			<th><?= lh('newsgroups', 'post_count_header') ?></th>
+			<th><?= lh('newsgroups', 'last_post_header') ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -102,11 +102,14 @@ $body_class = 'newsgroups';
 			<td><?= h($newsgroup['post_count']) ?></td>
 <?			if($newsgroup['last_post']): ?>
 			<td>
-				<?= h($newsgroup['last_post']['subject']) ?><br />
-				von <abbr title="<?= ha($newsgroup['last_post']['author_mail']) ?>"><?= h($newsgroup['last_post']['author_name']) ?></abbr> am <?= date('j.m.Y G:i', $newsgroup['last_post']['date']) ?> Uhr
+				<?= h($newsgroup['last_post']['subject']) ?>
+				<small><?= l('newsgroups', 'last_post_info',
+					sprintf('<abbr title="%s">%s</abbr>', ha($newsgroup['last_post']['author_mail']), h($newsgroup['last_post']['author_name'])),
+					date(l('newsgroups', 'last_post_info_date_format'), $newsgroup['last_post']['date'])
+				) ?></small>
 			</td>
 <?			else: ?>
-			<td>-</td>
+			<td><?= lh('newsgroups', 'no_last_post') ?></td>
 <?			endif ?>
 		</tr>
 <?	endforeach ?>

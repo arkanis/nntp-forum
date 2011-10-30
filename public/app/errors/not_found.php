@@ -9,18 +9,22 @@ if ( !defined('ROOT_DIR') ){
 }
 
 // Setup layout variables
-$title = 'Unbekannte Adresse';
+$title = l('error_pages', 'not_found', 'title');
+$suggestions = l('error_pages', 'not_found', 'suggestions');
+if ( isset($CONFIG['suggestions']['not_found'][$CONFIG['lang']]) )
+	$suggestions = array_merge($suggestions, $CONFIG['suggestions']['not_found'][$CONFIG['lang']]);
 ?>
 
 <h2><?= h($title) ?></h2>
 
-<p>Sorry, aber zu der Adresse <code><?= h($_SERVER['REQUEST_URI']) ?></code> konnte nichts passendes gefunden werden.</p>
+<p><?= l( 'error_pages', 'not_found', 'description', sprintf('<code>%s</code>', h($_SERVER['REQUEST_URI'])) ) ?></p>
+
+<? if ( count($suggestions) ): ?>
 <ul>
-	<li>Vielleicht hast du dich bei der URL nur vertippt. Ein kurzer Blick in die Adressleiste sollte dann reichen.</li>
-	<li>Das entsprechende Thema oder die entsprechende Newsgroup existiert nicht mehr. In dem Fall hilft leider
-		nur in <a href="/">den Newsgroups</a> nach etwas ähnlichem zu suchen.</li>
-	<li>Vielleicht gibt es aber auch gerade Probleme mit den Newsgroups oder der Website. Wenn das so ist sind wir
-		sicher schon dabei wieder alles gerade zu biegen.</li>
+<? foreach($suggestions as $suggestion): ?>
+	<li><?= $suggestion ?></li>
+<? endforeach ?>
 </ul>
+<? endif ?>
 
 <? require(ROOT_DIR . '/include/footer.php') ?>

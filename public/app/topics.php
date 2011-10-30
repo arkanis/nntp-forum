@@ -73,7 +73,7 @@ usort($topics, function($a, $b){
 });
 
 // Setup layout variables
-$title = 'Forum ' . $group;
+$title = l('topics', 'title', $group);
 $breadcrumbs[$group] = '/' . $group;
 $scripts[] = 'topics.js';
 $body_class = 'topics';
@@ -83,99 +83,46 @@ $body_class = 'topics';
 
 <ul class="actions above">
 <? if($posting_allowed): ?>
-	<li class="new topic"><a href="#" title="">Neues Thema eröffnen</a></li>
+	<li class="new topic"><a href="#"><?= lh('topics', 'new_topic') ?></a></li>
 <? endif ?>
-	<li class="all read"><a href="/<?= urlencode($group) ?>?all-read">Alles als gelesen markieren</a></li>
+	<li class="all read"><a href="/<?= urlencode($group) ?>?all-read"><?= lh('topics', 'all_read') ?></a></li>
 </ul>
 
 <form action="/<?= urlencode($group) ?>" method="post" enctype="multipart/form-data" class="message">
 	
 	<ul class="error">
-		<li id="message_subject_error">Du hast vergessen einen Namen für das neue Thema anzugeben.</li>
-		<li id="message_body_error">Du hast noch keinen Text für die Nachricht eingeben.</li>
+		<li id="message_subject_error"><?= lh('topics', 'topic_form', 'message_subject_error') ?></li>
+		<li id="message_body_error"><?= lh('topics', 'topic_form', 'message_body_error') ?></li>
 	</ul>
 	
 	<section class="help">
-		<h3>Kurze Format-Übersicht</h3>
-		
-		<dl>
-			<dt>Absätze</dt>
-				<dd>
-<pre>
-Absätze werden durch eine
-Leerzeile getrennt.
-
-Nächster Absatz.
-</pre>
-				</dd>
-			<dt>Listen</dt>
-				<dd>
-<pre>
-Listen können mit `*` oder `-`
-erstellt werden:
-
-- Erster Eintrag
-  - Eintrag 1a
-  - Eintrag 1b
-- Zweiter
-* Letzter
-</pre>
-				</dd>
-			<dt>Links</dt>
-				<dd>
-<pre>
-Übersichtlicher [Link][1] im
-Fließtext.
-
-[1]: http://www.hdm-stuttgart.de/
-
-Oder ein [direkter
-Link](http://www.hdm-stuttgart.de/).
-</pre>
-				</dd>
-			<dt>Code</dt>
-				<dd>
-<pre>
-Code muss mit mindestens 4
-Leerzeichen oder einem Tab
-eingerückt sein:
-
-    printf("hello world!");
-</pre>
-				</dd>
-			<dt>Zitate</dt>
-				<dd>
-<pre>
-Beginnen mit einem ">"-Zeichen:
-
-> Sein oder nicht sein…
-</pre>
-				</dd>
-		</dl>
+		<?= l('topics', 'topic_form', 'format_help') ?> 
 	</section>
 	
 	<section class="fields">
 		<p>
-			<label for="message_subject">Thema</label>
+			<label for="message_subject"><?= lh('topics', 'topic_form', 'topic_label') ?></label>
 			<input name="subject" required id="message_subject" type="text" value="" />
 		</p>
 		<p>
 			<textarea name="body" required id="message_body"></textarea>
 		</p>
 		<dl>
-			<dt>Anhänge</dt>
+			<dt><?= lh('topics', 'topic_form', 'attachments_label') ?></dt>
 				<dd><input name="attachments[]" type="file" /> <a href="#" class="destroy attachment">löschen</a></dd>
 		</dl>
 		<p class="buttons">
-			<button class="preview recommended">Vorschau ansehen</button> oder
-			<button class="create">Thema erstellen</button> oder
-			<button class="cancel">Abbrechen</button>
+			<button class="preview recommended"><?= lh('topics', 'topic_form', 'preview_button') ?></button>
+			<?= lh('topics', 'topic_form', 'button_separator') ?> 
+			<button class="create"><?= lh('topics', 'topic_form', 'create_topic_button') ?></button>
+			<?= lh('topics', 'topic_form', 'button_separator') ?> 
+			<button class="cancel"><?= lh('topics', 'topic_form', 'cancle_button') ?></button>
 		</p>
 	</section>
 	
 	<article id="post-preview">
 		<header>
-			<p>Vorschau</p>
+			<p><?= lh('topics', 'topic_form', 'preview_heading') ?></p>
 		</header>
 		
 		<div></div>
@@ -185,16 +132,16 @@ Beginnen mit einem ">"-Zeichen:
 <table>
 	<thead>
 		<tr>
-			<th>Thema</th>
-			<th>Beiträge</th>
-			<th>Neuster Beitrag</th>
+			<th><?= lh('topics', 'topic_header') ?></th>
+			<th><?= lh('topics', 'post_count_header') ?></th>
+			<th><?= lh('topics', 'last_post_header') ?></th>
 		</tr>
 	</thead>
 	<tbody>
 <? if ( empty($message_tree) ): ?>
 		<tr>
 			<td colspan="3" class="empty">
-				Dieses Forum ist momentan noch leer.
+				<?= lh('topics', 'no_topics') ?> 
 			</td>
 		</tr>
 <? else: ?>
@@ -207,8 +154,10 @@ Beginnen mit einem ">"-Zeichen:
 			<td><a href="/<?= urlencode($group) ?>/<?= urlencode($topic['message']['number']) ?>?<?= $topic['reply_count'] ?>"><?= h($topic['message']['subject']) ?></a></td>
 			<td><?= $topic['reply_count'] ?></td>
 			<td>
-				Von <abbr title="<?= ha($topic['latest_message']['author_mail']) ?>"><?= h($topic['latest_message']['author_name']) ?></abbr><br />
-				am <?= date('j.m.Y G:i', $topic['latest_message']['date']) ?> Uhr
+				<?= l('topics', 'last_post_info',
+					sprintf('<abbr title="%s">%s</abbr>', ha($topic['latest_message']['author_mail']), h($topic['latest_message']['author_name'])),
+					date(l('topics', 'last_post_info_date_format'), $topic['latest_message']['date'])
+				) ?> 
 			</td>
 		</tr>
 <?	endforeach ?>
@@ -218,9 +167,9 @@ Beginnen mit einem ">"-Zeichen:
 
 <ul class="actions below">
 <? if($posting_allowed): ?>
-	<li class="new topic"><a href="#">Neues Thema eröffnen</a></li>
+	<li class="new topic"><a href="#"><?= lh('topics', 'new_topic') ?></a></li>
 <? endif ?>
-	<li class="all read"><a href="/<?= urlencode($group) ?>?all-read">Alles als gelesen markieren</a></li>
+	<li class="all read"><a href="/<?= urlencode($group) ?>?all-read"><?= lh('topics', 'all_read') ?></a></li>
 </ul>
 
 <? require(ROOT_DIR . '/include/footer.php') ?>

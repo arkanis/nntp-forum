@@ -9,16 +9,22 @@ if ( !defined('ROOT_DIR') ){
 }
 
 // Setup layout variables
-$title = 'Login ungültig';
+$title = l('error_pages', 'forbidden', 'title');
+$suggestions = l('error_pages', 'forbidden', 'suggestions');
+if ( isset($CONFIG['suggestions']['forbidden'][$CONFIG['lang']]) )
+	$suggestions = array_merge($suggestions, $CONFIG['suggestions']['forbidden'][$CONFIG['lang']]);
 ?>
 
 <h2><?= h($title) ?></h2>
 
-<p>Sorry, aber mit deinen Login hast du leider keinen Zugriff. Der HdM-Account ist zwar gültig, aber leider konnte
-damit die Newsgroup nicht gelesen werden.</p>
+<p><?= l('error_pages', 'forbidden', 'description') ?></p>
+
+<? if ( count($suggestions) ): ?>
 <ul>
-	<li>Bitte wende dich an einen Mitarbeiter der Hochschule oder des Studiengangs Medieninformatik. Am besten
-		an den Mitarbeiter, der die Newsgroup pflegt.</li>
+<? foreach($suggestions as $suggestion): ?>
+	<li><?= $suggestion ?></li>
+<? endforeach ?>
 </ul>
+<? endif ?>
 
 <? require(ROOT_DIR . '/include/footer.php') ?>
