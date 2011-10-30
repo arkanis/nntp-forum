@@ -122,7 +122,7 @@ $body_class = 'topics';
 	
 	<article id="post-preview">
 		<header>
-			<p><?= lh('message_form', 'preview_heading') ?></p>
+			<p><?= lh('message_form', 'preview_heading_prefix') ?> <span></span></p>
 		</header>
 		
 		<div></div>

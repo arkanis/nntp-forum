@@ -77,8 +77,8 @@ $(document).ready(function(){
 		var message_number = parseInt(article.attr('data-number'), 10);
 		
 		var confirmation_form = $('<div class="confirmation"><form>' +
-			'<p>Willst du diese Nachricht wirklich löschen?</p>' +
-			'<p><button>Ja</button><button>Nein</button></p>' +
+			'<p>' + locale.delete_dialog.question + '</p>' +
+			'<p><button>' + locale.delete_dialog.yes + '</button><button>' + locale.delete_dialog.no + '</button></p>' +
 		'</form></div>').appendTo(article).find('> form');
 		
 		confirmation_form.css({
@@ -145,7 +145,7 @@ $(document).ready(function(){
 		// Ignore blockquotes with less than 3 paragraphs or blockquotes. Seems to be a good rule of
 		// thumb to leave small quotes in tact but yet catch the big message quotes.
 		if ( $(this).find('> p, > blockquote').length >= 3 )
-			$(this).prev('p').addClass('quote-guardian collapsed').attr('title', 'Zitierte Nachricht ein- oder ausblenden');
+			$(this).prev('p').addClass('quote-guardian collapsed').attr('title', locale.toggle_quote);
 	});
 	
 	$('p.quote-guardian').live('click', function(){
@@ -158,7 +158,8 @@ $(document).ready(function(){
 	// here.
 	$('article + ul').each(function(){
 		var reply_count = $(this).find('article').length;
-		$(this).prepend('<li class="reply-guardian" title="' + reply_count + ' Antworten ein- oder ausblenden"><a href="#">' + reply_count + ' Antworten ein- oder ausblenden</a></li>');
+		var title = '' + reply_count + ' ' + locale.toggle_replies;
+		$(this).prepend('<li class="reply-guardian" title="' + title + '"><a href="#">' + title + '</a></li>');
 	});
 	$('li.reply-guardian').live('click', function(){
 		$(this).parent('ul').toggleClass('collapsed');

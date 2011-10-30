@@ -183,4 +183,17 @@ $tracker->mark_topic_read($group, $topic_number);
 	</article>
 </form>
 
+<script>
+	// Locale sensitive strings for the scripts
+	var locale = {
+		delete_dialog: {
+			question: '<?= lh('messages', 'delete_dialog', 'question') ?>',
+			yes: '<?= lh('messages', 'delete_dialog', 'yes') ?>',
+			no: '<?= lh('messages', 'delete_dialog', 'no') ?>'
+		},
+		toggle_quote: '<?= lh('messages', 'toggle_quote') ?>',
+		toggle_replies: '<?= lh('messages', 'toggle_replies') ?>'
+	};
+</script>
+
 <? require(ROOT_DIR . '/include/footer.php') ?>

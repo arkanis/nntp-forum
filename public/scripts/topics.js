@@ -47,7 +47,7 @@ $(document).ready(function(){
 		
 		$.post(window.location.pathname, {'preview_text': $('textarea').val()}, function(data){
 			var offset = $('article#post-preview').
-				find('> header > p').text( 'Vorschau: ' + $('input#message_subject').val() ).end().
+				find('> header > p > span').text( $('input#message_subject').val() ).end().
 				find('> div').html(data).end().
 				show().offset();
 			window.scrollTo(0, offset.top);

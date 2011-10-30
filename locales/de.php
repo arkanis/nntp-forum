@@ -115,8 +115,10 @@ Beginnen mit einem ">"-Zeichen:
 		// Separator text between the buttons
 		'button_separator' => 'oder',
 		
-		// Title of the preview message
-		'preview_heading' => 'Vorschau'
+		// Title of the preview message (for answers)
+		'preview_heading' => 'Vorschau',
+		// Prefix of the topic preview (the name of the topic is appended by JavaScript)
+		'preview_heading_prefix' => 'Vorschau:'
 	),
 	
 	'topics' => array(
@@ -192,7 +194,16 @@ Beginnen mit einem ">"-Zeichen:
 		'permalink' => 'permalink',
 		
 		'answer' => 'Antworten',
-		'delete' => 'Nachricht löschen'
+		'delete' => 'Nachricht löschen',
+		
+		'delete_dialog' => array(
+			'question' => 'Willst du diese Nachricht wirklich löschen?',
+			'yes' => 'Ja',
+			'no' => 'Nein'
+		),
+		
+		'toggle_quote' => 'Zitierte Nachricht ein- oder ausblenden',
+		'toggle_replies' => 'Antworten ein- oder ausblenden'
 	)
 );
 
