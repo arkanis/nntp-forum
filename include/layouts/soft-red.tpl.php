@@ -34,8 +34,8 @@
 	<a class="help" href="<?= ha($CONFIG['howto_url']) ?>"><?= lh('layout', 'howto_link_text') ?></a><br />
 <? endif ?>
 <?	list($name, $version) = explode('/', $CONFIG['user_agent'], 2) ?>
-	<?= l('layout', 'credits', $name, $version, '<a href="http://arkanis.de/">Stephan Soller</a>') ?>
-	<?= l('layout', 'credits_3rd_party', '<a href="http://www.famfamfam.com/lab/icons/silk/">Silk Icons</a>', '<a href="http://www.famfamfam.com/">famfamfam.com</a>') ?>
+	<?= l('layout', 'credits', $name, $version, '<a href="http://arkanis.de/">Stephan Soller</a>') ?> 
+	<?= l('layout', 'credits_3rd_party', '<a href="http://www.famfamfam.com/lab/icons/silk/">Silk Icons</a>', '<a href="http://www.famfamfam.com/">famfamfam.com</a>') ?> 
 </footer>
 
 <? foreach($scripts as $script): ?>
