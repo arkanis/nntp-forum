@@ -113,7 +113,7 @@ $CONFIG = array(
 	'title' => 'Newsgroups Forum',
 	
 	// The language file (locale) used for the forum.
-	'lang' => 'de',
+	'lang' => autodetect_locale_with_fallback('en'),
 	
 	// The following stuff is a list of things a user can do when he sees an error page. You can
 	// configure this list for every error page and every locale. For example you can add a note

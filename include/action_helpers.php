@@ -238,4 +238,45 @@ function clean_cache($cache_file_name)
 		unlink($CONFIG['cache_dir'] . '/' . basename($cache_file_name));
 }
 
+/**
+ * A little helper that looks what locales are available and what locales the user preferes
+ * (by examining the HTTP `Accept-Language` header). It then returns the most prefered
+ * locale available. If none of the prefered locales is available or no `Accept-Language`
+ * was send the `$fallback_locale` is returned.
+ * 
+ * The details and format of the `Accept-Language` header are defined in RFC 2616,
+ * chapter 14.4 (http://tools.ietf.org/html/rfc2616#section-14.4).
+ */
+function autodetect_locale_with_fallback($fallback_locale){
+	if ( ! isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) )
+		return $fallback_locale;
+	
+	// Look what locale files are available
+	$locales_available = array_map(function($path){
+		return basename($path, '.php');
+	}, glob(ROOT_DIR . '/locales/*.php') );
+	
+	// Get the requested locale names and qualities out of the HTTP header
+	$locales_requested = array();
+	foreach( explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $qualified_locale ){
+		if ( preg_match('/ (?<name> [\w\d-]+ ) ;q= (?<weight> \d \. \d+ ) /ix', $qualified_locale, $match) ) {
+			$locales_requested[ $match['name'] ] = floatval($match['weight']);
+		} else {
+			$locales_requested[ $qualified_locale ] = 1.0;
+		}
+	}
+	
+	// Sort them so the most prefered locale is at the beginning
+	arsort($locales_requested);
+	
+	// Now look for the first match
+	foreach($locales_requested as $locale_name => $locale_quality){
+		if ( in_array($locale_name, $locales_available) )
+			return $locale_name;
+	}
+	
+	// If nothing matched return the fallback locale
+	return $fallback_locale;
+}
+
 ?>
