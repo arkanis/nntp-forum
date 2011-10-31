@@ -35,14 +35,14 @@ Ok, now to the technical stuff:
 - Supports encrypted NNTP connections
 - URLs are rewritten to nice and short URLs using Apaches mod_rewrite
 
-# Requirements
+## Requirements
 
 - PHP 5.3 or newer
 - Apache2 with `mod_rewrite` enabled
 
 The frontend is currently only tested with INN 2.5.2 (InterNetNews NNRP server).
 
-# Download and installation
+## Download and installation
 
 1. Download and extract or checkout the project here at GitHub.com
 2. The file `site.conf` is a template for an Apache2 virtual host. However you need to customize it for your setup:
@@ -60,14 +60,14 @@ That should do the job. Not as easy as it could be. Sorry for that.
 
 [i1]: http://httpd.apache.org/docs/2.2/howto/auth.html
 
-# Feedback
+## Feedback
 
 Comments and ideas are always welcome. You can [open an issue][f1], [post a comment][f2] on my weblog or send me a mail at <stephan.soller@helionweb.de>.
 
 [f1]: https://github.com/arkanis/nntp-forum/issues
 [f2]: http://arkanis.de/weblog/2011-06-13-nntp-forum-download-and-installation-guide
 
-# The MIT License
+## The MIT License
 
 Copyright (c) 2011 Stephan Soller <stephan.soller@helionweb.de>.
 
