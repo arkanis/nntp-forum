@@ -116,7 +116,7 @@ $body_class = 'topics';
 			<?= lh('message_form', 'button_separator') ?> 
 			<button class="create"><?= lh('message_form', 'create_topic_button') ?></button>
 			<?= lh('message_form', 'button_separator') ?> 
-			<button class="cancel"><?= lh('message_form', 'cancle_button') ?></button>
+			<button class="cancel"><?= lh('message_form', 'cancel_button') ?></button>
 		</p>
 	</section>
 	

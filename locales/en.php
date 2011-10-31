@@ -4,36 +4,36 @@ return array(
 	// Strings used by the layout (header and footer of each page)
 	'layout' => array(
 		// Name of the root breadcrumbs node. It always links back to the newsgroup list.
-		'breadcrumbs_index' => 'Übersicht',
+		'breadcrumbs_index' => 'Overview',
 		// Text for the link in the footer that explains how to setup newsgroups in a mail program
 		// like Thunderbird. The URL of that link can be set in the config file since the process is
 		// often infrastructure specific.
-		'howto_link_text' => 'Newsgroups in E-Mail-Program (z.B. Thunderbird) einrichten',
+		'howto_link_text' => 'Howto read newsgroups in a mail program like Thunderbird',
 		// Developer credits.
 		// Arguments: user agent name (e.g. 'NNTP-Forum'), version (e.g. '1.0.0'), link to developer
-		'credits' => '%s v%s, entwickelt von %s.',
+		'credits' => '%s v%s, developed by %s.',
 		// Text for 3rd party credits. Is used once for each 3rd party project.
 		// Arguments: link to project, link to author or website
-		'credits_3rd_party' => '%s von %s.'
+		'credits_3rd_party' => '%s by %s.'
 	),
 	
 	// Strings for the newsgroup list page
 	'newsgroups' => array(
 		// Page heading
-		'title' => 'Forenübersicht',
+		'title' => 'Forum overview',
 		
 		// Headings for the newsgroup table
 		'newsgroup_header' => 'Newsgroup',
-		'post_count_header' => 'Beiträge',
-		'last_post_header' => 'Letzter Beitrag',
+		'post_count_header' => 'Posts',
+		'last_post_header' => 'Latest post',
 		
 		// Information text for the last post of a newsgroup. The subject of the message is displayed
 		// just before that information.
 		// Arguments: message author, message date
-		'last_post_info' => 'von %s am %s Uhr',
+		'last_post_info' => 'by %s on %s',
 		// Date format used to create the message date string passed to `last_post_info`. The format
 		// of the date string is described in the PHP manual: http://php.net/date
-		'last_post_info_date_format' => 'j.m.Y G:i',
+		'last_post_info_date_format' => 'jS M Y g:i a',
 		// Text shown if a newsgroup has no latest post (e.g. is empty) or the last
 		// post was deleted.
 		'no_last_post' => '-'
@@ -45,58 +45,57 @@ return array(
 		'title' => 'Forum %s',
 		
 		// Action links
-		'new_topic' => 'Neues Thema eröffnen',
-		'all_read' => 'Alles als gelesen markieren',
+		'new_topic' => 'Open a new topic',
+		'all_read' => 'Mark all topics as read',
 		
 		// Headings for the topic table
-		'topic_header' => 'Thema',
-		'post_count_header' => 'Beiträge',
-		'last_post_header' => 'Neuster Beitrag',
+		'topic_header' => 'Topic',
+		'post_count_header' => 'Posts',
+		'last_post_header' => 'Latest post',
 		
 		// Information text for the latest post of a topic.
 		// Arguments: message author, message date
-		'last_post_info' => 'Von %s am %s Uhr',
+		'last_post_info' => 'By %s on %s',
 		// Date format used to create the message date string passed to `last_post_info`
-		'last_post_info_date_format' => 'j.m.Y G:i',
+		'last_post_info_date_format' => 'jS M Y g:i a',
 		
 		// This message is shown if a group does not contain any posts
-		'no_topics' => 'Dieses Forum ist momentan noch leer.'
+		'no_topics' => 'This forum is currently empty.'
 	),
 	
 	// Strings for the post list of a topic
 	'messages' => array(
 		// This text is shown for posts that have been deleted but are still in the cached
 		// message list. As soon as the cache is updated the deleted messages will vanish.
-		'deleted' => 'Dieser Beitrag wurde vom Autor gelöscht.',
+		'deleted' => 'This post has been deleted by the author.',
 		
 		// Header text of a message.
 		// Arguments: message author, message date
-		'message_header' => '%s, %s Uhr',
+		'message_header' => '%s, %s',
 		// Date format used to create the message date string passed to `last_post_info`
-		'message_header_date_format' => 'j.m.Y G:i',
+		'message_header_date_format' => 'jS M Y g:i a',
 		// Name of the permanent link to a message
 		'permalink' => 'permalink',
 		
 		// Action links of a message
-		'answer' => 'Antworten',
+		'answer' => 'Reply',
 		// This link is only shown for messages the user posted by himself
-		'delete' => 'Nachricht löschen',
+		'delete' => 'Delete post',
 		
 		// Delete post dialog
 		'delete_dialog' => array(
-			'question' => 'Willst du diese Nachricht wirklich löschen?',
-			'yes' => 'Ja',
-			'no' => 'Nein'
+			'question' => 'Do you really want to delete this post?',
+			'yes' => 'Yes',
+			'no' => 'No'
 		),
 		
 		// Links to collapse quoted messages
-		'show_quote' => 'Zitierte Nachricht einblenden',
-		'hide_quote' => 'Zitierte Nachricht ausblenden',
-		
+		'show_quote' => 'Show quoted post',
+		'hide_quote' => 'Hide quoted post',
 		// Link text to show or hide replies to a post
 		// Arguments: number of replies that will be shown or hidden
-		'show_replies' => '%s Antworten einblenden',
-		'hide_replies' => '%s Antworten ausblenden'
+		'show_replies' => 'Show %s replies',
+		'hide_replies' => 'Hide %s replies'
 	),
 	
 	// Strings for the different error pages. Each error page has a title, an error description
@@ -105,44 +104,44 @@ return array(
 	// specific suggestions (e.g. link to a support page) should be added in the configuration.
 	'error_pages' => array(
 		'forbidden' => array(
-			'title' => 'Login ungültig',
-			'description' => 'Sorry, aber mit deinen Login hast du leider keinen Zugriff. Der Benutzer ist zwar gültig, aber leider konnte damit die Newsgroup nicht gelesen werden.',
+			'title' => 'Forbidden',
+			'description' => 'Sorry, but access is forbidden. Your login seems to be valid but it was not possible to read the newsgroup with it.',
 			'suggestions' => array()
 		),
 		'not_found' => array(
-			'title' => 'Unbekannte Adresse',
-			'description' => 'Sorry, aber zu der Adresse %s konnte nichts passendes gefunden werden.',
+			'title' => 'Unknown address',
+			'description' => 'Sorry, but we could not find anything for the address %s.',
 			'suggestions' => array(
-				'Vielleicht hast du dich bei der URL nur vertippt. Ein kurzer Blick in die Adressleiste sollte dann reichen.',
-				'Das entsprechende Thema oder die entsprechende Newsgroup existiert nicht mehr. In dem Fall hilft leider
-					nur in den Newsgroups nach etwas ähnlichem zu suchen.'
+				'Maybe you misspelled the URL. A short check of the address bar should fix that.',
+				'The topic or newsgroup you want to read no longer exist. Unfortunately there is not much you can do.
+					Searching the newsgroups for something similar might help.'
 			)
 		),
 		'unauthorized' => array(
-			'title' => 'Login nötig',
-			'description' => 'Sorry, aber bei dem Login ist irgendwas schief gegangen.',
+			'title' => 'Login required',
+			'description' => 'Sorry, but something went wrong during the login.',
 			'suggestions' => array()
 		),
 		'send_failed' => array(
-			'title' => 'Beitrag konnte nicht gesendet werden',
-			'description' => 'Der Beitrag wurde vom Newsgroup-Server leider nicht angenommen. Wahrscheinlich
-				verfügst du nicht über die nötigen Rechte um in dieser Newsgroup Beiträge zu schreiben.',
+			'title' => 'Your message could not be send',
+			'description' => "Unfortunately the newsgroup server did not accept your post. You probably don't have the required
+				permissions to post in this newsgroup.",
 			// This hint is shown before the low level error message. It should explain that the responsible person
 			// might find the low level error useful for debugging.
-			'error_reporting_hint' => 'Falls du den Fehler melden willst gibt bitte die folgende genaue Fehlerbeschreibung mit an:',
+			'error_reporting_hint' => 'In case you want to report that error please send along this error description:',
 			'suggestions' => array()
 		),
 		'not_yet_online' => array(
-			'title' => 'Beitrag noch nicht online',
-			'description' => 'Der Beitrag wurde zwar akzeptiert, scheint aber noch nicht online zu sein. Möglicher
-				weise dauert es ein paar Sekunden oder er muss erst vom Moderator bestätigt werden.',
+			'title' => 'Post not yet online',
+			'description' => 'Your message was accepted by the newsgroups server. However it is not online yet.
+				It might take a few seconds or minutes to show up or a moderator first needs to confirm it.',
 			// Suggestions on what the user should or can do to handle the error.
 			// Arguments: path to the newsgroup the message was posted in.
 			'suggestions' => array(
-				'Damit im Fall aller Fälle nichts verlohren geht kannst zurück zum Formular, den Text
-					deines Beitrags kopieren und falls nötig später noch einmal senden.',
-				'Ob der Beitrag online ist siehst du wenn er innerhalb der nächsten paar Minuten in
-					<a href="%s">der Newsgroup</a> erscheint.'
+				'If you want to go absolutely sure your message is not lost go back to the form and copy the
+					message text. If necessary you can resend the message later.',
+				'As soon as your message goes online it will show up in <a href="%s">the newsgroup</a>.
+					Keep an eye on it if you don\'t want to miss it.'
 			)
 		)
 	),
@@ -153,87 +152,85 @@ return array(
 		'errors' => array(
 			// Only the topic form has a subject field, therefore it's save to assume that
 			// the user forgot to enter the topic subject.
-			'missing_subject' => 'Du hast vergessen einen Namen für das neue Thema anzugeben.',
-			'missing_body' => 'Du hast noch keinen Text für die Nachricht eingeben.'
+			'missing_subject' => 'You forgot to give the new topic a name.',
+			'missing_body' => "You have not yet entered any text for you message."
 		),
 		
 		// Format help shown with the message form
 		'format_help' => '
-		<h3>Kurze Format-Übersicht</h3>
+		<h3>A short format overview</h3>
 		
 		<dl>
-			<dt>Absätze</dt>
+			<dt>Paragraphs</dt>
 				<dd>
 <pre>
-Absätze werden durch eine
-Leerzeile getrennt.
+Paragraphs are separated by
+an empty line.
 
-Nächster Absatz.
+Next paragraph.
 </pre>
 				</dd>
-			<dt>Listen</dt>
+			<dt>Lists</dt>
 				<dd>
 <pre>
-Listen können mit `*` oder `-`
-erstellt werden:
+Use a `*` or `-` to create a list:
 
-- Erster Eintrag
-  * Eintrag 1a
-  * Eintrag 1b
-- Zweiter
-- Letzter
+- First item
+  * Item 1a
+  * Item 1b
+- Second
+- Last
 </pre>
 				</dd>
 			<dt>Links</dt>
 				<dd>
 <pre>
-Übersichtlicher [Link][1] im
-Fließtext.
+Clear [links][1] within text.
 
-[1]: http://www.hdm-stuttgart.de/
+[1]: http://www.example.com/
 
-Oder ein [direkter
-Link](http://www.hdm-stuttgart.de/).
+Or use [direct
+links](http://www.example.com/).
 </pre>
 				</dd>
 			<dt>Code</dt>
 				<dd>
 <pre>
-Code muss mit mindestens 4
-Leerzeichen oder einem Tab
-eingerückt sein:
+Code needs to be indented
+with 4 or more spaces or at
+least one tab:
 
     printf("hello world!");
 </pre>
 				</dd>
-			<dt>Zitate</dt>
+			<dt>Quotes</dt>
 				<dd>
 <pre>
-Beginnen mit einem `>`-Zeichen:
+Quotes star with a `>` sign:
 
-> Sein oder nicht sein…
+> To be or not to be…
 </pre>
 				</dd>
 		</dl>',
 		
 		// Field name labels
-		'topic_label' => 'Thema',
-		'attachments_label' => 'Anhänge',
-		'delete_attachment' => 'löschen',
+		'topic_label' => 'Topic',
+		'attachments_label' => 'Attachments',
+		'delete_attachment' => 'delete',
 		
 		// Form buttons for the topic creation and answer form
-		'preview_button' => 'Vorschau ansehen',
-		'create_topic_button' => 'Thema erstellen',
-		'create_answer_button' => 'Antwort absenden',
-		'cancel_button' => 'Abbrechen',
+		'preview_button' => 'Show preview',
+		'create_topic_button' => 'Create topic',
+		'create_answer_button' => 'Send reply',
+		'cancel_button' => 'Cancel',
 		
 		// Separator text between the buttons
-		'button_separator' => 'oder',
+		'button_separator' => 'or',
 		
 		// Title of the preview message (for answers)
-		'preview_heading' => 'Vorschau',
+		'preview_heading' => 'Preview',
 		// Prefix of the topic preview (the name of the topic is appended by JavaScript)
-		'preview_heading_prefix' => 'Vorschau:'
+		'preview_heading_prefix' => 'Preview:'
 	)
 );
 

@@ -170,7 +170,7 @@ $tracker->mark_topic_read($group, $topic_number);
 			<?= lh('message_form', 'button_separator') ?> 
 			<button class="create"><?= lh('message_form', 'create_answer_button') ?></button>
 			<?= lh('message_form', 'button_separator') ?> 
-			<button class="cancel"><?= lh('message_form', 'cancle_button') ?></button>
+			<button class="cancel"><?= lh('message_form', 'cancel_button') ?></button>
 		</p>
 	</section>
 	
@@ -187,12 +187,16 @@ $tracker->mark_topic_read($group, $topic_number);
 	// Locale sensitive strings for the scripts
 	var locale = {
 		delete_dialog: {
-			question: '<?= lh('messages', 'delete_dialog', 'question') ?>',
-			yes: '<?= lh('messages', 'delete_dialog', 'yes') ?>',
-			no: '<?= lh('messages', 'delete_dialog', 'no') ?>'
+			question: '<?= lha('messages', 'delete_dialog', 'question') ?>',
+			yes: '<?= lha('messages', 'delete_dialog', 'yes') ?>',
+			no: '<?= lha('messages', 'delete_dialog', 'no') ?>'
 		},
-		toggle_quote: '<?= lh('messages', 'toggle_quote') ?>',
-		toggle_replies: '<?= lh('messages', 'toggle_replies') ?>'
+		
+		show_quote: '<?= lha('messages', 'show_quote') ?>',
+		hide_quote: '<?= lha('messages', 'hide_quote') ?>',
+		
+		show_replies: '<?= lha('messages', 'show_replies') ?>',
+		hide_replies: '<?= lha('messages', 'hide_replies') ?>'
 	};
 </script>
 

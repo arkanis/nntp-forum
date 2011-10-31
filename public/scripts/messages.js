@@ -145,11 +145,14 @@ $(document).ready(function(){
 		// Ignore blockquotes with less than 3 paragraphs or blockquotes. Seems to be a good rule of
 		// thumb to leave small quotes in tact but yet catch the big message quotes.
 		if ( $(this).find('> p, > blockquote').length >= 3 )
-			$(this).prev('p').addClass('quote-guardian collapsed').attr('title', locale.toggle_quote);
+			$(this).prev('p').addClass('quote-guardian collapsed').attr('title', locale.show_quote);
 	});
 	
 	$('p.quote-guardian').live('click', function(){
-		$(this).toggleClass('collapsed');
+		if ( $(this).toggleClass('collapsed').hasClass('collapsed') )
+			$(this).attr('title', locale.show_quote);
+		else
+			$(this).attr('title', locale.hide_quote);
 		return false;
 	})
 	
@@ -158,11 +161,18 @@ $(document).ready(function(){
 	// here.
 	$('article + ul').each(function(){
 		var reply_count = $(this).find('article').length;
-		var title = '' + reply_count + ' ' + locale.toggle_replies;
+		var title = locale.hide_replies.replace('%s', reply_count);
 		$(this).prepend('<li class="reply-guardian" title="' + title + '"><a href="#">' + title + '</a></li>');
 	});
 	$('li.reply-guardian').live('click', function(){
-		$(this).parent('ul').toggleClass('collapsed');
+		var reply_list = $(this).parent('ul');
+		var reply_count = reply_list.find('article').length;
+		if ( reply_list.toggleClass('collapsed').hasClass('collapsed') )
+			var title = locale.show_replies.replace('%s', reply_count);
+		else
+			var title = locale.hide_replies.replace('%s', reply_count);
+		$(this).attr('title', title).find('a').text(title);
+		
 		return false;
 	})
 });
