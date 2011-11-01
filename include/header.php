@@ -9,9 +9,9 @@ require('action_helpers.php');
 // If we are run in an environment load the matching config file. Otherwise just load the
 // defaul config.
 if ($_CONFIG_ENV = getenv('ENVIRONMENT'))
-	require( basename("config.$_CONFIG_ENV.php") );
+	$CONFIG = require( basename("config.$_CONFIG_ENV.php") );
 else
-	require('config.php');
+	$CONFIG = require('config.php');
 
 // Load the configured locale
 $_LOCALE = require(ROOT_DIR . '/locales/' . $CONFIG['lang'] . '.php');

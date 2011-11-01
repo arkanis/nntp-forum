@@ -11,7 +11,7 @@
 // Environment variables can usually be set in the webserver configuration. In case of the
 // Apache2 webserver you can use the `SetEnv` e.g. in the virtual host of the NNTP forum.
 
-$CONFIG = array(
+return array(
 	'nntp' => array(
 		// The login for the NNTP server. By default we pick up the HTTP authentication configured in the
 		// webserver. If you want a public reader you can configure the NNTP user here that will be used
