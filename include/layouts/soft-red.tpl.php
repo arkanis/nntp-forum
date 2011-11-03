@@ -2,20 +2,20 @@
 <html lang="de">
 <head>
 	<meta charset="utf-8">
-	<title><? if ($title) echo(h($title) . ' - '); ?><?= h($CONFIG['title']) ?></title>
+	<title><? if ($title) echo(h($title) . ' - '); ?><?= h(lt($CONFIG['title'])) ?></title>
 	<link rel="stylesheet" type="text/css" href="/styles/soft-red.css" />
 <?	foreach($CONFIG['newsfeeds'] as $name => $newsfeed): ?>
-	<link href="/<?= urlencode($name) ?>.xml" rel="alternate" title="<?= h($newsfeed['title']) ?>" type="application/atom+xml" />
+	<link href="/<?= urlencode($name) ?>.xml" rel="alternate" title="<?= h(lt($newsfeed['title'])) ?>" type="application/atom+xml" />
 <?	endforeach ?>
 </head>
 <body class="<?= ha($body_class) ?>">
 
 <header>
-	<h1><a href="/"><?= h($CONFIG['title']) ?></a></h1>
+	<h1><a href="/"><?= h(lt($CONFIG['title'])) ?></a></h1>
 	<nav>
 		<ul id="utilities">
 <?	foreach($CONFIG['newsfeeds'] as $name => $newsfeed): ?>
-			<li><a class="newsfeed" href="/<?= urlencode($name) ?>.xml" type="application/atom+xml" rel="alternate"><?= h($newsfeed['title']) ?></a></li>
+			<li><a class="newsfeed" href="/<?= urlencode($name) ?>.xml" type="application/atom+xml" rel="alternate"><?= h(lt($newsfeed['title'])) ?></a></li>
 <?	endforeach ?>
 		</ul>
 		<ul id="breadcrumbs">

@@ -74,6 +74,24 @@ function lha(){
 	return ha( call_user_func_array('l', func_get_args()) );
 }
 
+/**
+ * Helper to support possible localized text. If the text is an array the key with the name of the
+ * current locale is returned. If no key matches the current locale the first array element is
+ * returned. If `$text_or_array` is not an array it is returned as it is.
+ */
+function lt($text_or_array){
+	global $CONFIG;
+	
+	if ( is_array($text_or_array) ){
+		if ( isset($text_or_array[$CONFIG['lang']]) )
+			return $text_or_array[$CONFIG['lang']];
+		else
+			return reset($text_or_array);
+	}
+	
+	return $text_or_array;
+}
+
 
 /**
  * Converts the specified number of bytes into a more human readable format like KiByte

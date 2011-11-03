@@ -99,7 +99,7 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 
 
 // Setup layout variables
-$title = $feed_config['title'];
+$title = lt($feed_config['title']);
 $layout = 'atom-feed';
 $feed_url = url_for('/' . urlencode($_GET['name']) . '.xml');
 $updated = ( count($messages) > 0 ) ? $messages[reset(array_keys($messages))]['date'] : time();
