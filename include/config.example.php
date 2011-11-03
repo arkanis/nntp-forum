@@ -13,12 +13,6 @@
 
 return array(
 	'nntp' => array(
-		// The login for the NNTP server. By default we pick up the HTTP authentication configured in the
-		// webserver. If you want a public reader you can configure the NNTP user here that will be used
-		// by the frontend. If the NNTP server requires no authentication specify `null` as user.
-		'user' => $_SERVER['PHP_AUTH_USER'],
-		'pass' => $_SERVER['PHP_AUTH_PW'],
-		
 		// Transport URI for the NNTP connection, see http://php.net/transports.inet
 		// For unencrypted NNTP servers use "tcp://news.example.com:119" (tcp on port 119), for encrypted
 		// "ssl://news.example.com:563" (ssl on port 563).
@@ -40,8 +34,24 @@ return array(
 				// If you see a welcome message from the news server everything worked perfectly.
 				'cafile' => '/path/to/yourcert.pem',
 			)
-		)
+		),
+		
+		// The login for the NNTP server. By default we pick up the HTTP authentication configured in the
+		// webserver. If you want a public reader you can configure the NNTP user here that will be used
+		// by the frontend. If the NNTP server requires no authentication specify `null` as user.
+		'user' => $_SERVER['PHP_AUTH_USER'],
+		'pass' => $_SERVER['PHP_AUTH_PW']
 	),
+	
+	// The title of the website shown in the header of each page.
+	// If you want different title for different languages you can use an array instead of a simple string:
+	// 	'title' => array('en' => 'FooBar message board', 'de' => 'FooBar Nachrichtenzentrale'),
+	'title' => 'Newsgroups Forum',
+	
+	// Newsgroups howto link (e.g. 'http://example.com/news-howto.html'). This link is displayed
+	// in the footer to provide a clue for newcommers on how to set up the newsgroups in
+	// Thunderbird, etc.
+	'howto_url' => null,
 	
 	/**
 	 * A list of newsfeeds. The key of every entry in this array will be the URL for the newsfeed (e.g. "offiziell" will
@@ -53,7 +63,7 @@ return array(
 	 * 		"hdm.*,!hdm.test.*" (matches all newsgroups in "hdm" but not any "hdm.test.*" newsgroups).
 	 * 		Note that newsfeeds are cached and this cached data is not checked for authorization. Therefore using
 	 * 		wildmats that might include messages not everyone should see is a bad idea.
-	 * 	'title': The display name of the newsfeed.
+	 * 	'title': The display name of the newsfeed. Might also be language specific like the global title option is.
 	 * 	'history_duration': The number of seconds the NNTP server will look into the past to search for messages.
 	 * 		Messages older than that time will not be reported by the NNTP server.
 	 * 	'limit': The number of messages actually shown in the newsfeed.
@@ -95,23 +105,6 @@ return array(
 		return ($mail == "$login@example.com");
 	},
 	
-	'cache_dir' => ROOT_DIR . '/cache',
-	'cache_lifetime' => 5 * 60,  // 5 minutes
-	
-	'unread_tracker_dir' => ROOT_DIR . '/unread-tracker',
-	'unread_tracker_topic_limit' => 50,
-	// Used by the clean-expired-trackers cron job. Tracker that have not been modified for
-	// the time specified here (in seconds) are deleted by the cron job. This will prevent a
-	// slow disk overflow when students come and go.
-	'unread_tracker_unused_expire_time' => 60 * 60 * 24 * 30 * 6,
-	
-	// The user agent string added as a message header. Important for others to see who is
-	// responsible for an idealistically UTF-8 encoded message.
-	'user_agent' => 'NNTP-Forum/1.0.0',
-	
-	// The title of the website shown in the header of each page.
-	'title' => 'Newsgroups Forum',
-	
 	// The language file (locale) used for the forum.
 	'lang' => autodetect_locale_with_fallback('en'),
 	
@@ -124,10 +117,19 @@ return array(
 		'unauthorized' => array()
 	),
 	
-	// Newsgroups howto link (e.g. 'http://example.com/news-howto.html'). This link is displayed
-	// in the footer to provide a clue for newcommers on how to set up the newsgroups in
-	// Thunderbird, etc.
-	'howto_url' => null
+	'cache_dir' => ROOT_DIR . '/cache',
+	'cache_lifetime' => 5 * 60,  // 5 minutes
+	
+	'unread_tracker_dir' => ROOT_DIR . '/unread-tracker',
+	'unread_tracker_topic_limit' => 50,
+	// Used by the clean-expired-trackers cron job. Tracker that have not been modified for
+	// the time specified here (in seconds) are deleted by the cron job. This will prevent a
+	// slow disk overflow when students come and go.
+	'unread_tracker_unused_expire_time' => 60 * 60 * 24 * 30 * 6,
+	
+	// The user agent string added as a message header. Important for others to see who is
+	// responsible for an idealistically UTF-8 encoded message.
+	'user_agent' => 'NNTP-Forum/1.0.0'
 );
 
 ?>
