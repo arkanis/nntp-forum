@@ -9,17 +9,17 @@
  * requests HTTP headers. This is common in almost any page therefore it deserves a function
  * of it's own. :)
  * 
- * If no authentication headers are present `exit_with_unauthorized_error()` is called. If the
+ * If an authentication user name is configured the authentication is performed. If the
  * NNTP authentication failed `exit_with_forbidden_error()` is called.
  */
 function nntp_connect_and_authenticate($config){
-	if ( !isset($config['nntp']['user']) or !isset($config['nntp']['pass']) )
-		exit_with_unauthorized_error();
-	
 	$nntp = new NntpConnection($config['nntp']['uri'], $config['nntp']['timeout'], $config['nntp']['options']);
-	if ( ! $nntp->authenticate($config['nntp']['user'], $config['nntp']['pass']) ){
-		$nntp->close();
-		exit_with_forbidden_error();
+	
+	if ( isset($config['nntp']['user']) ){
+		if ( ! $nntp->authenticate($config['nntp']['user'], $config['nntp']['pass']) ){
+			$nntp->close();
+			exit_with_forbidden_error();
+		}
 	}
 	
 	return $nntp;
