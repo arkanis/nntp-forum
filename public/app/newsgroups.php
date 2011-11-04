@@ -30,15 +30,21 @@ foreach(explode("\n", $newsgroup_list) as $newsgroup){
 	if ($status == 224) {
 		// Query and decode information if there is a last post
 		$post_overview = $nntp->get_text_response();
-		list($number, $subject, $from, $date, $message_id, $references, $bytes, $lines) = explode("\t", $post_overview, 8);
-		list($author_name, $author_mail) = MessageParser::split_from_header( MessageParser::decode_words($from) );
-		$latest_post = array(
-			'number' => $number,
-			'subject' => MessageParser::decode_words($subject),
-			'author_name' => $author_name,
-			'author_mail' => $author_mail,
-			'date' => MessageParser::parse_date($date)
-		);
+		
+		if ( empty($post_overview) ) {
+			// Bugfix for INN 2.4, it always returns 224, even if it does not provide valid post data
+			$latest_post = null;
+		} else {
+			list($number, $subject, $from, $date, $message_id, $references, $bytes, $lines) = explode("\t", $post_overview, 8);
+			list($author_name, $author_mail) = MessageParser::split_from_header( MessageParser::decode_words($from) );
+			$latest_post = array(
+				'number' => $number,
+				'subject' => MessageParser::decode_words($subject),
+				'author_name' => $author_name,
+				'author_mail' => $author_mail,
+				'date' => MessageParser::parse_date($date)
+			);
+		}
 	} else {
 		// Or just give up if there is none
 		$latest_post = null;
@@ -55,11 +61,14 @@ $nntp->command('list newsgroups', 215);
 $descriptions = $nntp->get_text_response();
 $nntp->close();
 
+// The `trim()` call is a bugfix for INN 2.4
 $ordered_newsgroups = array();
-foreach(explode("\n", $descriptions) as $group_info){
-	list($name, $description) = preg_split('/\s+/', $group_info, 2);
-	$ordered_newsgroups[$name] = $newsgroups[$name];
-	$ordered_newsgroups[$name]['description'] = trim($description);
+if ( !empty($descriptions) ){
+	foreach(explode("\n", $descriptions) as $group_info){
+		list($name, $description) = preg_split('/\s+/', $group_info, 2);
+		$ordered_newsgroups[$name] = $newsgroups[$name];
+		$ordered_newsgroups[$name]['description'] = trim($description);
+	}
 }
 
 // Append the newsgroups not mentioned in the description file below the ordered newsgroups.

@@ -9,6 +9,7 @@ class NntpException extends Exception { }
 class NntpConnection
 {
 	private $connection;
+	private $nntp_command_filter;
 	
 	/**
 	 * Opens a NNTP connection to the specified `$uri`. Also checks the initial server
@@ -23,6 +24,21 @@ class NntpConnection
 		list($status, $rest) = $this->get_status_response();
 		if ( !($status == 200 or $status == 201) )
 			throw new NntpException("Expected a 200 or 201 server ready status but got $status: $rest");
+		
+		// If we got an old INN 2.4 server use the command filter to rewrite some command names
+		if ( preg_match('/INN 2.4/', $rest) ){
+			$this->nntp_command_filter = function(&$command, &$expected_status_code){
+				@list($cmd, $args) = explode(' ', $command, 2);
+				if ($cmd == 'over') {
+					$command = 'xover ' . $args;
+				} else if ($cmd == 'hdr') {
+					$command = 'xhdr ' . $args;
+					// We need to patch the return code, too. Somehow INN 2.4
+					// returns 221 instead of 225.
+					$expected_status_code = 221;
+				}
+			};
+		}
 	}
 	
 	/**
@@ -109,6 +125,14 @@ class NntpConnection
 	 * second the rest of the status response.
 	 */
 	function command($command, $expected_status_code){
+		// If a command filter is set let it handle the command and expected status codes before
+		// sending them. The command filter is used to fix up commands for old NNTP servers
+		// that do not support them unchanged.
+		if ( is_callable($this->nntp_command_filter) ){
+			$filter = $this->nntp_command_filter;
+			$filter($command, $expected_status_code);
+		}
+		
 		if (strlen($command) > 510)
 			throw new NntpException("Command exceeds 512 character limit: $command");
 		if (strpos($command, "\n\r") !== false)
