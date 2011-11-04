@@ -19,6 +19,9 @@ Newsgroups often have a somewhat aged appearance. This often makes them unattrac
 	- The unread tracker data is stored on the server, one small file per user
 	- The tracker data does not grow over time but only with the number of users (only the 50 newest messages in each group are tracked)
 - Provides freely configurable newsfeeds for the newsgroups
+- Internationalized
+	- Language files for English, German and France available
+	- Easy to write new language files
 
 This is the basic stuff. Right now the forum is optimized for the environment of my university. Therefore the authorization of users is handled in an unusual way:
 
