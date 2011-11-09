@@ -81,7 +81,7 @@ class MessageParser
 				if ($message_data['content'] == null and $content_type == 'text/plain') {
 					$message_data['content_encoding'] = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
 					return 'append-content-line';
-				} else {
+				} else if ( isset($headers['content-disposition']) ) {
 					list($disposition_type, $disposition_parms) = MessageParser::parse_type_params_header($headers['content-disposition']);
 					if ( isset($content_type_params['name']) )
 						$name = $content_type_params['name'];
