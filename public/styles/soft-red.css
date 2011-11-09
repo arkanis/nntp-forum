@@ -203,7 +203,6 @@ article > p.empty { margin: 1em; text-align: center; color: gray; }
 
 article > ul.attachments { margin: 0 -0.5em 0 -0.5em; padding: 0.5em 0.5em 0.5em 30px; border-bottom: 1px solid #ddd; list-style: none; background: hsl(0, 0%, 95%) url(/styles/attach.png) no-repeat 8px 50%; }
 article > ul.attachments > li { display: inline; margin: 0 0.5em 0 0; padding: 0; }
-article > ul.attachments > li:first-child:before { content: 'Anhänge: '; margin-right: 0.5em; }
 
 article > ul.actions { overflow: hidden; margin: 0 -0.5em -0.5em -0.5em; padding: 0.5em; list-style: none; background: hsl(0, 0%, 90%); }
 article > ul.actions > li { display: inline; margin-right: 1em; }

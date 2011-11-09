@@ -78,6 +78,9 @@ return array(
 		// Name of the permanent link to a message
 		'permalink' => 'permalien',
 		
+		// Title of attachment list
+		'attachments' => 'Pièces jointes:',
+		
 		// Action links of a message
 		'answer' => 'Répondre',
 		// This link is only shown for messages the user posted by himself

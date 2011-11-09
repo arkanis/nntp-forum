@@ -77,6 +77,9 @@ return array(
 		// Name of the permanent link to a message
 		'permalink' => 'permalink',
 		
+		// Title of attachment list
+		'attachments' => 'Anhänge:',
+		
 		// Action links of a message
 		'answer' => 'Antworten',
 		// This link is only shown for messages the user posted by himself

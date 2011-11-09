@@ -114,6 +114,7 @@ function traverse_tree($tree_level){
 		
 		if ( ! empty($message_data['attachments']) ){
 			echo('	<ul class="attachments">' . "\n");
+			echo('		<li>' . lh('messages', 'attachments') . '</li>' . "\n");
 			foreach($message_data['attachments'] as $attachment)
 				echo('		<li><a href="/' . urlencode($group) . '/' . urlencode($overview['number']) . '/' . urlencode($attachment['name']) . '">' . h($attachment['name']) . '</a> (' . number_to_human_size($attachment['size']) . ')</li>' . "\n");
 			echo("	</ul>\n");
