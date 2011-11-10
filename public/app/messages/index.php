@@ -39,8 +39,12 @@ $thread_tree = array( $topic_id => $message_tree[$topic_id] );
 // a direct link the tracker was not updated by the topic indes before. Otherwise messages added
 // since the last update (newer than the tracked watermark) will be marked as unread on the
 // next update, even if the user alread viewed the message now.
-$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($CONFIG['nntp']['user']));
-$tracker->update($group, $message_tree, $message_infos, $CONFIG['unread_tracker_topic_limit']);
+if ( $CONFIG['unread_tracker']['file'] ) {
+	$tracker = new UnreadTracker($CONFIG['unread_tracker']['file']);
+	$tracker->update($group, $message_tree, $message_infos, $CONFIG['unread_tracker']['topic_limit']);
+} else {
+	$tracker = null;
+}
 
 // See if the current user is allowed to post in this newsgroup
 $nntp->command('list active ' . $group, 215);
@@ -99,7 +103,7 @@ function traverse_tree($tree_level){
 		}
 		
 		echo("<li>\n");
-		$unread_class = $tracker->is_message_unread($group, $topic_number, $overview['number']) ? ' class="unread"' : '';
+		$unread_class = ( $tracker and $tracker->is_message_unread($group, $topic_number, $overview['number']) ) ? ' class="unread"' : '';
 		printf('<article id="message-%d" data-number="%d"%s>' . "\n", $overview['number'], $overview['number'], $unread_class);
 		echo("	<header>\n");
 		echo("		<p>");
@@ -144,7 +148,8 @@ function traverse_tree($tree_level){
 
 traverse_tree($thread_tree);
 $nntp->close();
-$tracker->mark_topic_read($group, $topic_number);
+if ($tracker)
+	$tracker->mark_topic_read($group, $topic_number);
 
 ?>
 

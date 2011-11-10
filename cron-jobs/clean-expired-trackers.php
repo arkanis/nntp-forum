@@ -10,11 +10,24 @@
  */
 
 define('ROOT_DIR', dirname(__FILE__) . '/..');
-require(ROOT_DIR . '/include/config.php');
 
-$tracker_files = glob($CONFIG['unread_tracker_dir'] . '/*');
+// Load first because the `autodetect_lang()` function can be used in the configuration file.
+require(ROOT_DIR . '/include/action_helpers.php');
+
+// Set the stuff used in the config file… otherwise we will get some warnings.
+$_SERVER['PHP_AUTH_USER'] = null;
+$_SERVER['PHP_AUTH_PW'] = null;
+
+// If we are run in an environment load the matching config file. Otherwise just load the
+// defaul config.
+if ($_CONFIG_ENV = getenv('ENVIRONMENT'))
+	$CONFIG = require( ROOT_DIR . '/include/' . basename("config.$env.php") );
+else
+	$CONFIG = require( ROOT_DIR . '/include/config.php' );
+
+$tracker_files = glob( dirname($CONFIG['unread_tracker']['file']) . '/*' );
 foreach($tracker_files as $file){
-	if ( filemtime($file) + $CONFIG['unread_tracker_unused_expire_time'] < time() )
+	if ( filemtime($file) + $CONFIG['unread_tracker']['unused_expire_time'] < time() )
 		unlink($file);
 }
 

@@ -24,10 +24,14 @@ $posting_allowed = ($post_flag != 'n');
 $nntp->close();
 
 // Load existing unread tracking information and mark new topics as unread
-$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($CONFIG['nntp']['user']));
-$tracker->update_and_save($group, $message_tree, $message_infos, $CONFIG['unread_tracker_topic_limit']);
+if ( $CONFIG['unread_tracker']['file'] ) {
+	$tracker = new UnreadTracker($CONFIG['unread_tracker']['file']);
+	$tracker->update_and_save($group, $message_tree, $message_infos, $CONFIG['unread_tracker']['topic_limit']);
+} else {
+	$tracker = null;
+}
 
-if ( isset($_GET['all-read']) ){
+if ( isset($_GET['all-read']) and $tracker ){
 	// If the `all-read` parameter is set mark all topics in this group as read and
 	// reload the page with a redirect (so the parameter is no longer in the URL).
 	$tracker->mark_all_topics_read($group);
@@ -56,7 +60,7 @@ foreach($message_tree as $message_id => $replies){
 		'message' => $topic_message,
 		'latest_message' => $latest_message,
 		'reply_count' => $reply_count,
-		'unread' => $tracker->is_topic_unread($group, $topic_message['number'])
+		'unread' => $tracker ? $tracker->is_topic_unread($group, $topic_message['number']) : false
 	);
 }
 
@@ -146,7 +150,7 @@ $body_class = 'topics';
 		</tr>
 <? else: ?>
 <?	foreach($topics as $topic): ?>
-<?		if ( $tracker->is_topic_unread($group, $topic['message']['number']) ): ?>
+<?		if ( $tracker and $tracker->is_topic_unread($group, $topic['message']['number']) ): ?>
 		<tr class="unread">
 <?		else: ?>
 		<tr>

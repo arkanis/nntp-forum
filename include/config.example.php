@@ -10,6 +10,13 @@
 // 
 // Environment variables can usually be set in the webserver configuration. In case of the
 // Apache2 webserver you can use the `SetEnv` e.g. in the virtual host of the NNTP forum.
+// 
+// This config file is also used by the `clean-expired-trackers` cron job
+// (`cron-jobs/clean-expired-trackers.php`). This cron job can also take the `ENVIRONMENT`
+// environment variable to load a config file for a specific environment.
+// 
+// The variables `$_SERVER['PHP_AUTH_USER']` and `$_SERVER['PHP_AUTH_PW']` are both
+// set to `null` in the config file.
 
 return array(
 	'nntp' => array(
@@ -120,12 +127,20 @@ return array(
 	'cache_dir' => ROOT_DIR . '/cache',
 	'cache_lifetime' => 5 * 60,  // 5 minutes
 	
-	'unread_tracker_dir' => ROOT_DIR . '/unread-tracker',
-	'unread_tracker_topic_limit' => 50,
-	// Used by the clean-expired-trackers cron job. Tracker that have not been modified for
-	// the time specified here (in seconds) are deleted by the cron job. This will prevent a
-	// slow disk overflow when students come and go.
-	'unread_tracker_unused_expire_time' => 60 * 60 * 24 * 30 * 6,
+	// Unread tracker settings
+	'unread_tracker' => array(
+		// This is the path to the file used to track unread topics. As default each user gets his
+		// own file. If you want to disable unread tracking (e.g. for a public newsgroup) set this
+		// option to `null`.
+		'file' => ROOT_DIR . '/unread-tracker/' . $_SERVER['PHP_AUTH_USER'],
+		// The maximum number of _unread_ topics the tracker can remember in one file. This
+		// restriction makes sure that the tracker data does not grow over time.
+		'topic_limit' => 50,
+		// Tracker that have not been modified for the time specified here (in seconds) are deleted
+		// by the `clean-expired-trackers` cron job (`cron-jobs/clean-expired-trackers.php`). This
+		// will prevent a slow disk overflow when users come and go.
+		'unused_expire_time' => 60 * 60 * 24 * 30 * 6
+	),
 	
 	// The user agent string added as a message header. Important for others to see who is
 	// responsible for an idealistically UTF-8 encoded message.

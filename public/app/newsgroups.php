@@ -78,7 +78,10 @@ foreach($newsgroups as $name => $infos){
 }
 
 // Load the unread tracking information for this user
-$tracker = new UnreadTracker($CONFIG['unread_tracker_dir'] . '/' . basename($CONFIG['nntp']['user']));
+if ( $CONFIG['unread_tracker']['file'] )
+	$tracker = new UnreadTracker($CONFIG['unread_tracker']['file']);
+else
+	$tracker = null;
 
 // Setup layout variables
 $title = null;
@@ -97,7 +100,7 @@ $body_class = 'newsgroups';
 	</thead>
 	<tbody>
 <?	foreach($ordered_newsgroups as $name => $newsgroup): ?>
-<?		if ( $tracker->is_newsgroup_unread($name, $newsgroup['last_post']['number']) ): ?>
+<?		if ( $tracker and $tracker->is_newsgroup_unread($name, $newsgroup['last_post']['number']) ): ?>
 		<tr class="unread">
 <?		else: ?>
 		<tr>
