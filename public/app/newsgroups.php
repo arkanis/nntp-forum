@@ -66,8 +66,12 @@ $ordered_newsgroups = array();
 if ( !empty($descriptions) ){
 	foreach(explode("\n", $descriptions) as $group_info){
 		list($name, $description) = preg_split('/\s+/', $group_info, 2);
-		$ordered_newsgroups[$name] = $newsgroups[$name];
-		$ordered_newsgroups[$name]['description'] = trim($description);
+		if ( isset($newsgroups[$name]) ){
+			// Only show a group if it was returned by the initial `list` (active) command.
+			// Otherwise we might get a description for a not selectable group.
+			$ordered_newsgroups[$name] = $newsgroups[$name];
+			$ordered_newsgroups[$name]['description'] = trim($description);
+		}
 	}
 }
 
