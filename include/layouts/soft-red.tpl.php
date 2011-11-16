@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="<?= $CONFIG['lang'] ?>">
 <head>
 	<meta charset="utf-8">
 	<title><? if ($title) echo(h($title) . ' - '); ?><?= h(lt($CONFIG['title'])) ?></title>
