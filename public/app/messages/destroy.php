@@ -58,6 +58,7 @@ try {
 	
 	// Now we got all we need to construct the cancel message
 	$from = $CONFIG['sender_address']($CONFIG['nntp']['user'], $CONFIG['nntp']['user']);
+	$content = l('messages', 'deleted_moderator_message');
 	$cancel_message = <<<EOD
 Control: cancel $message_id
 From: $from
@@ -65,7 +66,7 @@ Subject: $subject
 Newsgroups: $newsgroups
 Content-Type: text/plain; charset=utf-8
 
-Der Autor beantragt über das Webinterface die Löschung der Nachricht.
+$content
 EOD;
 	
 	// Post the cancel message

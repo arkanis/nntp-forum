@@ -70,6 +70,11 @@ return array(
 		// message list. As soon as the cache is updated the deleted messages will vanish.
 		'deleted' => 'Ce message a été supprimé par son auteur.',
 		
+		// This is the content of the delete _request_ send to the server. Usually these requests
+		// are handled automatically. However some server might require a moderator to accept
+		// these requests. This message is what such an moderator will see.
+		'deleted_moderator_message' => 'Ce message a été annulé par son auteur.',
+		
 		// Header text of a message.
 		// Arguments: message author, message date
 		'message_header' => '%s, %s',
