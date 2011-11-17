@@ -15,8 +15,8 @@
 // (`cron-jobs/clean-expired-trackers.php`). This cron job can also take the `ENVIRONMENT`
 // environment variable to load a config file for a specific environment.
 // 
-// The variables `$_SERVER['PHP_AUTH_USER']` and `$_SERVER['PHP_AUTH_PW']` are both
-// set to `null` in the config file.
+// For the cron job he variables `$_SERVER['PHP_AUTH_USER']` and `$_SERVER['PHP_AUTH_PW']`
+// are both set to `null` in the config file.
 
 return array(
 	'nntp' => array(
