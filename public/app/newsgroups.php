@@ -8,7 +8,7 @@ require(ROOT_DIR . '/include/header.php');
 // information of restricted newsgroups to be read by normal users.
 $nntp = nntp_connect_and_authenticate($CONFIG);
 
-$nntp->command('list', 215);
+$nntp->command('list active ' .  $CONFIG['newsgroups'], 215);
 $newsgroup_list = $nntp->get_text_response();
 
 $newsgroups = array();

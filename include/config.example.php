@@ -50,6 +50,11 @@ return array(
 		'pass' => $_SERVER['PHP_AUTH_PW']
 	),
 	
+	// An RFC 977 wildmat (http://tools.ietf.org/html/rfc977#section-3.8) that specifies which newsgroups
+	// should be displayed. Examples: "hdm.allgemein", "hdm.mi.*-offiziell", "hdm.*,!hdm.test.*" (matches
+	// all newsgroups in "hdm" but not any "hdm.test.*" newsgroups)
+	'newsgroups' => '*',
+	
 	// The title of the website shown in the header of each page.
 	// If you want different title for different languages you can use an array instead of a simple string:
 	// 	'title' => array('en' => 'FooBar message board', 'de' => 'FooBar Nachrichtenzentrale'),
