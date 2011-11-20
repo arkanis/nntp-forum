@@ -104,7 +104,7 @@ return array(
 		*/
 	),
 	
-	// Options for the image thumbnail generation
+	// Options for the image thumbnail generation. The GD PHP module needs to be installed for this to work!
 	'thumbnails' => array(
 		// Set to `true` to enable thumbnail generation. PLEASE BE AWARE: This feature may eat up your server
 		// CPU! Resizing images is an calcuation intensive matter so it's better to turn it off if you expect many
