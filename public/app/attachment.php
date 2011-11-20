@@ -63,5 +63,6 @@ $message_parser = new MessageParser(array(
 ));
 $nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
 $nntp->close();
+$message_parser->end_of_message();
 
 ?>

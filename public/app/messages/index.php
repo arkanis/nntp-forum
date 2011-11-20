@@ -78,7 +78,6 @@ function traverse_tree($tree_level){
 	$empty_message_data = array(
 		'newsgroup' => null,
 		'content' => null,
-		'content_encoding' => null,
 		'attachments' => array()
 	);
 	// Storage area for message parser event handlers
@@ -95,8 +94,9 @@ function traverse_tree($tree_level){
 		list($status,) = $nntp->command('article ' . $id, array(220, 430));
 		if ($status == 220){
 			$nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
+			$message_parser->end_of_message();
 			// All the stuff in `$message_data` is set by the event handlers of the parser
-			$content = Markdown( iconv($message_data['content_encoding'], 'UTF-8', $message_data['content']) );
+			$content = Markdown($message_data['content']);
 		} else {
 			$content = '<p class="empty">' . l('messages', 'deleted') . '</p>';
 			$message_data['attachments'] = array();

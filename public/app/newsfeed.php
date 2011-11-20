@@ -47,7 +47,6 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	$empty_message_data = array(
 		'newsgroup' => null,
 		'content' => null,
-		'content_encoding' => null,
 		'attachments' => array()
 	);
 	// Storage area for message parser event handlers
@@ -67,10 +66,9 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 		$nntp->command('article ' . $message_id, 220);
 		// Parse it. The parser event handlers store the message information in $message_data.
 		$nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
-		// Decode the message content to UTF-8 and convert it to HTML
-		$message_data['content'] = Markdown( iconv($message_data['content_encoding'], 'UTF-8', $message_data['content']) );
-		// Remove the encoding, no need to keep this in a nice and cachable array
-		unset($message_data['content_encoding']);
+		$message_parser->end_of_message();
+		// Convert the message content to HTML
+		$message_data['content'] = Markdown($message_data['content']);
 		
 		// Fetch the message tree of the newsgroup this article was posed in (or the first one of those
 		// if it was posted in many). We need this to get the message number for the links.
@@ -87,8 +85,8 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 			$messages[$message_id] = $message_data;
 		}
 		
-		// Reset the parser and the storage variable to make them ready for the next iteration
-		$message_parser->reset();
+		// Reset the storage variable to make it ready for the next iteration. The parser is automatically reset
+		// by the `end_of_message()` function.
 		$message_data = $empty_message_data;
 	}
 	
