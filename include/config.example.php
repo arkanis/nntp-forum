@@ -104,6 +104,23 @@ return array(
 		*/
 	),
 	
+	// Options for the image thumbnail generation
+	'thumbnails' => array(
+		// Set to `true` to enable thumbnail generation. PLEASE BE AWARE: This feature may eat up your server
+		// CPU! Resizing images is an calcuation intensive matter so it's better to turn it off if you expect many
+		// images to be posted. This does not increase the load of the NNTP server. The message data is feteched
+		// anyway and the images are generated from the same data.
+		'enabled' => true,
+		// The width for landscape images
+		'width' => 100,
+		// The height for portrait images
+		'height' => 100,
+		// Quality of the thumbnails. All thumbnails are stored as JPEG.
+		'quality' => 60,
+		// After that time (in seconds) thumbnails are deleted by the clean-expired-trackers cronjob
+		'expire_time' => 60 * 60 * 24 * 7  // one week
+	),
+	
 	// Connection and search settings for the LDAP name lookup. This lookup is performed before a new message
 	// is send to the NNTP server. It translates the login of the user into a display name that can then be used to
 	// build a proper sender address (see below).
