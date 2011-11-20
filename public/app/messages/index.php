@@ -87,6 +87,95 @@ function traverse_tree($tree_level){
 	// information if present.
 	$message_parser = MessageParser::for_text_and_attachments($message_data);
 	
+	// The following scary bit of code extends the message parser to generate image previews while
+	// the message is parsed. It is event driven code like the rest of the parser. We wrap new anonymous
+	// functions around the events thar are already there.
+	// This wrapper pattern (inspired by Lisp and JavaScript) should be moved to the `for_text_and_attachments()`
+	// function as "extended events". But for now it works.
+	if ($CONFIG['thumbnails']['enabled']){
+		// Original event handlers. Remember them here to call them later on.
+		$old_message_header = $message_parser->events['message-header'];
+		$old_part_header = $message_parser->events['part-header'];
+		$old_record_attachment_size = $message_parser->events['record-attachment-size'];
+		$old_part_end = $message_parser->events['part-end'];
+		
+		// State variables used across our event handlers
+		$message_id;
+		$raw_data = null;
+		
+		// Only record the message ID from the message headers. We need it to build a unique hash.
+		$message_parser->events['message-header'] = function($headers) use($old_message_header, &$message_id){
+			$message_id = $headers['message-id'];
+			return $old_message_header($headers);
+		};
+		
+		// If we got an image and it's not already in the thumbnail cache set `$raw_data` so the other
+		// events will take action.
+		$message_parser->events['part-header'] = function($headers, $content_type, $content_type_params) use($old_part_header, &$raw_data, &$message_id, &$message_data){
+			$content_event = $old_part_header($headers, $content_type, $content_type_params);
+			if ( $content_event == 'record-attachment-size' and preg_match('#image/.*#', $content_type) ){
+				$last_index = count($message_data['attachments']) - 1;
+				$display_name = $message_data['attachments'][$last_index]['name'];
+				$cache_name = md5($message_id . $display_name);
+				$message_data['attachments'][$last_index]['preview'] = $cache_name;
+				
+				// If there is no cached version available kick of the data recording and preview generation
+				if ( ! file_exists(ROOT_DIR . '/public/thumbnails/' . $cache_name) )
+					$raw_data = array();
+			}
+			return $content_event;
+		};
+		
+		// Record raw image data if requested. Append each data chunk to the `$raw_data` array to avoid
+		// to many concatinations.
+		$message_parser->events['record-attachment-size'] = function($line) use($old_record_attachment_size, &$raw_data){
+			if ( $raw_data !== null )  // is_array() makes trouble in this spot, seems to hand in an endless loop
+				$raw_data[] = $line;
+			return $old_record_attachment_size($line);
+		};
+		
+		// We're at the end of an MIME part. If we got raw data to process load the actual image from them.
+		// Create a thumbnail version and put it into the cache.
+		$message_parser->events['part-end'] = function() use($old_part_end, $CONFIG, &$raw_data, &$message_data){
+			if ( $raw_data !== null ){
+				$data = join('', $raw_data);
+				$image = @imagecreatefromstring($data);
+				
+				if ($image) {
+					$width = imagesx($image);
+					$height = imagesy($image);
+					
+					if ($width > $height) {
+						// Landscape format
+						$preview_width = $CONFIG['thumbnails']['width'];
+						$preview_height = $height / ($width / $CONFIG['thumbnails']['width']);
+					} else {
+						// Portrait format
+						$preview_height = $CONFIG['thumbnails']['height'];
+						$preview_width = $width / ($height / $CONFIG['thumbnails']['height']);
+					}
+					
+					$preview_image = imagecreatetruecolor($preview_width, $preview_height);
+					imagecopyresampled($preview_image, $image, 0, 0, 0, 0, $preview_width, $preview_height, $width, $height);
+					imagedestroy($image);
+					
+					$last_index = count($message_data['attachments']) - 1;
+					$cache_name = $message_data['attachments'][$last_index]['preview'];
+					
+					imagejpeg($preview_image, ROOT_DIR . '/public/thumbnails/' . $cache_name, $CONFIG['thumbnails']['quality']);
+					imagedestroy($preview_image);
+				} else {
+					// If we could not create the preview kill the preview name from the message data
+					$last_index = count($message_data['attachments']) - 1;
+					unset($message_data['attachments'][$last_index]['preview']);
+				}
+				
+				$raw_data = null;
+			}
+			return $old_part_end();
+		};
+	}
+	
 	echo("<ul>\n");
 	foreach($tree_level as $id => $replies){
 		$overview = $message_infos[$id];
@@ -119,8 +208,16 @@ function traverse_tree($tree_level){
 		if ( ! empty($message_data['attachments']) ){
 			echo('	<ul class="attachments">' . "\n");
 			echo('		<li>' . lh('messages', 'attachments') . '</li>' . "\n");
-			foreach($message_data['attachments'] as $attachment)
-				echo('		<li><a href="/' . urlencode($group) . '/' . urlencode($overview['number']) . '/' . urlencode($attachment['name']) . '">' . h($attachment['name']) . '</a> (' . number_to_human_size($attachment['size']) . ')</li>' . "\n");
+			foreach($message_data['attachments'] as $attachment){
+				if ( isset($attachment['preview']) ) {
+					echo('		<li class="thumbnail" style="background-image: url(/thumbnails/' . $attachment['preview'] . ');">' . "\n");
+				} else {
+					echo('		<li>' . "\n");
+				}
+				echo('			<a href="/' . urlencode($group) . '/' . urlencode($overview['number']) . '/' . urlencode($attachment['name']) . '">' . h($attachment['name']) . '</a>' . "\n");
+				echo('			(' . number_to_human_size($attachment['size']) . ')' . "\n");
+				echo('		</li>' . "\n");
+			}
 			echo("	</ul>\n");
 		}
 		

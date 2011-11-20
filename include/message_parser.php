@@ -9,7 +9,7 @@
  * 
  * During the parsing the message parser triggers several events:
  * 
- * 	message-header ( part-header <line event>* )+ end-of-message
+ * 	message-header ( part-header <line event>* part-end )+ message-end
  * 
  * - `message-header`: Triggered first and only once after all message headers have been parsed.
  *   The handler gets all message headers. All header names are converted to lower case.
@@ -23,12 +23,15 @@
  *     (which are already in the headers given to the `part-header` event).
  *   - `<line event>`: If the `part-header` event returned an event name this event is triggered for each
  *     content line of the part.
- * - `end-of-message`: Triggered as soon as the `end_of_message()` method of the parser is called. The
+ *   - `part-end`: This event is triggered at the end of each MIME part. The handler doesn't get any
+ *     arguments. This event can be used to finalize the processing of a part (e.g. compressing an extracted
+ *     image).
+ * - `message-end`: Triggered as soon as the `end_of_message()` method of the parser is called. The
  *   handler gets no arguments. This event is useful for postprocessing like encoding the message content
  *   to UTF-8 or converting HTML to plain text.
  * 
  * Normal non MIME encoded messages are handled like a MIME message with just one part. This
- * way handlers don't need any extra modifications to handle non MIME messages.
+ * way handlers don't need extra modifications to handle non MIME messages.
  * 
  * Handlers for these events can be given to the constructor as an associative array. Note that any
  * outside variables the handlers changes must be declared with `use(&$var)`. Otherwise the anonymous
@@ -72,33 +75,23 @@ class MessageParser
 	 * is prefered but if conly HTML is available it will be converted to plain text. The text content is
 	 * automatically converted to UTF-8 as soon as `end_of_message()` is called. The information is
 	 * stored in the `$message_data` argument.
-	 * 
-	 * The `$custome_events` argument can be used to override the handlers defined by this function.
-	 * You should only do that if you know what you are doing and have read the source code of this
-	 * function.
 	 */
-	static function for_text_and_attachments(&$message_data, $custome_events = array()){
+	static function for_text_and_attachments(&$message_data){
 		$events = array(
 			'message-header' => function($headers) use(&$message_data){
 				$message_data['newsgroup'] = trim(reset(explode(',', $headers['newsgroups'])));
 			},
 			'part-header' => function($headers, $content_type, $content_type_params) use(&$message_data){
 				if ( preg_match('#text/(plain|html)#', $content_type) ) {
-					if ($message_data['content'] == null) {
-						// The first text or HTML part found
+					// Take the first plain text or HTML part (this is the first condition).
+					// If we already have `text/html` content and get a new `text/plain` part take the new text part
+					// (this is the other condition). We prefere plain text over HTML since the text from the mail
+					// client is probably better than the stripped HTML stuff created in the `message-end` event.
+					if ( $message_data['content'] == null or ( $message_data['content_type'] == 'text/html' and $content_type == 'text/plain' ) ){
+						$message_data['content'] = '';
 						$message_data['content_type'] = $content_type;
 						$message_data['content_encoding'] = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
 						return 'append-content-line';
-					} else {
-						// Another text or HTML part. If we only have HTML until now and get a plain text
-						// part, use the plain text. This should catch any alternative plain text provided by
-						// mail programs. Otherwise stick to what we already have.
-						if ( $message_data['content_type'] == 'text/html' and $content_type == 'text/plain' ){
-							$message_data['content'] = '';
-							$message_data['content_type'] = $content_type;
-							$message_data['content_encoding'] = isset($content_type_params['charset']) ? $content_type_params['charset'] : 'ISO-8859-1';
-							return 'append-content-line';
-						}
 					}
 				} else if ( isset($headers['content-disposition']) ) {
 					list($disposition_type, $disposition_parms) = MessageParser::parse_type_params_header($headers['content-disposition']);
@@ -119,7 +112,7 @@ class MessageParser
 				$current_attachment_index = count($message_data['attachments']) - 1;
 				$message_data['attachments'][$current_attachment_index]['size'] += strlen($line);
 			},
-			'end-of-message' => function() use(&$message_data){
+			'message-end' => function() use(&$message_data){
 				// Decode the message content to UTF-8
 				$message_data['content'] = iconv($message_data['content_encoding'], 'UTF-8', $message_data['content']);
 				unset($message_data['content_encoding']);
@@ -128,7 +121,6 @@ class MessageParser
 					$message_data['content'] = preg_replace('/^[ \t]+/m', '', strip_tags($message_data['content']));
 			}
 		);
-		$events = array_merge($events, $custome_events);
 		return new self($events);
 	}
 	
@@ -198,7 +190,7 @@ class MessageParser
 	
 	
 	// Event handler functions or callbacks
-	private $events = array();
+	public $events = array();
 	
 	// Keeps track of the state of the state machine.
 	private $state = 'message_headers';
@@ -225,7 +217,8 @@ class MessageParser
 		$default_events = array(
 			'message-header' => function($headers){ },
 			'part-header' => function($headers, $content_type, $content_type_params){ },
-			'end-of-message' => function(){ }
+			'part-end' => function(){ },
+			'message-end' => function(){ }
 		);
 		$this->events = array_merge($default_events, $events);
 	}
@@ -254,12 +247,18 @@ class MessageParser
 	}
 	
 	/**
-	 * Markes the end of a message. This triggers the `end-of-message` event that may be used for post
+	 * Markes the end of a message. This triggers the `message-end` event that may be used for post
 	 * processing of message data (e.g. convert HTML to plain text). This function also resets the parser
 	 * state afterwards by calling `reset()`.
+	 * 
+	 * If the message was not a MIME message this method also triggers the `part-end` event. This is
+	 * done before the `message-end` event. This way you can write code for MIME messages that will
+	 * also work for normal messages.
 	 */
 	function end_of_message(){
-		call_user_func($this->events['end-of-message']);
+		if ($this->state == 'message_body')
+			call_user_func($this->events['part-end']);
+		call_user_func($this->events['message-end']);
 		$this->reset();
 	}
 	
@@ -389,15 +388,18 @@ class MessageParser
 	 * state. If an end boundary is encoutered we pop the topmost boundary from the stack (because we're
 	 * done with that multipart entity) and change back to the `mime_body` state.
 	 * 
-	 * If the current line is no boundary decode the current transfer encoding and call the current content
-	 * event if defined. If it isn't defined no one is interested in the content and we can discard the line.
+	 * Since both types of boundaries end a part the `part-end` event is triggered. If the current line is no
+	 * boundary decode the current transfer encoding and call the current content event if defined. If it isn't
+	 * defined no one is interested in the content and we can discard the line.
 	 */
 	private function mime_part_content($line){
 		list($boundary, $end_boundary) = end($this->mime_boundaries);
 		if ($line == $boundary) {
+			call_user_func($this->events['part-end']);
 			$this->headers = array();
 			$this->state = 'mime_part_headers';
 		} elseif ($line == $end_boundary) {
+			call_user_func($this->events['part-end']);
 			array_pop($this->mime_boundaries);
 			$this->state = 'mime_body';
 		} else {

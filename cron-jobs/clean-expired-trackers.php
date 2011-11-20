@@ -25,9 +25,17 @@ if ($_CONFIG_ENV = getenv('ENVIRONMENT'))
 else
 	$CONFIG = require( ROOT_DIR . '/include/config.php' );
 
+// Delete old tracker files
 $tracker_files = glob( dirname($CONFIG['unread_tracker']['file']) . '/*' );
 foreach($tracker_files as $file){
 	if ( filemtime($file) + $CONFIG['unread_tracker']['unused_expire_time'] < time() )
+		unlink($file);
+}
+
+// Delete old thumbnail files
+$thumbnail_files = glob( ROOT_DIR . '/public/thumbnails/*' );
+foreach($thumbnail_files as $file){
+	if ( filemtime($file) + $CONFIG['thumbnails']['expire_time'] < time() )
 		unlink($file);
 }
 
