@@ -15,8 +15,8 @@
 // (`cron-jobs/clean-expired-trackers.php`). This cron job can also take the `ENVIRONMENT`
 // environment variable to load a config file for a specific environment.
 // 
-// The variables `$_SERVER['PHP_AUTH_USER']` and `$_SERVER['PHP_AUTH_PW']` are both
-// set to `null` in the config file.
+// For the cron job he variables `$_SERVER['PHP_AUTH_USER']` and `$_SERVER['PHP_AUTH_PW']`
+// are both set to `null` in the config file.
 
 return array(
 	'nntp' => array(
@@ -104,7 +104,7 @@ return array(
 		*/
 	),
 	
-	// Options for the image thumbnail generation. The GD PHP module needs to be installed for this to work!
+	// Options for the image thumbnail generation
 	'thumbnails' => array(
 		// Set to `true` to enable thumbnail generation. PLEASE BE AWARE: This feature may eat up your server
 		// CPU! Resizing images is an calcuation intensive matter so it's better to turn it off if you expect many
