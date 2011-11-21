@@ -55,6 +55,7 @@ try {
 	// This empty line triggers the content part of the message and fires the `message-header`
 	// event of the parser.
 	$message_parser->parse_line('');
+	$message_parser->end_of_message();
 	
 	// Now we got all we need to construct the cancel message
 	$from = $CONFIG['sender_address']($CONFIG['nntp']['user'], $CONFIG['nntp']['user']);

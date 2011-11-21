@@ -8,7 +8,7 @@ if( !isset($_GET['newsgroup']) or !isset($_GET['number']) or !isset($_GET['attac
 
 $group = sanitize_newsgroup_name($_GET['newsgroup']);
 $message_number = intval($_GET['number']);
-$attachment_name = basename($_GET['attachment']);
+$attachment_name = urldecode(basename($_GET['attachment']));
 
 // Connect to the newsgroup and get the (possibly cached) message tree and information.
 $nntp = nntp_connect_and_authenticate($CONFIG);
@@ -35,9 +35,10 @@ if ($message_id == null)
 // attachment output all lines of it directly to the browser. The transfer encoding like base64
 // is handled by the message parser.
 $nntp->command('article ' . $message_id, 220);
+$attachment_found = false;
 
 $message_parser = new MessageParser(array(
-	'part-header' => function($headers, $content_type, $content_type_params) use(&$attachment_name){
+	'part-header' => function($headers, $content_type, $content_type_params) use(&$attachment_name, &$attachment_found){
 		if( isset($headers['content-disposition']) ) {
 			list($disposition_type, $disposition_parms) = MessageParser::parse_type_params_header($headers['content-disposition']);
 		} else {
@@ -51,6 +52,7 @@ $message_parser = new MessageParser(array(
 			$name = $disposition_parms['filename'];
 		
 		if ( isset($name) and $name == $attachment_name ){
+			$attachment_found = true;
 			header('Content-Type: ' . $headers['content-type']);
 			if ( isset($headers['content-disposition']) )
 				header('Content-Disposition: ' . $headers['content-disposition']);
@@ -63,5 +65,9 @@ $message_parser = new MessageParser(array(
 ));
 $nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
 $nntp->close();
+$message_parser->end_of_message();
+
+if ( !$attachment_found )
+	exit_with_not_found_error();
 
 ?>

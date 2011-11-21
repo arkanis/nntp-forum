@@ -3,12 +3,13 @@
 define('ROOT_DIR', '../..');
 require(ROOT_DIR . '/include/header.php');
 
-// Query overview information about all newsgroups. This information can not be cached
-// since the list of newsgroups depends on the user priviliges. Caching would allow
-// information of restricted newsgroups to be read by normal users.
+// Query overview information about all newsgroups (filtered by the configured wildmat).
+// This information can not be cached since the list of newsgroups depends on the user
+// priviliges. Caching would allow information of restricted newsgroups to be read by
+// normal users.
 $nntp = nntp_connect_and_authenticate($CONFIG);
 
-$nntp->command('list', 215);
+$nntp->command('list active ' .  $CONFIG['newsgroups']['filter'], 215);
 $newsgroup_list = $nntp->get_text_response();
 
 $newsgroups = array();
@@ -56,29 +57,48 @@ foreach(explode("\n", $newsgroup_list) as $newsgroup){
 	);
 }
 
-// Query the newsgroup description file. The order of the file is also used as display order.
+// Query the newsgroup description file. The order of these descriptions are also used as a
+// starting point for the display order.
 $nntp->command('list newsgroups', 215);
 $descriptions = $nntp->get_text_response();
 $nntp->close();
 
 // The `trim()` call is a bugfix for INN 2.4
-$ordered_newsgroups = array();
+$desc_ordered_newsgroups = array();
 if ( !empty($descriptions) ){
 	foreach(explode("\n", $descriptions) as $group_info){
 		list($name, $description) = preg_split('/\s+/', $group_info, 2);
 		if ( isset($newsgroups[$name]) ){
 			// Only show a group if it was returned by the initial `list` (active) command.
 			// Otherwise we might get a description for a not selectable group.
-			$ordered_newsgroups[$name] = $newsgroups[$name];
-			$ordered_newsgroups[$name]['description'] = trim($description);
+			$desc_ordered_newsgroups[$name] = $newsgroups[$name];
+			$desc_ordered_newsgroups[$name]['description'] = trim($description);
 		}
 	}
 }
 
 // Append the newsgroups not mentioned in the description file below the ordered newsgroups.
 foreach($newsgroups as $name => $infos){
-	if ( ! array_key_exists($name, $ordered_newsgroups) )
-		$ordered_newsgroups[$name] = $infos;
+	if ( ! array_key_exists($name, $desc_ordered_newsgroups) )
+		$desc_ordered_newsgroups[$name] = $infos;
+}
+
+// Sort the newsgroups according to the configuration
+if ( is_array($CONFIG['newsgroups']['order']) ) {
+	// If we got an array of names show that groups first, the rest after them
+	$ordered_newsgroups = array();
+	foreach( $CONFIG['newsgroups']['order'] as $name )
+		if ( array_key_exists($name, $desc_ordered_newsgroups) )
+			$ordered_newsgroups[$name] = $desc_ordered_newsgroups[$name];
+	foreach( $desc_ordered_newsgroups as $name => $infos )
+		if ( ! array_key_exists($name, $ordered_newsgroups) )
+			$ordered_newsgroups[$name] = $infos;
+} else if ( is_callable($CONFIG['newsgroups']['order']) ) {
+	// If a callable is supplied let it order the list
+	$ordered_newsgroups = call_user_func($CONFIG['newsgroups']['order'], $desc_ordered_newsgroups);
+} else {
+	// If nothing is configured just use the order of the description list
+	$ordered_newsgroups = $desc_ordered_newsgroups;
 }
 
 // Load the unread tracking information for this user

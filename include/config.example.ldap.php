@@ -50,6 +50,24 @@ return array(
 		'pass' => $_SERVER['PHP_AUTH_PW']
 	),
 	
+	// Config options for the newsgroup index page
+	'newsgroups' => array(
+		// An RFC 977 wildmat (http://tools.ietf.org/html/rfc977#section-3.8) that specifies which newsgroups
+		// should be displayed. Examples: "hdm.allgemein", "hdm.mi.*-offiziell", "hdm.*,!hdm.test.*" (matches
+		// all newsgroups in "hdm" but not any "hdm.test.*" newsgroups)
+		'filter' => '*',
+		// Order of the newsgroup list. If the value is `null` the order of the descriptions of the NNTP server is
+		// used. With INN this is the order you wrote the descriptions into the description file.
+		// If the value is an array of group names these groups are shown first in that order. All groups not listed
+		// in the array are shown afterwards. Example:
+		// 	'order' => array('public.welcome', 'public.bugreports')
+		// If the value is a function that function will get the entire group list with all information. The group
+		// names are the array keys. The function have to return the sorted group list. Example:
+		// 	'order' => function($list){ krsort($list); return $list; }
+		// This will sort the group list alphabetically by the group names (reverse array key sort).
+		'order' => null
+	),
+	
 	// The title of the website shown in the header of each page.
 	// If you want different title for different languages you can use an array instead of a simple string:
 	// 	'title' => array('en' => 'FooBar message board', 'de' => 'FooBar Nachrichtenzentrale'),
@@ -84,6 +102,23 @@ return array(
 			'limit' => 10
 		)
 		*/
+	),
+	
+	// Options for the image thumbnail generation
+	'thumbnails' => array(
+		// Set to `true` to enable thumbnail generation. PLEASE BE AWARE: This feature may eat up your server
+		// CPU! Resizing images is an calcuation intensive matter so it's better to turn it off if you expect many
+		// images to be posted. This does not increase the load of the NNTP server. The message data is feteched
+		// anyway and the images are generated from the same data.
+		'enabled' => true,
+		// The width for landscape images
+		'width' => 100,
+		// The height for portrait images
+		'height' => 100,
+		// Quality of the thumbnails. All thumbnails are stored as JPEG.
+		'quality' => 60,
+		// After that time (in seconds) thumbnails are deleted by the clean-expired-trackers cronjob
+		'expire_time' => 60 * 60 * 24 * 7  // one week
 	),
 	
 	// Connection and search settings for the LDAP name lookup. This lookup is performed before a new message

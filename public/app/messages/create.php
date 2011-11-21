@@ -81,7 +81,10 @@ try {
 			}
 		));
 		$parent_headers = $nntp->get_text_response_per_line(array($message_parser, 'parse_line'));
+		// This empty line triggers the content part of the message and fires the `message-header`
+		// event of the parser.
 		$message_parser->parse_line('');
+		$message_parser->end_of_message();
 		
 		$references[] = $parent_id;
 		$subject = preg_match('/^Re:/i', $parent_subject) ? $parent_subject : 'Re: ' . $parent_subject;
