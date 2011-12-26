@@ -39,6 +39,10 @@ class NntpConnection
 				}
 			};
 		}
+		
+		// Switch to reader mode because the wildmat of "list active *" is not
+		// availalbe in feed mode (Patch by Peter)
+		$this->command('mode reader', array(200, 201));
 	}
 	
 	/**
