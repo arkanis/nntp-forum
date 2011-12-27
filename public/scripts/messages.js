@@ -134,7 +134,7 @@ $(document).ready(function(){
 	$('form.message dl input[type="file"]').live('change', function(){
 		var dd_element = $(this).parent();
 		if ( dd_element.next().length == 0 )
-			dd_element.clone(false).find('input[type="file"]').replaceWith('<input type="file" />').end().insertAfter(dd_element);
+			dd_element.clone(false).find('input[type="file"]').replaceWith('<input name="attachments[]" type="file" />').end().insertAfter(dd_element);
 		return false;
 	});
 	
