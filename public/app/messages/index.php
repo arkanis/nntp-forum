@@ -266,7 +266,7 @@ if ($tracker)
 		</p>
 		<dl>
 			<dt><?= lh('message_form', 'attachments_label') ?></dt>
-				<dd><input type="file" /> <a href="#" class="destroy attachment"><?= l('message_form', 'delete_attachment') ?></a></dd>
+				<dd><input name="attachments[]" type="file" /> <a href="#" class="destroy attachment"><?= l('message_form', 'delete_attachment') ?></a></dd>
 		</dl>
 		<p class="buttons">
 			<button class="preview recommended"><?= lh('message_form', 'preview_button') ?></button>
