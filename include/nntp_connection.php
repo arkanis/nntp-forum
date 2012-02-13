@@ -26,7 +26,7 @@ class NntpConnection
 			throw new NntpException("Expected a 200 or 201 server ready status but got $status: $rest");
 		
 		// If we got an old INN 2.4 server use the command filter to rewrite some command names
-		if ( preg_match('/INN 2.4/', $rest) ){
+		if ( preg_match('/INN 2.4|DNEWS/', $rest) ){
 			$this->nntp_command_filter = function(&$command, &$expected_status_code){
 				@list($cmd, $args) = explode(' ', $command, 2);
 				if ($cmd == 'over') {
