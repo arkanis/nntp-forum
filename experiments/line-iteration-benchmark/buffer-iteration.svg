@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="665" height="290">
+	<defs>
+		<style type="text/css">
+			text { font-family: sans-serif; font-size: 14px; color: #333; }
+			text.value { text-anchor: middle; }
+			text.unit { text-anchor: middle; font-size: 12px; }
+			text.label { text-anchor: middle; }
+			text.legend {}
+		</style>
+	</defs>
+	<g transform="translate(10, 10)">
+		<g>
+			<rect x="0" y="0" width="645" height="1" fill="#ccc"></rect>
+			<rect x="0" y="40" width="645" height="1" fill="#ccc"></rect>
+			<rect x="0" y="80" width="645" height="1" fill="#ccc"></rect>
+			<rect x="0" y="120" width="645" height="1" fill="#ccc"></rect>
+			<rect x="0" y="160" width="645" height="1" fill="#ccc"></rect>
+			<rect x="0" y="200" width="645" height="1" fill="black"></rect>
+		</g>
+		<g id="records" transform="translate(10, 0)">
+			<rect x="0" y="50" width="40" height="150" style="fill: #3366cc"></rect>
+			<text class="value" x="20" y="30">244</text>
+			<text class="unit" x="20" y="44">MiB/s</text>
+			<rect x="45" y="175" width="40" height="25" style="fill: #dc3912"></rect>
+			<text class="value" x="65" y="155">508</text>
+			<text class="unit" x="65" y="169">MiB</text>
+			<text class="label" x="42.5" y ="220">fgets</text>
+		</g>
+		<g id="records" transform="translate(145, 0)">
+			<rect x="0" y="53" width="40" height="147" style="fill: #3366cc"></rect>
+			<text class="value" x="20" y="33">238</text>
+			<text class="unit" x="20" y="47">MiB/s</text>
+			<rect x="45" y="175" width="40" height="25" style="fill: #dc3912"></rect>
+			<text class="value" x="65" y="155">508</text>
+			<text class="unit" x="65" y="169">MiB</text>
+			<text class="label" x="42.5" y ="220">strtok</text>
+		</g>
+		<g id="records" transform="translate(280, 0)">
+			<rect x="0" y="97" width="40" height="103" style="fill: #3366cc"></rect>
+			<text class="value" x="20" y="77">166</text>
+			<text class="unit" x="20" y="91">MiB/s</text>
+			<rect x="45" y="175" width="40" height="25" style="fill: #dc3912"></rect>
+			<text class="value" x="65" y="155">508</text>
+			<text class="unit" x="65" y="169">MiB</text>
+			<text class="label" x="42.5" y ="220">stream_get_line</text>
+		</g>
+		<g id="records" transform="translate(415, 0)">
+			<rect x="0" y="131" width="40" height="69" style="fill: #3366cc"></rect>
+			<text class="value" x="20" y="111">111</text>
+			<text class="unit" x="20" y="125">MiB/s</text>
+			<rect x="45" y="199" width="40" height="1" style="fill: #dc3912"></rect>
+			<text class="value" x="65" y="179">0.29</text>
+			<text class="unit" x="65" y="193">MiB</text>
+			<text class="label" x="42.5" y ="220">strpos</text>
+		</g>
+		<g id="records" transform="translate(550, 0)">
+			<rect x="0" y="185" width="40" height="15" style="fill: #3366cc"></rect>
+			<text class="value" x="20" y="165">23.4</text>
+			<text class="unit" x="20" y="179">MiB/s</text>
+			<rect x="45" y="74" width="40" height="126" style="fill: #dc3912"></rect>
+			<text class="value" x="65" y="54">2572</text>
+			<text class="unit" x="65" y="68">MiB</text>
+			<text class="label" x="42.5" y ="220">preg_split</text>
+		</g>
+		
+		<g transform="translate(0, 230)">
+			<g id="foo0">
+				<rect x="0" y="0" width="14" height="14" style="fill: #3366cc"></rect>
+				<text class="legend" x="18" y="12">Throughput in MiByte/s</text>
+			</g>
+			<g id="foo1">
+				<rect x="0" y="20" width="14" height="14" style="fill: #dc3912"></rect>
+				<text class="legend" x="18" y="32">Peak memory usage - buffer size in MiByte</text>
+			</g>
+		</g>
+	</g>
+</svg>
