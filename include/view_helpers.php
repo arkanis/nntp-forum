@@ -4,24 +4,35 @@
  * Escapes the specified text so it can be safely inserted as HTML tag content.
  * It's UTF-8 safe.
  * 
- * Since this function is made for HTML content it does not escape double
- * quotes ("). If you want to insert something as an attribute value use the
- * ha() function.
+ * Since this function is made for HTML content it does not escape single or 
+ * double quotes ("). If you want to insert something as an attribute value use
+ * the ha() function.
+ * 
+ * Since it's meant for displaying stuff in HTML this function removes invalid
+ * UTF-8 code points. This can cause security problems if you output commands
+ * or data with it. That is used by other systems. See `ENT_IGNORE` flag of
+ * PHPs `htmlspecialchars()` function.
  * 
  * This is a shortcut mimicing the Ruby on Rails "h" helper.
  */
 function h($text_to_escape){
-	return htmlspecialchars($text_to_escape, ENT_NOQUOTES, 'UTF-8');
+	return htmlspecialchars($text_to_escape, ENT_NOQUOTES | ENT_IGNORE, 'UTF-8');
 }
 
 /**
  * Escapes the specified text so it can be safely inserted into an HTML attribute.
  * It's UTF-8 safe.
  * 
+ * Since it's meant for displaying stuff in HTML this function removes invalid
+ * UTF-8 code points. This can cause security problems if you output commands
+ * or data with it. That is used by other systems. See `ENT_IGNORE` flag of
+ * PHPs `htmlspecialchars()` function. `ENT_SUBSTITUTE` would be more
+ * suitable here but requires PHP 5.4.
+ * 
  * This is a shortcut mimicing the Ruby on Rails "h" helper.
  */
 function ha($text_to_escape){
-	return htmlspecialchars($text_to_escape, ENT_QUOTES, 'UTF-8');
+	return htmlspecialchars($text_to_escape, ENT_QUOTES | ENT_IGNORE, 'UTF-8');
 }
 
 /**
