@@ -140,6 +140,7 @@ function traverse_tree($tree_level){
 			if ( $raw_data !== null ){
 				$data = join('', $raw_data);
 				$image = @imagecreatefromstring($data);
+				$preview_created = false;
 				
 				if ($image) {
 					$width = imagesx($image);
@@ -162,9 +163,11 @@ function traverse_tree($tree_level){
 					$last_index = count($message_data['attachments']) - 1;
 					$cache_name = $message_data['attachments'][$last_index]['preview'];
 					
-					imagejpeg($preview_image, ROOT_DIR . '/public/thumbnails/' . $cache_name, $CONFIG['thumbnails']['quality']);
+					$preview_created = @imagejpeg($preview_image, ROOT_DIR . '/public/thumbnails/' . $cache_name, $CONFIG['thumbnails']['quality']);
 					imagedestroy($preview_image);
-				} else {
+				}
+				
+				if (!$preview_created) {
 					// If we could not create the preview kill the preview name from the message data
 					$last_index = count($message_data['attachments']) - 1;
 					unset($message_data['attachments'][$last_index]['preview']);
