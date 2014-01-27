@@ -92,7 +92,7 @@ function traverse_tree($tree_level){
 	// functions around the events thar are already there.
 	// This wrapper pattern (inspired by Lisp and JavaScript) should be moved to the `for_text_and_attachments()`
 	// function as "extended events". But for now it works.
-	if ($CONFIG['thumbnails']['enabled']){
+	if ( $CONFIG['thumbnails']['enabled'] and extension_loaded('gd') ){
 		// Original event handlers. Remember them here to call them later on.
 		$old_message_header = $message_parser->events['message-header'];
 		$old_part_header = $message_parser->events['part-header'];
