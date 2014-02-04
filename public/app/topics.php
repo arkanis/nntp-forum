@@ -56,24 +56,25 @@ foreach($message_tree as $message_id => $replies){
 	$topic_message = $message_infos[$message_id];
 	$reply_count = 1 + count($message_tree[$message_id], COUNT_RECURSIVE);
 	
+	// is_topic_unread() returns false if the is no unread marker or the next unread message number if there is
+	$next_unread_message_num = $tracker ? $tracker->is_topic_unread($group, $topic_message['number']) : false;
+	// Don't mark as unread if there is no unread marker. If there is mark it as unread if the next unread
+	// message number is older or equal to the current latest message number.
+	$unread = ($next_unread_message_num === false) ? false : ( $next_unread_message_num  <= $latest_message['number'] );
+	
 	$topics[] = array(
 		'message' => $topic_message,
 		'latest_message' => $latest_message,
 		'reply_count' => $reply_count,
-		'unread' => $tracker ? $tracker->is_topic_unread($group, $topic_message['number']) : false
+		'unread' => $unread
 	);
 }
 
-// Sort the topics. If one of the two topics is unread the unread topic will always be shown first.
-// If both are read or unread compare by date (newest is shown first).
+// Sort the topcis, compare by date (newest is shown first).
+// Previously we always showed unread topics first but this confused users. Once you read a topic it
+// vanished (was sorted in 50 topcis downwards).
 usort($topics, function($a, $b){
-	if ($a['unread'] and !$b['unread']) {
-		return -1;
-	} elseif (!$a['unread'] and $b['unread']) {
-		return 1;
-	} else {
-		return ($a['latest_message']['date'] > $b['latest_message']['date']) ? -1 : 1;
-	}
+	return ($a['latest_message']['date'] > $b['latest_message']['date']) ? -1 : 1;
 });
 
 // Setup layout variables
@@ -150,7 +151,7 @@ $body_class = 'topics';
 		</tr>
 <? else: ?>
 <?	foreach($topics as $topic): ?>
-<?		if ( $tracker and $tracker->is_topic_unread($group, $topic['message']['number']) ): ?>
+<?		if ( $topic['unread'] ): ?>
 		<tr class="unread">
 <?		else: ?>
 		<tr>
