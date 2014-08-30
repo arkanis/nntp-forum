@@ -167,7 +167,7 @@ return array(
 		// This is the path to the file used to track unread topics. As default each user gets his
 		// own file. If you want to disable unread tracking (e.g. for a public newsgroup) set this
 		// option to `null`.
-		'file' => null
+		'file' => null,
 		// The maximum number of _unread_ topics the tracker can remember in one file. This
 		// restriction makes sure that the tracker data does not grow over time.
 		'topic_limit' => 50,
