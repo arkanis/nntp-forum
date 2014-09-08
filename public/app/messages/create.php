@@ -109,7 +109,7 @@ try {
 	if ( empty($_FILES) or empty($_FILES['attachments']['name'][0]) ) {
 		// If we have no attachments build a normal message just with headers and text body
 		$headers[] = 'Content-Type: text/plain; charset=utf-8';
-		$message = join("\n", $headers) . "\n\n" . $_POST['body'];
+		$message = join("\r\n", $headers) . "\r\n\r\n" . $_POST['body'];
 		
 		$nntp->command('post', 340);
 		list($status, $confirmation) = $nntp->send_text($message, 240);
@@ -123,13 +123,13 @@ try {
 		$nntp->command('post', 340);
 		list($status, $confirmation) = $nntp->send_text_per_chunk(240, function($send) use($headers, $boundary){
 			// Send the message headers
-			$send(join("\n", $headers) . "\n\n");
-			$boundary_line = '--' . $boundary . "\n";
+			$send(join("\r\n", $headers) . "\r\n\r\n");
+			$boundary_line = '--' . $boundary . "\r\n";
 			
 			// Send the text part
 			$send($boundary_line);
-			$send('Content-Type: text/plain; charset=utf-8' . "\n\n");
-			$send($_POST['body'] . "\n");
+			$send('Content-Type: text/plain; charset=utf-8' . "\r\n\r\n");
+			$send($_POST['body'] . "\r\n");
 			
 			// Send the attachments
 			foreach($_FILES['attachments']['name'] as $index => $name){
@@ -138,12 +138,12 @@ try {
 					$mime_type = $_FILES['attachments']['type'][$index];
 					// Remove all double quotes from the file name so no one can escape
 					$name = str_replace('"', '', $name);
-					$part_headers = 'Content-Type: ' . $mime_type . '; name="' . $name . '"' . "\n" .
-						'Content-Transfer-Encoding: base64' . "\n" .
+					$part_headers = 'Content-Type: ' . $mime_type . '; name="' . $name . '"' . "\r\n" .
+						'Content-Transfer-Encoding: base64' . "\r\n" .
 						'Content-Disposition: attachment; filename="' . $name . '"';
 					
 					$send($boundary_line);
-					$send($part_headers . "\n\n");
+					$send($part_headers . "\r\n\r\n");
 					$send( chunk_split(base64_encode(file_get_contents($file_path))) );
 				}
 			}

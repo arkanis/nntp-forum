@@ -61,12 +61,12 @@ try {
 	$from = $CONFIG['sender_address']($CONFIG['nntp']['user'], $CONFIG['nntp']['user']);
 	$content = l('messages', 'deleted_moderator_message');
 	$cancel_message = <<<EOD
-Control: cancel $message_id
-From: $from
-Subject: $subject
-Newsgroups: $newsgroups
-Content-Type: text/plain; charset=utf-8
-
+Control: cancel $message_id\r
+From: $from\r
+Subject: $subject\r
+Newsgroups: $newsgroups\r
+Content-Type: text/plain; charset=utf-8\r
+\r
 $content
 EOD;
 	
