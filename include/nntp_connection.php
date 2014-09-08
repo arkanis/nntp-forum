@@ -85,9 +85,7 @@ class NntpConnection
 	
 	/**
 	 * Fetches the response body of a command. Also replaces double dots at the start of text
-	 * lines with a single dot (as required by NNTP.
-	 * 
-	 * TODO: Find a proper max length for a text response line.
+	 * lines with a single dot (as required by NNTP).
 	 */
 	function get_text_response(){
 		$text = '';

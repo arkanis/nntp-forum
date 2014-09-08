@@ -43,7 +43,7 @@ function ha($text_to_escape){
  * - If the key resolves to something else than a string in the language file (e.g. an array) the
  *   data from the language file is returned as it is. No `printf` string substitution is performed.
  *   This allows you to fetch arrays directly from the language file (used for the list of suggestions
- *   shown on error pages.
+ *   shown on error pages).
  * - If no format arguments are specified even strings are returned without processing. This way
  *   you can fetch the raw strings out of a language file. This is used to pass them to JavaScript.
  */
