@@ -161,7 +161,7 @@ $body_class = 'topics';
 			<td>
 				<?= l('topics', 'last_post_info',
 					sprintf('<abbr title="%s">%s</abbr>', ha($topic['latest_message']['author_mail']), h($topic['latest_message']['author_name'])),
-					date(l('topics', 'last_post_info_date_format'), $topic['latest_message']['date'])
+					timezone_aware_date($topic['latest_message']['date'], l('topics', 'last_post_info_date_format'))
 				) ?> 
 			</td>
 		</tr>

@@ -146,10 +146,15 @@ class MessageParser
 	}
 	
 	/**
-	 * Parses a date sting as found in mail headers into a Unix timestamp.
+	 * Parses an RFC 2822 dates as found in mail headers (e.g. "Wed, 12 Feb 2014 09:15:58 +0000").
+	 * Also works with optional trailing data (e.g. "Wed, 12 Feb 2014 09:15:58 +0000 (UTC)").
+	 * 
+	 * Returns a PHP DateTime object containing the timestamp and timezone.
 	 */
-	static function parse_date($date_as_string){
-		return strtotime($date_as_string);
+	static function parse_date_and_zone($date_as_string){
+		// The "+" modifier at the end will ignore trailing data (like " (UTC)").
+		$obj = date_create_from_format(DateTime::RFC2822 . '+', $date_as_string, new DateTimeZone('UTC'));
+		return $obj;
 	}
 	
 	/**

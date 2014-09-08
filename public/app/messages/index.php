@@ -201,7 +201,7 @@ function traverse_tree($tree_level){
 		echo("		<p>");
 		echo('			' . l('messages', 'message_header', 
 			sprintf('<a href="mailto:%1$s" title="%1$s">%2$s</a>', ha($overview['author_mail']), h($overview['author_name'])),
-			date( l('messages', 'message_header_date_format'), $overview['date'] )
+			timezone_aware_date($overview['date'], l('messages', 'message_header_date_format'))
 		) . "\n");
 		printf('			<a class="permalink" href="/%s/%d#message-%d">%s</a>' . "\n", urlencode($group), $topic_number, $overview['number'], l('messages', 'permalink'));
 		echo("		</p>\n");

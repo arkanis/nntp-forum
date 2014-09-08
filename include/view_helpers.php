@@ -122,4 +122,19 @@ function number_to_human_size($bytes){
 	return sprintf('%.1f MiByte', $bytes);
 }
 
+/**
+ * Returns a <time> element that displays $date in the specified $format (see http://php.net/date).
+ * The <time> element also contains additional information so the timezone-converter.js script can
+ * convert the date to the users local timezone.
+ * 
+ * Since the users timezone can only be queried via JavaScript this has to be done on the client
+ * side. If the script fails the date is displayed in the timezone specified in the date itself and
+ * a timezone abbreviation is added ('T' format of PHPs date() function). This ensures that users
+ * can always read the date correctly.
+ */
+function timezone_aware_date($date, $format){
+	return sprintf('<time dateTime="%s" data-format="%s">%s %s</time>', ha($date->format('c')), ha($format), h($date->format($format)), h($date->format('T')));
+}
+
+
 ?>

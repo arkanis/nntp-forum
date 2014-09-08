@@ -43,7 +43,7 @@ foreach(explode("\n", $newsgroup_list) as $newsgroup){
 				'subject' => MessageParser::decode_words($subject),
 				'author_name' => $author_name,
 				'author_mail' => $author_mail,
-				'date' => MessageParser::parse_date($date)
+				'date' => MessageParser::parse_date_and_zone($date)
 			);
 		}
 	} else {
@@ -141,7 +141,7 @@ $body_class = 'newsgroups';
 				<?= h($newsgroup['last_post']['subject']) ?>
 				<small><?= l('newsgroups', 'last_post_info',
 					sprintf('<abbr title="%s">%s</abbr>', ha($newsgroup['last_post']['author_mail']), h($newsgroup['last_post']['author_name'])),
-					date(l('newsgroups', 'last_post_info_date_format'), $newsgroup['last_post']['date'])
+					timezone_aware_date($newsgroup['last_post']['date'], l('newsgroups', 'last_post_info_date_format'))
 				) ?></small>
 			</td>
 <?			else: ?>

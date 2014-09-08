@@ -31,7 +31,7 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	foreach(explode("\n", $new_message_ids) as $id){
 		$nntp->command('hdr date ' . $id, 225);
 		list(,$date) = explode(' ', $nntp->get_text_response(), 2);
-		$message_dates[$id] = MessageParser::parse_date($date);
+		$message_dates[$id] = MessageParser::parse_date_and_zone($date);
 	}
 	
 	// Sort message ids by date and limit the number to the configured feed limit
@@ -100,13 +100,13 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 $title = lt($feed_config['title']);
 $layout = 'atom-feed';
 $feed_url = url_for('/' . urlencode($_GET['name']) . '.xml');
-$updated = ( count($messages) > 0 ) ? $messages[reset(array_keys($messages))]['date'] : time();
+$updated = ( count($messages) > 0 ) ? $messages[reset(array_keys($messages))]['date'] : date_create();
 ?>
 <? foreach ($messages as $message_id => $message): ?>
 	<entry>
 		<id>nntp://<?= ha(trim($message_id, '<>')) ?>/</id>
 		<title><?= h($message['subject']) ?></title>
-		<updated><?= date('c', $message['date']); ?></updated>
+		<updated><?= $message['date']->format('c'); ?></updated>
 		<author>
 			<name><?= h($message['author_name']) ?></name>
 			<email><?= h($message['author_mail']) ?></email>

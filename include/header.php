@@ -31,7 +31,7 @@ require('markdown.php');
 $title = '';
 $breadcrumbs = array();
 $layout = 'soft-red';
-$scripts = array('jquery.min.js');
+$scripts = array('jquery.min.js', 'timezone-converter.js');
 $body_class = '';
 ob_start();
 

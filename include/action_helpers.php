@@ -96,7 +96,7 @@ function built_message_tree($nntp_connection, $newsgroup){
 				'subject' => MessageParser::decode_words($subject),
 				'author_name' => $author_name,
 				'author_mail' => $author_mail,
-				'date' => MessageParser::parse_date($date)
+				'date' => MessageParser::parse_date_and_zone($date)
 			);
 		});
 		
@@ -128,7 +128,7 @@ function built_message_tree($nntp_connection, $newsgroup){
 		foreach($tree_iterator as $id => $children){
 			echo( str_repeat('  ', $tree_iterator->getDepth()) . '- ' . $id . ': ' );
 			if ( isset($message_infos[$id]) )
-				printf("%s (%s)\n", $message_infos[$id]['subject'], date('r', $message_infos[$id]['date']));
+				printf("%s (%s)\n", $message_infos[$id]['subject'], $message_infos[$id]['date']->format('r'));
 			else
 				echo("DELETED\n");
 		}
