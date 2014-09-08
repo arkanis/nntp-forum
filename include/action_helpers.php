@@ -216,7 +216,7 @@ function cached($cache_file_name, $data_function)
 	}
 	
 	$data_to_cache = $data_function();
-	file_put_contents($cache_file_path, serialize($data_to_cache));
+	@file_put_contents($cache_file_path, serialize($data_to_cache));
 	return $data_to_cache;
 }
 
