@@ -45,7 +45,9 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	// Default storage area for each message. This array is used to reset the storage area for the event
 	// handlers after a message is parsed.
 	$empty_message_data = array(
+		'id' => null,
 		'newsgroup' => null,
+		'newsgroups' => null,
 		'content' => null,
 		'attachments' => array()
 	);

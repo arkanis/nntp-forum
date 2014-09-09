@@ -22,6 +22,7 @@ body > header > nav a:hover { text-decoration: underline; }
 body > header > nav > ul#utilities { float: right; margin: 0; padding: 0; list-style: none; }
 body > header > nav > ul#utilities > li { display: inline; margin-left: 0.5em; }
 body > header > nav > ul#utilities > li > a.newsfeed { padding: 1px 0 1px 20px; background: url(/styles/feed.png) left center no-repeat; }
+body > header > nav > ul#utilities > li > a.subscriptions { padding: 1px 0 1px 20px; background: url(/styles/bell.png) left center no-repeat; }
 body > header > nav > ul#breadcrumbs { overflow: hidden; margin: 0; padding: 0; list-style: none; }
 body > header > nav > ul#breadcrumbs > li { float: left; margin: 0 1em 0 0; padding: 0; }
 body > header > nav > ul#breadcrumbs > li:before { content: '→'; margin-right: 1em; }
@@ -144,6 +145,12 @@ ul.actions > li.new.topic > a { background-image: url(/styles/comments_add.png);
 ul.actions > li.new.message > a { background-image: url(/styles/comment_add.png); }
 ul.actions > li.destroy.message > a { background-image: url(/styles/comment_delete.png); }
 ul.actions > li.all.read > a { padding-top: 1px; padding-bottom: 1px; background-image: url(/styles/newspaper_delete.png); }
+ul.actions > li.new.subscription > a { background-image: url(/styles/bell_add.png); }
+ul.actions > li.destroy.subscription > a { background-image: url(/styles/bell_delete.png); }
+ul.actions > li.in_progress > a { background-image: url(/styles/in_progress.gif) !important; color: gray; }
+ul.actions > li.disabled { display: none; }
+ul.actions > li.failed > a { color: hsl(0, 100%, 35%); }
+
 
 /**
  * Page specific styles

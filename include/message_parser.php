@@ -79,7 +79,10 @@ class MessageParser
 	static function for_text_and_attachments(&$message_data){
 		$events = array(
 			'message-header' => function($headers) use(&$message_data){
-				$message_data['newsgroup'] = trim(reset(explode(',', $headers['newsgroups'])));
+				$newsgroups = array_map('trim', explode(',', $headers['newsgroups']));
+				$message_data['newsgroup'] = reset($newsgroups);
+				$message_data['newsgroups'] = $newsgroups;
+				$message_data['id'] = $headers['message-id'];
 			},
 			'part-header' => function($headers, $content_type, $content_type_params) use(&$message_data){
 				if ( preg_match('#text/(plain|html)#', $content_type) ) {

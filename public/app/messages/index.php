@@ -46,6 +46,9 @@ if ( $CONFIG['unread_tracker']['file'] ) {
 	$tracker = null;
 }
 
+// Fetch the users subscriptions so we can display proper subscribe/unsubscribe links for each message.
+list($subscribed_messages, ) = load_subscriptions();
+
 // See if the current user is allowed to post in this newsgroup
 $nntp->command('list active ' . $group, 215);
 $group_info = $nntp->get_text_response();
@@ -71,12 +74,14 @@ $body_class = 'messages';
 // A recursive tree walker function. Unfortunately necessary because we start the recursion
 // within the function (otherwise we could use an iterator).
 function traverse_tree($tree_level){
-	global $nntp, $message_infos, $group, $posting_allowed, $tracker, $topic_number, $CONFIG;
+	global $nntp, $message_infos, $group, $posting_allowed, $tracker, $topic_number, $CONFIG, $subscribed_messages;
 	
 	// Default storage area for each message. This array is used to reset the storage area for the event
 	// handlers after a message is parsed.
 	$empty_message_data = array(
 		'newsgroup' => null,
+		'newsgroups' => null,
+		'id' => null,
 		'content' => null,
 		'attachments' => array()
 	);
@@ -196,7 +201,7 @@ function traverse_tree($tree_level){
 		
 		echo("<li>\n");
 		$unread_class = ( $tracker and $tracker->is_message_unread($group, $topic_number, $overview['number']) ) ? ' class="unread"' : '';
-		printf('<article id="message-%d" data-number="%d"%s>' . "\n", $overview['number'], $overview['number'], $unread_class);
+		printf('<article id="message-%d" data-number="%d" data-id="%s"%s>' . "\n", $overview['number'], $overview['number'], ha($message_data['id']), $unread_class);
 		echo("	<header>\n");
 		echo("		<p>");
 		echo('			' . l('messages', 'message_header', 
@@ -227,6 +232,15 @@ function traverse_tree($tree_level){
 		echo('		<ul class="actions">' . "\n");
 		if($posting_allowed)
 			echo('			<li class="new message"><a href="#">' . l('messages', 'answer') . '</a></li>' . "\n");
+		
+		if (!in_array($message_data['id'], $subscribed_messages)) {
+			echo('			<li class="new subscription"><a href="#">' . l('messages', 'subscribe') . '</a></li>' . "\n");
+			echo('			<li class="destroy subscription disabled"><a href="#">' . l('messages', 'unsubscribe') . '</a></li>' . "\n");
+		} else {
+			echo('			<li class="new subscription disabled"><a href="#">' . l('messages', 'subscribe') . '</a></li>' . "\n");
+			echo('			<li class="destroy subscription"><a href="#">' . l('messages', 'unsubscribe') . '</a></li>' . "\n");
+		}
+		
 		if($CONFIG['sender_is_self']($overview['author_mail'], $CONFIG['nntp']['user']))
 			echo('			<li class="destroy message"><a href="#">' . l('messages', 'delete') . '</a></li>' . "\n");
 		echo('		</ul>' . "\n");

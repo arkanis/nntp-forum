@@ -87,6 +87,9 @@ return array(
 		
 		// Action links of a message
 		'answer' => 'Antworten',
+		// Either subscribe or unsubscribe is shown
+		'subscribe' => 'Abbonieren',
+		'unsubscribe' => 'Abbo löschen',
 		// This link is only shown for messages the user posted by himself
 		'delete' => 'Nachricht löschen',
 		
@@ -242,6 +245,11 @@ Beginnen mit einem `>`-Zeichen:
 		'preview_heading' => 'Vorschau',
 		// Prefix of the topic preview (the name of the topic is appended by JavaScript)
 		'preview_heading_prefix' => 'Vorschau:'
+	),
+	
+	'subscriptions' => array(
+		'link' => 'Abonnements',
+		'title' => 'Deine Abonnements'
 	)
 );
 

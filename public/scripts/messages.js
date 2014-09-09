@@ -175,4 +175,54 @@ $(document).ready(function(){
 		
 		return false;
 	})
+	
+	
+	$('ul.actions > li.new.subscription > a').live('click', function(){
+		var article = $(this).closest('article');
+		var message_id = article.data('id');
+		
+		console.log(message_id);
+		$(this).closest('li').addClass('in_progress');
+		$.ajax('/your/subscriptions', {
+			type: 'POST',
+			contentType: 'text/plain',
+			data: message_id,
+			context: this,
+			complete: function(request){
+				$(this).closest('li').removeClass('in_progress failed');
+				if (request.status == 201) {
+					$(this).closest('li').addClass('disabled');
+					$(this).closest('ul').find('li.destroy.subscription').removeClass('disabled');
+				} else {
+					$(this).closest('li').addClass('failed');
+					$(this).text('Subscription failed, sorry');
+				}
+			}
+		});
+		
+		return false;
+	});
+	
+	$('ul.actions > li.destroy.subscription > a').live('click', function(){
+		var article = $(this).closest('article');
+		var message_id = article.data('id');
+		
+		$(this).closest('li').addClass('in_progress');
+		$.ajax('/your/subscriptions/' + encodeURIComponent(message_id), {
+			type: 'DELETE',
+			context: this,
+			complete: function(request){
+				$(this).closest('li').removeClass('in_progress failed');
+				if (request.status == 204) {
+					$(this).closest('li').addClass('disabled');
+					$(this).closest('ul').find('li.new.subscription').removeClass('disabled');
+				} else {
+					$(this).closest('li').addClass('failed');
+					$(this).text('Unsubscribe failed, sorry');
+				}
+			}
+		});
+		
+		return false;
+	});
 });

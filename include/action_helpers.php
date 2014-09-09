@@ -279,4 +279,21 @@ function autodetect_locale_with_fallback($fallback_locale){
 	return $fallback_locale;
 }
 
+/**
+ * Returns a list of message IDs the current user is subscribed to as well as the
+ * file path the list is stored in.
+ */
+function load_subscriptions(){
+	if (empty($_SERVER['PHP_AUTH_USER']))
+		return array();
+	
+	$user_message_list_file = ROOT_DIR . '/subscriptions/user-' . $_SERVER['PHP_AUTH_USER'];
+	
+	$subscribed_messages = json_decode(@file_get_contents($user_message_list_file));
+	if (!$subscribed_messages)
+		$subscribed_messages = array();
+	
+	return array($subscribed_messages, $user_message_list_file);
+}
+
 ?>

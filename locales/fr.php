@@ -88,6 +88,9 @@ return array(
 		
 		// Action links of a message
 		'answer' => 'Répondre',
+		// Either subscribe or unsubscribe is shown
+		'subscribe' => 'Subscribe',
+		'unsubscribe' => 'Unsubscribe',
 		// This link is only shown for messages the user posted by himself
 		'delete' => 'Retirer mon message',
 		
@@ -240,6 +243,11 @@ Les citations commencent avec un signe `>` :
 		'preview_heading' => 'Aperçu',
 		// Prefix of the topic preview (the name of the topic is appended by JavaScript)
 		'preview_heading_prefix' => 'Aperçu:'
+	),
+	
+	'subscriptions' => array(
+		'link' => 'Subscriptions',
+		'title' => 'Your subscriptions'
 	)
 );
 

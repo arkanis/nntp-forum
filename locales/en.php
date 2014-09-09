@@ -87,6 +87,9 @@ return array(
 		
 		// Action links of a message
 		'answer' => 'Reply',
+		// Either subscribe or unsubscribe is shown
+		'subscribe' => 'Subscribe',
+		'unsubscribe' => 'Unsubscribe',
 		// This link is only shown for messages the user posted by himself
 		'delete' => 'Delete post',
 		
@@ -239,6 +242,11 @@ Quotes star with a `>` sign:
 		'preview_heading' => 'Preview',
 		// Prefix of the topic preview (the name of the topic is appended by JavaScript)
 		'preview_heading_prefix' => 'Preview:'
+	),
+	
+	'subscriptions' => array(
+		'link' => 'Subscriptions',
+		'title' => 'Your subscriptions'
 	)
 );
 

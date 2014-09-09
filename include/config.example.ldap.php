@@ -177,6 +177,13 @@ return array(
 		'unused_expire_time' => 60 * 60 * 24 * 30 * 6
 	),
 	
+	'subscriptions' => array(
+		'watchlist' => ROOT_DIR . '/subscriptions/watchlist',
+		'sender_address' => 'no-reply@example.com',
+		'user' => 'observer',
+		'pass' => 'unknown'
+	),
+	
 	// The user agent string added as a message header. Important for others to see who is
 	// responsible for an idealistically UTF-8 encoded message.
 	'user_agent' => 'NNTP-Forum/1.1.1'
