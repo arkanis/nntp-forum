@@ -47,7 +47,7 @@ if ( $CONFIG['unread_tracker']['file'] ) {
 }
 
 // Fetch the users subscriptions so we can display proper subscribe/unsubscribe links for each message.
-list($subscribed_messages, ) = load_subscriptions();
+list($subscribed_messages, $subscribed_messages_file) = load_subscriptions();
 
 // See if the current user is allowed to post in this newsgroup
 $nntp->command('list active ' . $group, 215);
@@ -233,12 +233,14 @@ function traverse_tree($tree_level){
 		if($posting_allowed)
 			echo('			<li class="new message"><a href="#">' . l('messages', 'answer') . '</a></li>' . "\n");
 		
-		if (!in_array($message_data['id'], $subscribed_messages)) {
-			echo('			<li class="new subscription"><a href="#">' . l('messages', 'subscribe') . '</a></li>' . "\n");
-			echo('			<li class="destroy subscription disabled"><a href="#">' . l('messages', 'unsubscribe') . '</a></li>' . "\n");
-		} else {
-			echo('			<li class="new subscription disabled"><a href="#">' . l('messages', 'subscribe') . '</a></li>' . "\n");
-			echo('			<li class="destroy subscription"><a href="#">' . l('messages', 'unsubscribe') . '</a></li>' . "\n");
+		if ($subscribed_messages_file) {
+			if (!in_array($message_data['id'], $subscribed_messages)) {
+				echo('			<li class="new subscription"><a href="#">' . l('messages', 'subscribe') . '</a></li>' . "\n");
+				echo('			<li class="destroy subscription disabled"><a href="#">' . l('messages', 'unsubscribe') . '</a></li>' . "\n");
+			} else {
+				echo('			<li class="new subscription disabled"><a href="#">' . l('messages', 'subscribe') . '</a></li>' . "\n");
+				echo('			<li class="destroy subscription"><a href="#">' . l('messages', 'unsubscribe') . '</a></li>' . "\n");
+			}
 		}
 		
 		if($CONFIG['sender_is_self']($overview['author_mail'], $CONFIG['nntp']['user']))
