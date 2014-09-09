@@ -50,9 +50,14 @@ if (is_array($last_run_data)) {
 	exit(0);
 }
 
-// Fetch all new messages since the last run date
 $nntp->command('mode reader', array(200, 201));
 
+// Record the date just before we started the message list. Everything older than this date
+// will have to be examined on the next run. We'll safe that date later on if everything else
+// went fine.
+list(, $current_run_date) = $nntp->command('date', 111);
+
+// Fetch all new messages since the last run date
 $start_date = date_create_from_format('YmdHis', $last_run_date, new DateTimeZone('UTC'));
 //$start_date = date_create('6 month ago', new DateTimeZone('UTC'));
 //echo('newnews * ' . $start_date->format('Ymd His'));
@@ -60,9 +65,6 @@ $nntp->command('newnews * ' . $start_date->format('Ymd His'), 230);
 $new_message_list = $nntp->get_text_response();
 $new_message_ids = empty(trim($new_message_list)) ? array() : explode("\n", $new_message_list);
 
-// Remember when we stopped to fetch new messages so we know where to continue next time. We'll safe
-// that date later on if everything else went fine.
-list(, $last_run_date) = $nntp->command('date', 111);
 
 // Load the watchlist
 $watchlist_file = $CONFIG['subscriptions']['watchlist'];
@@ -120,6 +122,6 @@ foreach($new_message_ids as $id){
 }
 
 // Everything worked fine, write down the last run information for the next job
-file_put_contents($last_run_file, json_encode(array($last_run_date, null)));
+file_put_contents($last_run_file, json_encode(array($current_run_date, null)));
 
 ?>
