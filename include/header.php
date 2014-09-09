@@ -6,10 +6,6 @@
 // Load first because the `autodetect_lang()` function can be used in the configuration file.
 require('action_helpers.php');
 
-// Set the default time zone to UTC so mail dates without a time zone are parsed as
-// UTC time (as of RFC 2822 (http://tools.ietf.org/html/rfc2822#section-3.3).
-date_default_timezone_set('UTC');
-
 // If we are run in an environment load the matching config file. Otherwise just load the
 // defaul config.
 if ($_CONFIG_ENV = getenv('ENVIRONMENT'))
