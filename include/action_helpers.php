@@ -285,7 +285,7 @@ function autodetect_locale_with_fallback($fallback_locale){
  */
 function load_subscriptions(){
 	if (empty($_SERVER['PHP_AUTH_USER']))
-		return array();
+		return array(array(), false);
 	
 	$user_message_list_file = ROOT_DIR . '/subscriptions/user-' . $_SERVER['PHP_AUTH_USER'];
 	
