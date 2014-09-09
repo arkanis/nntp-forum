@@ -17,7 +17,9 @@
 <?	foreach($CONFIG['newsfeeds'] as $name => $newsfeed): ?>
 			<li><a class="newsfeed" href="/<?= urlencode($name) ?>.xml" type="application/atom+xml" rel="alternate"><?= h(lt($newsfeed['title'])) ?></a></li>
 <?	endforeach ?>
+<?	if( ! empty($CONFIG['nntp']['user']) ): ?>
 			<li><a class="subscriptions" href="/your/subscriptions"><?= lh('subscriptions', 'link') ?></a></li>
+<?	endif ?>
 		</ul>
 		<ul id="breadcrumbs">
 			<li><a href="/"><?= lh('layout', 'breadcrumbs_index') ?></a></li>
