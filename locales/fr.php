@@ -248,7 +248,10 @@ Les citations commencent avec un signe `>` :
 	'subscriptions' => array(
 		'link' => 'Subscriptions',
 		'title' => 'Your subscriptions'
-	)
+	),
+	
+	'months' => array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'),
+	'days' => array('lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche')
 );
 
 ?>

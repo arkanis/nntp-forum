@@ -60,11 +60,7 @@ $(document).ready(function(){
 	  var jsdate, f;
 	  // Keep this here (works, but for code commented-out below for file size reasons)
 	  // var tal= [];
-	  var txt_words = [
-	    'Sun', 'Mon', 'Tues', 'Wednes', 'Thurs', 'Fri', 'Satur',
-	    'January', 'February', 'March', 'April', 'May', 'June',
-	    'July', 'August', 'September', 'October', 'November', 'December'
-	  ];
+	  var txt_words = locale.days.concat(locale.months);
 	  // trailing backslash -> (dropped)
 	  // a backslash followed by any character (including backslash) -> the character
 	  // empty string -> empty string

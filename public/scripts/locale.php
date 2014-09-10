@@ -15,7 +15,10 @@ $locale_subset = array(
 	'hide_quote' => $locale['messages']['hide_quote'],
 	
 	'show_replies' => $locale['messages']['show_replies'],
-	'hide_replies' => $locale['messages']['hide_replies']
+	'hide_replies' => $locale['messages']['hide_replies'],
+	
+	'months' => $locale['months'],
+	'days' => $locale['days']
 );
 
 header("Content-type: text/javascript");

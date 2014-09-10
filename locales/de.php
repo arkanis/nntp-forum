@@ -250,7 +250,10 @@ Beginnen mit einem `>`-Zeichen:
 	'subscriptions' => array(
 		'link' => 'Abonnements',
 		'title' => 'Deine Abonnements'
-	)
+	),
+	
+	'months' => array('Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'),
+	'days' => array('Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag')
 );
 
 ?>

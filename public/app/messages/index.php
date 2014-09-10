@@ -63,7 +63,6 @@ $nntp->command('group ' . $group, 211);
 $title = $message_infos[$topic_id]['subject'];
 $breadcrumbs[$group] = '/' . $group;
 $breadcrumbs[$title] = '/' . $group . '/' . $topic_number;
-$scripts[] = 'locale-' . $CONFIG['lang'] . '.js';
 $scripts[] = 'messages.js';
 $body_class = 'messages';
 ?>

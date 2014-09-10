@@ -247,7 +247,10 @@ Quotes star with a `>` sign:
 	'subscriptions' => array(
 		'link' => 'Subscriptions',
 		'title' => 'Your subscriptions'
-	)
+	),
+	
+	'months' => array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
+	'days' => array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
 );
 
 ?>
