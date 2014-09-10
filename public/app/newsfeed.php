@@ -108,7 +108,7 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 $title = lt($feed_config['title']);
 $layout = 'atom-feed';
 $feed_url = url_for('/' . urlencode($_GET['name']) . '.xml');
-$updated = ( count($messages) > 0 ) ? $messages[reset(array_keys($messages))]['date'] : date_create();
+$updated = ( count($messages) > 0 ) ? $messages[reset(array_keys($messages))]['date'] : date_create('now', new DateTimeZone('UTC'));
 ?>
 <? foreach ($messages as $message_id => $message): ?>
 	<entry>
