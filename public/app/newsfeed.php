@@ -24,11 +24,12 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	// wildcards) in the config.
 	$start_date = date('Ymd His', time() - $feed_config['history_duration']);
 	$nntp->command('newnews ' . $feed_config['newsgroups'] . ' ' . $start_date, 230);
-	$new_message_ids = $nntp->get_text_response();
+	$new_message_list = $nntp->get_text_response();
+	$new_message_ids = empty(trim($new_message_list)) ? array() : explode("\n", $new_message_list);
 	
 	// Query the dates of all new messages
 	$message_dates = array();
-	foreach(explode("\n", $new_message_ids) as $id){
+	foreach($new_message_ids as $id){
 		$nntp->command('hdr date ' . $id, 225);
 		list(,$date) = explode(' ', $nntp->get_text_response(), 2);
 		$message_dates[$id] = MessageParser::parse_date_and_zone($date);
