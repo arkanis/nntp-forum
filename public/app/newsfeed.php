@@ -20,10 +20,15 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	// newsgroup. Therefore we query the overview information of the message tree a message was posted
 	// in later on.
 	
+	// Query the servers date and calculate the newsfeed start date based on it (avoids confusion between
+	// NNTP server time and the server time the frontend runs on).
+	list(, $current_server_date_str) = $nntp->command('date', 111);
+	$current_server_date = date_create_from_format('YmdHis', $current_server_date_str, new DateTimeZone('UTC'));
+	$start_date = $current_server_date->sub(new DateInterval('PT' . $feed_config['history_duration'] . 'S'));
+	
 	// Query the newest messages in all newsgroups matching the "wildmat" (newsgroup name with
 	// wildcards) in the config.
-	$start_date = date('Ymd His', time() - $feed_config['history_duration']);
-	$nntp->command('newnews ' . $feed_config['newsgroups'] . ' ' . $start_date, 230);
+	$nntp->command('newnews ' . $feed_config['newsgroups'] . ' ' . $start_date->format('Ymd His'), 230);
 	$new_message_list = $nntp->get_text_response();
 	$new_message_ids = empty(trim($new_message_list)) ? array() : explode("\n", $new_message_list);
 	
