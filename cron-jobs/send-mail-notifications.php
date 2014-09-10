@@ -62,8 +62,8 @@ $start_date = date_create_from_format('YmdHis', $last_run_date, new DateTimeZone
 //$start_date = date_create('6 month ago', new DateTimeZone('UTC'));
 //echo('newnews * ' . $start_date->format('Ymd His'));
 $nntp->command('newnews * ' . $start_date->format('Ymd His'), 230);
-$new_message_list = $nntp->get_text_response();
-$new_message_ids = empty(trim($new_message_list)) ? array() : explode("\n", $new_message_list);
+$new_message_list = trim($nntp->get_text_response());
+$new_message_ids = empty($new_message_list) ? array() : explode("\n", $new_message_list);
 
 
 // Load the watchlist

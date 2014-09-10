@@ -29,8 +29,8 @@ $messages = cached('feed-' . $_GET['name'], function() use($feed_config, $CONFIG
 	// Query the newest messages in all newsgroups matching the "wildmat" (newsgroup name with
 	// wildcards) in the config.
 	$nntp->command('newnews ' . $feed_config['newsgroups'] . ' ' . $start_date->format('Ymd His'), 230);
-	$new_message_list = $nntp->get_text_response();
-	$new_message_ids = empty(trim($new_message_list)) ? array() : explode("\n", $new_message_list);
+	$new_message_list = trim($nntp->get_text_response());
+	$new_message_ids = empty($new_message_list) ? array() : explode("\n", $new_message_list);
 	
 	// Query the dates of all new messages
 	$message_dates = array();
