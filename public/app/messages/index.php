@@ -63,6 +63,7 @@ $nntp->command('group ' . $group, 211);
 $title = $message_infos[$topic_id]['subject'];
 $breadcrumbs[$group] = '/' . $group;
 $breadcrumbs[$title] = '/' . $group . '/' . $topic_number;
+$scripts[] = 'locale-' . $CONFIG['lang'] . '.js';
 $scripts[] = 'messages.js';
 $body_class = 'messages';
 ?>
@@ -304,22 +305,5 @@ if ($tracker)
 		<div></div>
 	</article>
 </form>
-
-<script>
-	// Locale sensitive strings for the scripts
-	var locale = {
-		delete_dialog: {
-			question: '<?= lha('messages', 'delete_dialog', 'question') ?>',
-			yes: '<?= lha('messages', 'delete_dialog', 'yes') ?>',
-			no: '<?= lha('messages', 'delete_dialog', 'no') ?>'
-		},
-		
-		show_quote: '<?= lha('messages', 'show_quote') ?>',
-		hide_quote: '<?= lha('messages', 'hide_quote') ?>',
-		
-		show_replies: '<?= lha('messages', 'show_replies') ?>',
-		hide_replies: '<?= lha('messages', 'hide_replies') ?>'
-	};
-</script>
 
 <? require(ROOT_DIR . '/include/footer.php') ?>
