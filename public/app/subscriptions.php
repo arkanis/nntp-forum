@@ -131,6 +131,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } elseif ($_SERVER['REQUEST_METHOD'] == 'GET' or $_SERVER['REQUEST_METHOD'] == 'HEAD') {
 	// Display a website so the user can manage his subscriptions
 	
+	// Fetch some additional display data for each message. We're using the hdr command since
+	// the results might be fetched from the fast overview database. If we use head the NNTP
+	// server will have to load the message.
+	$nntp = nntp_connect_and_authenticate($CONFIG);
+	$messages = array();
+	
+	foreach($subscribed_messages as $message_id) {
+		$messages[$message_id] = array();
+		
+		$nntp->command('hdr subject ' . $message_id, 225);
+		$messages[$message_id]['subject'] = MessageParser::decode_words( preg_replace('/^\d+\s+/', '', $nntp->get_text_response()) );
+		
+		$nntp->command('hdr from ' . $message_id, 225);
+		$from_header = MessageParser::decode_words( preg_replace('/^\d+\s+/', '', $nntp->get_text_response()) );
+		list($messages[$message_id]['author_name'], $messages[$message_id]['author_mail']) = MessageParser::split_from_header($from_header);
+		
+		$nntp->command('hdr date ' . $message_id, 225);
+		$messages[$message_id]['date'] = MessageParser::parse_date_and_zone( preg_replace('/^\d+\s+/', '', $nntp->get_text_response()) );
+		
+		$nntp->command('hdr newsgroups ' . $message_id, 225);
+		$newsgroups_header = preg_replace('/^\d+\s+/', '', $nntp->get_text_response());
+		$messages[$message_id]['newsgroups'] = preg_split('/\s+/', $newsgroups_header, null, PREG_SPLIT_NO_EMPTY);
+	}
+	
+	// Since we have all the message data in one array anyway we can sort by date as well
+	uasort($messages, function($a, $b){
+		if ($a == $b)
+			return 0;
+		return ($a < $b) ? -1 : 1;
+	});
 } else {
 	// No idea what request method landed here...
 	exit_with_not_found_error();
@@ -144,10 +174,21 @@ $body_class = 'subscriptions';
 
 <h2><?= lh('subscriptions', 'title') ?></h2>
 
+<? if(empty($messages)): ?>
+<p class="empty"><?= h(l('subscriptions', 'no_subscriptions')) ?></p>
+<? else: ?>
 <ul>
-<? foreach($subscribed_messages as $message_id): ?>
-	<li><?= h($message_id) ?></li>
+<? foreach($messages as $id => $data): ?>
+	<li>
+		<a href="/<?= urlencode(substr($id, 1, -1)) ?>"><?= h($data['subject']) ?></a>
+		<small><?= l('subscriptions', 'subscription_info',
+			sprintf('<abbr title="%s">%s</abbr>', ha($data['author_mail']), h($data['author_name'])),
+			timezone_aware_date($data['date'], l('subscriptions', 'subscription_info_date_format')),
+			join(', ', array_map(function($newsgroup){ return sprintf('<a href="%s">%s</a>', '/' . urlencode($newsgroup), h($newsgroup)); }, $data['newsgroups']))
+		) ?></small>
+	</li>
 <? endforeach ?>
 </ul>
+<? endif ?>
 
 <? require(ROOT_DIR . '/include/footer.php') ?>

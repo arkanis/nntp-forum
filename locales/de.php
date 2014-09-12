@@ -248,8 +248,22 @@ Beginnen mit einem `>`-Zeichen:
 	),
 	
 	'subscriptions' => array(
-		'link' => 'Abonnements',
-		'title' => 'Deine Abonnements'
+		// Link shown in the navigation
+		'link' => 'Mailbenachrichtigungen',
+		// The title of the subscription page
+		'title' => 'Deine Mailbenachrichtigungen',
+		
+		// Information text shown for each subscription. The subject of the subscribed message
+		// is displayed just before that information.
+		// Arguments: subject, author, data, list of newsgoups the subscribed message was posted in
+		'subscription_info' => 'von %s am %s Uhr in %s',
+		
+		// Date format used to create the message date string passed to `subscription_info`. The
+		// format of the date string is described in the PHP manual: http://php.net/date
+		'subscription_info_date_format' => 'j.m.Y G:i',
+		
+		// Text shown if the user has no subscriptions.
+		'no_subscriptions' => "Momentan wirst du über keine neuen Beiträge benachrichtigt."
 	),
 	
 	'months' => array('Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'),

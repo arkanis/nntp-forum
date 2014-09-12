@@ -246,8 +246,22 @@ Les citations commencent avec un signe `>` :
 	),
 	
 	'subscriptions' => array(
+		// Link shown in the navigation
 		'link' => 'Subscriptions',
-		'title' => 'Your subscriptions'
+		// The title of the subscription page
+		'title' => 'Your subscriptions',
+		
+		// Information text shown for each subscription. The subject of the subscribed message
+		// is displayed just before that information.
+		// Arguments: subject, author, data, list of newsgoups the subscribed message was posted in
+		'subscription_info' => 'by %s on %s posted in %s',
+		
+		// Date format used to create the message date string passed to `subscription_info`. The
+		// format of the date string is described in the PHP manual: http://php.net/date
+		'subscription_info_date_format' => 'j M Y G:i',
+		
+		// Text shown if the user has no subscriptions.
+		'no_subscriptions' => "You haven't subscribed to any posts."
 	),
 	
 	'months' => array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'),

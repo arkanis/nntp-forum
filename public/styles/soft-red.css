@@ -194,6 +194,13 @@ body.topics form.message {
 body.topics > ul.actions > li > a.new.topic, body.topics > form.message { display: none; }
 
 
+/* subscriptions */
+body.subscriptions > ul { margin: 1em 0; padding: 0; list-style: none; }
+body.subscriptions > ul > li { margin: 0.75em 0; padding: 0; }
+body.subscriptions > ul > li > small { display: block; color: gray; }
+body.subscriptions > ul > li > small > a:not(:hover):not(:focus):not(:active) { color: inherit; }
+
+
 /* post styles */
 article { margin: 0; padding: 0.5em; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); border-radius: 5px; }
 article > header { margin: -0.5em -0.5em 0 -0.5em; padding: 0.25em 0.5em; color: white; background: #28698f; border-radius: 5px 5px 0 0; }

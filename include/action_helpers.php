@@ -282,6 +282,8 @@ function autodetect_locale_with_fallback($fallback_locale){
 /**
  * Returns a list of message IDs the current user is subscribed to as well as the
  * file path the list is stored in.
+ * 
+ * If no user is currently authenticated an empty array and false is returned.
  */
 function load_subscriptions(){
 	if (empty($_SERVER['PHP_AUTH_USER']))
