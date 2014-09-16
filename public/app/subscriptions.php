@@ -169,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Setup layout variables
 $title = l('subscriptions', 'title');
 $breadcrumbs[l('subscriptions', 'title')] = '/your/subscriptions';
+$scripts[] = 'subscriptions.js';
 $body_class = 'subscriptions';
 ?>
 
@@ -179,8 +180,11 @@ $body_class = 'subscriptions';
 <? else: ?>
 <ul>
 <? foreach($messages as $id => $data): ?>
-	<li>
+	<li data-id="<?= ha($id) ?>">
 		<a href="/<?= urlencode(substr($id, 1, -1)) ?>"><?= h($data['subject']) ?></a>
+		<ul class="actions">
+			<li class="destroy subscription"><a href="#"><?= lh('subscriptions', 'unsubscribe') ?></a></li>
+		</ul>
 		<small><?= l('subscriptions', 'subscription_info',
 			sprintf('<abbr title="%s">%s</abbr>', ha($data['author_mail']), h($data['author_name'])),
 			timezone_aware_date($data['date'], l('subscriptions', 'subscription_info_date_format')),

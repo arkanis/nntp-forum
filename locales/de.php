@@ -90,6 +90,9 @@ return array(
 		// Either subscribe or unsubscribe is shown
 		'subscribe' => 'Abbonieren',
 		'unsubscribe' => 'Abbo löschen',
+		// Error messages for subscription. On failure the link text is replaced with these messages.
+		'subscribe_failed' => 'Konnte Nachricht nicht abbonieren, sorry',
+		'unsubscribe_failed' => 'Konnte Abbo nicht löschen, sorry',
 		// This link is only shown for messages the user posted by himself
 		'delete' => 'Nachricht löschen',
 		
@@ -261,6 +264,9 @@ Beginnen mit einem `>`-Zeichen:
 		// Date format used to create the message date string passed to `subscription_info`. The
 		// format of the date string is described in the PHP manual: http://php.net/date
 		'subscription_info_date_format' => 'j.m.Y G:i',
+		
+		// Name of the unsubscribe link for each message in the subscription list
+		'unsubscribe' => 'Unsubscribe',
 		
 		// Text shown if the user has no subscriptions.
 		'no_subscriptions' => "Momentan wirst du über keine neuen Beiträge benachrichtigt."

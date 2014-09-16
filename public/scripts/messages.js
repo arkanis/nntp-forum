@@ -195,7 +195,7 @@ $(document).ready(function(){
 					$(this).closest('ul').find('li.destroy.subscription').removeClass('disabled');
 				} else {
 					$(this).closest('li').addClass('failed');
-					$(this).text('Subscription failed, sorry');
+					$(this).text(locale.subscribe_failed);
 				}
 			}
 		});
@@ -218,7 +218,7 @@ $(document).ready(function(){
 					$(this).closest('ul').find('li.new.subscription').removeClass('disabled');
 				} else {
 					$(this).closest('li').addClass('failed');
-					$(this).text('Unsubscribe failed, sorry');
+					$(this).text(locale.unsubscribe_failed);
 				}
 			}
 		});

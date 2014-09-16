@@ -91,6 +91,9 @@ return array(
 		// Either subscribe or unsubscribe is shown
 		'subscribe' => 'Subscribe',
 		'unsubscribe' => 'Unsubscribe',
+		// Error messages for subscription. On failure the link text is replaced with these messages.
+		'subscribe_failed' => 'Subscription failed, sorry',
+		'unsubscribe_failed' => 'Unsubscribe failed, sorry',
 		// This link is only shown for messages the user posted by himself
 		'delete' => 'Retirer mon message',
 		
@@ -259,6 +262,9 @@ Les citations commencent avec un signe `>` :
 		// Date format used to create the message date string passed to `subscription_info`. The
 		// format of the date string is described in the PHP manual: http://php.net/date
 		'subscription_info_date_format' => 'j M Y G:i',
+		
+		// Name of the unsubscribe link for each message in the subscription list
+		'unsubscribe' => 'Unsubscribe',
 		
 		// Text shown if the user has no subscriptions.
 		'no_subscriptions' => "You haven't subscribed to any posts."

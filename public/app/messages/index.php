@@ -233,6 +233,9 @@ function traverse_tree($tree_level){
 		if($posting_allowed)
 			echo('			<li class="new message"><a href="#">' . l('messages', 'answer') . '</a></li>' . "\n");
 		
+		if($CONFIG['sender_is_self']($overview['author_mail'], $CONFIG['nntp']['user']))
+			echo('			<li class="destroy message"><a href="#">' . l('messages', 'delete') . '</a></li>' . "\n");
+		
 		if ($subscribed_messages_file) {
 			if (!in_array($message_data['id'], $subscribed_messages)) {
 				echo('			<li class="new subscription"><a href="#">' . l('messages', 'subscribe') . '</a></li>' . "\n");
@@ -243,8 +246,6 @@ function traverse_tree($tree_level){
 			}
 		}
 		
-		if($CONFIG['sender_is_self']($overview['author_mail'], $CONFIG['nntp']['user']))
-			echo('			<li class="destroy message"><a href="#">' . l('messages', 'delete') . '</a></li>' . "\n");
 		echo('		</ul>' . "\n");
 		
 		echo("</article>\n");

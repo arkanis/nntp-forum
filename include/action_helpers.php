@@ -291,7 +291,7 @@ function load_subscriptions(){
 	
 	$user_message_list_file = ROOT_DIR . '/subscriptions/user-' . $_SERVER['PHP_AUTH_USER'];
 	
-	$subscribed_messages = json_decode(@file_get_contents($user_message_list_file));
+	$subscribed_messages = json_decode(@file_get_contents($user_message_list_file), true);
 	if (!$subscribed_messages)
 		$subscribed_messages = array();
 	

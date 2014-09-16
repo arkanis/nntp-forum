@@ -17,6 +17,9 @@ $locale_subset = array(
 	'show_replies' => $locale['messages']['show_replies'],
 	'hide_replies' => $locale['messages']['hide_replies'],
 	
+	'subscribe_failed' => $locale['messages']['subscribe_failed'],
+	'unsubscribe_failed' => $locale['messages']['unsubscribe_failed'],
+	
 	'months' => $locale['months'],
 	'days' => $locale['days']
 );
