@@ -31,7 +31,7 @@ $message_parser = new MessageParser(array(
 		$newsgroups = array_map('trim', explode(',', $headers['newsgroups']));
 		$newsgroup = reset($newsgroups);
 		if (isset($headers['references'])) {
-			$referenced_ids = preg_split('/\s+/', $headers['references'], PREG_SPLIT_NO_EMPTY);
+			$referenced_ids = preg_split('/\s+/', $headers['references'], null, PREG_SPLIT_NO_EMPTY);
 			$root_message_id = reset($referenced_ids);
 		}
 	}
