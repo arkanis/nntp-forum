@@ -286,7 +286,8 @@ function autodetect_locale_with_fallback($fallback_locale){
  * If no user is currently authenticated an empty array and false is returned.
  */
 function load_subscriptions(){
-	if (empty($_SERVER['PHP_AUTH_USER']))
+	global $CONFIG;
+	if (empty($_SERVER['PHP_AUTH_USER']) or !$CONFIG['subscriptions']['watchlist'])
 		return array(array(), false);
 	
 	$user_message_list_file = ROOT_DIR . '/subscriptions/user-' . $_SERVER['PHP_AUTH_USER'];

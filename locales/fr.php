@@ -267,7 +267,11 @@ Les citations commencent avec un signe `>` :
 		'unsubscribe' => 'Unsubscribe',
 		
 		// Text shown if the user has no subscriptions.
-		'no_subscriptions' => "You haven't subscribed to any posts."
+		'no_subscriptions' => "You haven't subscribed to any posts.",
+		
+		// The text of the notification mail send to users
+		// Arguments: Name of the author, link to the message, link to the subscriptions page
+		'mail' => "%s replied to a message you subscribed to. Take a look at %s.\n\nYou can unsubscribe at %s."
 	),
 	
 	'months' => array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'),

@@ -184,6 +184,37 @@ return array(
 		'pass' => 'unknown'
 	),
 	
+	// Settings for mail notifications about new messages. For this to work you also have to enable
+	// the /cron-jobs/send-mail-notifications.php cron job on your system.
+	'subscriptions' => array(
+		// File that keeps track of what user will be notified for which message. Set to `null` to
+		// disable mail notifications.
+		'watchlist' => ROOT_DIR . '/subscriptions/watchlist',
+		// NNTP (newsgroup) account used by the cron job to look for new messages. Specify `null` as
+		// user in case your newsgoup doesn't need authentication.
+		'nntp' => array(
+			'user' => 'notifications',
+			'pass' => 'secret'
+		),
+		
+		// URL where you installed the NNTP forum. Since the cron job can't figure this out by itself
+		// this is used to generate links in the notification mail.
+		'link_base' => 'http://news.example.com/',
+		
+		// The address the notification mails are send from
+		'sender_address' => 'notifications@example.com',
+		// SMTP server used to send notification mails. Server and port have to be specified. If your
+		// SMTP server doesn't need authentication you can omit the user and password. If you omit the
+		// timeout PHPs default timeout will be used.
+		'smtp' => array(
+			'server' => 'mail.example.com',
+			'port' => 587,
+			'user' => 'notifications',
+			'pass' => 'secret',
+			'timeout' => 10
+		)
+	),
+	
 	// The user agent string added as a message header. Important for others to see who is
 	// responsible for an idealistically UTF-8 encoded message.
 	'user_agent' => 'NNTP-Forum/1.1.1'

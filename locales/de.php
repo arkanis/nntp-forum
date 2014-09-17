@@ -269,7 +269,12 @@ Beginnen mit einem `>`-Zeichen:
 		'unsubscribe' => 'Unsubscribe',
 		
 		// Text shown if the user has no subscriptions.
-		'no_subscriptions' => "Momentan wirst du über keine neuen Beiträge benachrichtigt."
+		'no_subscriptions' => "Momentan wirst du über keine neuen Beiträge benachrichtigt.",
+		
+		// The text of the notification mail send to users
+		// Arguments: Name of the author, link to the message, link to the subscriptions page
+		'mail' => "%s hat auf eine deiner abbonierten Nachrichten geantwortet: %s.\n\nDu kannst deine Abbos hier löschen: %s."
+		'mail' => ""
 	),
 	
 	'months' => array('Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'),

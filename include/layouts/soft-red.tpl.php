@@ -17,7 +17,7 @@
 <?	foreach($CONFIG['newsfeeds'] as $name => $newsfeed): ?>
 			<li><a class="newsfeed" href="/<?= urlencode($name) ?>.xml" type="application/atom+xml" rel="alternate"><?= h(lt($newsfeed['title'])) ?></a></li>
 <?	endforeach ?>
-<?	if( ! empty($CONFIG['nntp']['user']) ): ?>
+<?	if( ! empty($CONFIG['nntp']['user']) and ! empty($CONFIG['subscriptions']['watchlist']) ): ?>
 			<li><a class="subscriptions" href="/your/subscriptions"><?= lh('subscriptions', 'link') ?></a></li>
 <?	endif ?>
 		</ul>

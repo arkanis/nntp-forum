@@ -177,6 +177,14 @@ return array(
 		'unused_expire_time' => 60 * 60 * 24 * 30 * 6
 	),
 	
+	// Settings for mail notifications about new messages. For this to work you also have to enable
+	// the /cron-jobs/send-mail-notifications.php cron job on your system.
+	'subscriptions' => array(
+		// File that keeps track of what user will be notified for which message. Set to `null` to
+		// disable mail notifications.
+		'watchlist' => null,
+	),
+	
 	// The user agent string added as a message header. Important for others to see who is
 	// responsible for an idealistically UTF-8 encoded message.
 	'user_agent' => 'NNTP-Forum/1.1.1'
