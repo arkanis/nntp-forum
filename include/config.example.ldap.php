@@ -177,13 +177,6 @@ return array(
 		'unused_expire_time' => 60 * 60 * 24 * 30 * 6
 	),
 	
-	'subscriptions' => array(
-		'watchlist' => ROOT_DIR . '/subscriptions/watchlist',
-		'sender_address' => 'no-reply@example.com',
-		'user' => 'observer',
-		'pass' => 'unknown'
-	),
-	
 	// Settings for mail notifications about new messages. For this to work you also have to enable
 	// the /cron-jobs/send-mail-notifications.php cron job on your system.
 	'subscriptions' => array(
